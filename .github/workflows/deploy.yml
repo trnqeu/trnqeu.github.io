@@ -36,8 +36,8 @@ jobs:
       - name: Build with Astro
         run: npm run build
         env:
-          SITE: https://trnqeu.github.io/trnq-eu-astro
-          BASE_PATH: /trnq-eu-astro/
+          SITE: https://trnqeu.github.io/trnqeu-volks
+          BASE_PATH: /trnqeu-volks/
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

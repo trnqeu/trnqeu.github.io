@@ -9,6 +9,9 @@ const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob),
 const sortedPosts = allPosts
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .slice(0, 3);
+
+// Get the base path for creating correct links
+const base = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Trnq-eu: Stefano Trinchero's Personal Website" description="Human slop, code snippets, weird digital content" showSidebar={false}>
