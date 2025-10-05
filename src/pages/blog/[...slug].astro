@@ -18,10 +18,11 @@ export async function getStaticPaths() {
     const readingTime = calculateReadingTime(plainText);
     const allHeadings = extractHeadings(rawContent);
     const tocHeadings = filterHeadingsForTOC(allHeadings);
+    const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
     
     return {
-      params: { slug: post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '') },
-      props: { post, readingTime, tocHeadings }
+      params: { slug },
+      props: { post, readingTime, tocHeadings, url: `/blog/${slug}` }
     };
   });
 }
