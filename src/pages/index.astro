@@ -1,9 +1,11 @@
 ---
 import Layout from '../components/Layout.astro';
-const mdPostsGlob = import.meta.glob('../content/blog/*.md', { eager: true });
-const mdxPostsGlob = import.meta.glob('../content/blog/*.mdx', { eager: true });
+const mdPostsGlob = import.meta.glob('../content/ideas/*.md', { eager: true });
+const mdxPostsGlob = import.meta.glob('../content/ideas/*.mdx', { eager: true });
+const murderHePromptedPostsGlob = import.meta.glob('../content/murderheprompted/*.md', { eager: true });
 
-const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
+
+const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob)] as any[];
 const sortedPosts = allPosts
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .slice(0, 3);
@@ -15,27 +17,18 @@ const sortedPosts = allPosts
     <section class="hero">
       <div class="hero-content">
         <h1 class="hero-title">trnq-eu</h1>
-        <p class="hero-subtitle">Bauhaus Meets Monumental</p>
+        <p class="hero-subtitle">Personal website</p>
         <p class="hero-description">
-          An aesthetic exploration where Bauhaus functionalism collides with 
-          monumental grandeur. Form follows function, with a twist.
+          Human slop, code snippets, weird digital content
         </p>
         <hr class="hero-rule" />
-        <div class="hero-actions">
-          <a href="#demo" class="btn btn-primary">View Demo</a>
-          <a href="#installation" class="btn btn-secondary">Get Started</a>
-        </div>
       </div>
     </section>
 
     <!-- Demo Section -->
     <section class="demo-section" id="demo">
       <div class="container">
-        <h2 class="section-title">Live Demo</h2>
-        <p class="demo-description">
-          See the theme in action with sample blog posts that demonstrate all typography, 
-          layout, and design elements working together in perfect dissonant harmony.
-        </p>
+        
         
         {sortedPosts.length > 0 && (
           <div class="demo-posts">
@@ -112,7 +105,7 @@ const sortedPosts = allPosts
     </section>
 
     <!-- Typography Showcase -->
-    <section class="typography-showcase">
+    <!-- <section class="typography-showcase">
       <div class="container">
         <h2 class="section-title">Typography</h2>
         <p class="typography-description">
@@ -136,10 +129,10 @@ const sortedPosts = allPosts
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- Installation Section -->
-    <section class="installation" id="installation">
+    <!-- <section class="installation" id="installation">
       <div class="container">
         <h2 class="section-title">Quick Start</h2>
         <div class="install-steps">
@@ -169,7 +162,7 @@ cd volks-typo</code></pre>
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
   </div>
 </Layout>
 

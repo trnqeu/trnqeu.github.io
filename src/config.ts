@@ -17,20 +17,19 @@ export interface SiteConfig {
 }
 
 export const config: SiteConfig = {
-  title: "Volks-Typo",
-  description: "A blog exploring the intersection of design, typography, and history",
+  title: "Trnq-eu",
+  description: "Stefano Trinchero's Personal Website. Contains human slop, code snippets, ideas on AI, programming, archives, time and whatever goes through my mind. Home of the 'Murder, he prompted' series.",
   author: {
-    name: "Your Name",
-    bio: "Writer, designer, and explorer of aesthetic tensions between past and present.",
+    name: "Stefano Trinchero",
+    bio: "Data scientist, Occasional writer, Self-taught Grind Coder.",
     // avatar: "/images/avatar.jpg" // Uncomment and add your avatar image to public/images/
   },
   social: {
-    github: "https://github.com/yourusername",
-    twitter: "https://twitter.com/yourusername",
+    github: "https://github.com/trnq-eu",
     linkedin: "https://linkedin.com/in/yourusername",
-    email: "your.email@example.com"
+    email: "s.trinchero@gmail.com"
   },
-  siteUrl: "https://volks-typo.example.com"
+  siteUrl: "https://trnq.eu"
 };
 
 // Export constants for SEO component
