@@ -1,0 +1,48 @@
+---
+import { string } from 'astro:schema'
+
+interface Props {
+    author?: string;
+    variant?: 'human' | 'ai';
+}
+
+
+const { author = 'AI', variant = 'ai'} = Astro.props;
+
+const bubbleClasses = {
+    ai: 'bg-gray-100 border-gray-200 dark:bg-gray-800 dark:border-gray-700',
+    human: 'bg-blue-100 border-blue-200 dark:bg-blue-900/50 dark:border-blue-800'
+};
+
+---
+<div class:list={["chat-bubble", bubbleClasses[variant]]}>
+    <!-- {author && <div class="author">{author}</div>} -->
+    <div class="content">
+        <slot />
+    </div>
+</div>  
+
+<style>
+    .chat-bubble {
+        display: flex;
+        align-items: center;
+        border: 1px solid;
+        border-radius: 12px;
+        padding: 16px;
+        margin-block: 24px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .author {
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        color: #666;
+        dark:color; #ccc;
+    }
+
+    .content {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+</style>

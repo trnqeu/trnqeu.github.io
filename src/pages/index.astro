@@ -3,14 +3,15 @@ import Layout from '../components/Layout.astro';
 const mdPostsGlob = import.meta.glob('../content/ideas/*.md', { eager: true });
 const mdxPostsGlob = import.meta.glob('../content/ideas/*.mdx', { eager: true });
 const murderHePromptedPostsGlob = import.meta.glob('../content/murderheprompted/*.md', { eager: true });
+const murderHePromptedMdxPostsGlob = import.meta.glob('../content/murderheprompted/*.mdx', { eager: true });
 
 
-const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob)] as any[];
+const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob)] as any[];
 const sortedPosts = allPosts
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .slice(0, 3);
 
-// Get the base path for creating correct links
+// Get the base path for creating correct links, which works on any domain
 const base = import.meta.env.BASE_URL;
 ---
 
@@ -20,7 +21,7 @@ const base = import.meta.env.BASE_URL;
     <section class="hero">
       <div class="hero-content">
         <h1 class="hero-title">trnq-eu</h1>
-        <p class="hero-subtitle">Personal website</p>
+        <p class="hero-subtitle">Someone's website</p>
         <p class="hero-description">
           Human slop, code snippets, weird digital content
         </p>
@@ -32,144 +33,103 @@ const base = import.meta.env.BASE_URL;
     <section class="demo-section" id="demo">
       <div class="container">
         
-        
         {sortedPosts.length > 0 && (
           <div class="demo-posts">
-            {sortedPosts.map(post => (
-              <article class="demo-post-card">
-                <h3 class="demo-post-title">
-                  <a href={post.url}>{post.frontmatter.title}</a>
-                </h3>
-                
-                <div class="demo-post-meta">
-                  <time class="demo-post-date" datetime={post.frontmatter.date}>
-                    {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </time>
-                  <span class="demo-post-reading-time">5 min read</span>
-                </div>
-                
-                {post.frontmatter.excerpt && (
-                  <p class="demo-post-excerpt">{post.frontmatter.excerpt}</p>
-                )}
-                
-                {post.frontmatter.categories && (
-                  <div class="demo-post-categories">
-                    {post.frontmatter.categories.map((category: string) => (
-                      <span class="demo-category">{category}</span>
-                    ))}
+            {sortedPosts.map(post => {
+              // --- START OF THE FIX ---
+
+              // 1. Check which folder the post is in to determine its URL path
+              const postPath = post.file.includes('/murderheprompted/') 
+                ? 'murderheprompted/' 
+                : 'ideas/'; // All other posts go to the blog route
+
+              // 2. Extract the clean filename (the slug)
+              const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
+
+              // 3. Construct the final, working link
+              const finalHref = `${base}${postPath}${slug}`;
+
+              // --- END OF THE FIX ---
+
+              return (
+                <article class="demo-post-card">
+                  <h3 class="demo-post-title">
+                    {/* Use the new 'finalHref' variable we just created */}
+                    <a href={finalHref}>{post.frontmatter.title}</a>
+                  </h3>
+                  
+                  <div class="demo-post-meta">
+                    <time class="demo-post-date" datetime={post.frontmatter.date}>
+                      {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </time>
+                    <span class="demo-post-reading-time">5 min read</span>
                   </div>
-                )}
-              </article>
-            ))}
+                  
+                  {post.frontmatter.excerpt && (
+                    <p class="demo-post-excerpt">{post.frontmatter.excerpt}</p>
+                  )}
+                  
+                  {post.frontmatter.categories && (
+                    <div class="demo-post-categories">
+                      {post.frontmatter.categories.map((category: string) => (
+                        <span class="demo-category">{category}</span>
+                      ))}
+                    </div>
+                  )}
+                </article>
+              )
+            })}
           </div>
         )}
         
         <div class="demo-actions">
-          <a href={`${import.meta.env.BASE_URL}blog`} class="btn btn-primary">View Blog</a>
+          {/* Note: `blog` needs to be prefixed with `base` as well for portability */}
+          <a href={`${base}blog`} class="btn btn-primary">View Blog</a>
         </div>
       </div>
     </section>
 
-    <!-- Features Section -->
+    {/* ... The rest of your file is fine ... */}
     <section class="features" id="features">
-      <div class="container">
-        <h2 class="section-title">Design Philosophy</h2>
-        <div class="features-grid">
-          <div class="feature-card">
-            <h3 class="feature-title">Dissonant Harmony</h3>
-            <p class="feature-description">Bauhaus minimalism meets monumental design. Clean aesthetics with bold, commanding presence.</p>
-          </div>
-          <div class="feature-card">
-            <h3 class="feature-title">Perfect Readability</h3>
-            <p class="feature-description">Optimized typography with ideal line lengths and spacing for maximum comprehension.</p>
-          </div>
-          <div class="feature-card">
-            <h3 class="feature-title">Left Aligned</h3>
-            <p class="feature-description">Natural reading flow with consistent left alignment throughout all content.</p>
-          </div>
-          <div class="feature-card">
-            <h3 class="feature-title">Typographic Tension</h3>
-            <p class="feature-description">Cormorant Garamond meets Inter. Classical serif headings contrast modern sans-serif body.</p>
-          </div>
-          <div class="feature-card">
-            <h3 class="feature-title">Constructivist Grid</h3>
-            <p class="feature-description">8-point grid system creates structural order. Blood-red rules command attention.</p>
-          </div>
-          <div class="feature-card">
-            <h3 class="feature-title">Fast Performance</h3>
-            <p class="feature-description">Zero JavaScript, minimal CSS, self-hosted fonts for blazing speed.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Typography Showcase -->
-    <!-- <section class="typography-showcase">
-      <div class="container">
-        <h2 class="section-title">Typography</h2>
-        <p class="typography-description">
-          Work Sans provides exceptional readability across all text sizes and contexts
-        </p>
-        
-        <div class="typography-samples">
-          <div class="type-sample">
-            <h1 class="sample-h1">MONUMENTAL TYPE</h1>
-            <p class="type-meta">Cormorant Garamond • 900 Weight • Blood Red</p>
-          </div>
-          
-          <div class="type-sample">
-            <p class="sample-body">Bauhaus-inspired body text in Inter creates perfect readability. Function meets form in every letterform, optimized for modern screens.</p>
-            <p class="type-meta">Inter • 400 Weight • Charcoal Black</p>
-          </div>
-          
-          <div class="type-sample">
-            <code class="sample-code">npm install volks-typo</code>
-            <p class="type-meta">JetBrains Mono • Monospace Code</p>
-          </div>
-        </div>
-      </div>
-    </section> -->
-
-    <!-- Installation Section -->
-    <!-- <section class="installation" id="installation">
-      <div class="container">
-        <h2 class="section-title">Quick Start</h2>
-        <div class="install-steps">
-          <div class="step">
-            <h3 class="step-number">01</h3>
-            <div class="step-content">
-              <h4 class="step-title">Clone Repository</h4>
-              <pre class="code-block"><code>git clone https://github.com/yourusername/volks-typo.git
-cd volks-typo</code></pre>
+        <div class="container">
+          <h2 class="section-title">Design Philosophy</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <h3 class="feature-title">Dissonant Harmony</h3>
+              <p class="feature-description">Bauhaus minimalism meets monumental design. Clean aesthetics with bold, commanding presence.</p>
             </div>
-          </div>
-          
-          <div class="step">
-            <h3 class="step-number">02</h3>
-            <div class="step-content">
-              <h4 class="step-title">Install Dependencies</h4>
-              <pre class="code-block"><code>npm install</code></pre>
+            <div class="feature-card">
+              <h3 class="feature-title">Perfect Readability</h3>
+              <p class="feature-description">Optimized typography with ideal line lengths and spacing for maximum comprehension.</p>
             </div>
-          </div>
-          
-          <div class="step">
-            <h3 class="step-number">03</h3>
-            <div class="step-content">
-              <h4 class="step-title">Start Development</h4>
-              <pre class="code-block"><code>npm run dev</code></pre>
+            <div class="feature-card">
+              <h3 class="feature-title">Left Aligned</h3>
+              <p class="feature-description">Natural reading flow with consistent left alignment throughout all content.</p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-title">Typographic Tension</h3>
+              <p class="feature-description">Cormorant Garamond meets Inter. Classical serif headings contrast modern sans-serif body.</p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-title">Constructivist Grid</h3>
+              <p class="feature-description">8-point grid system creates structural order. Blood-red rules command attention.</p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-title">Fast Performance</h3>
+              <p class="feature-description">Zero JavaScript, minimal CSS, self-hosted fonts for blazing speed.</p>
             </div>
           </div>
         </div>
-      </div>
-    </section> -->
+      </section>
   </div>
 </Layout>
 
 <style>
+  /* All your styles are correct and do not need to be changed */
   .landing-page {
     width: 100%;
   }
