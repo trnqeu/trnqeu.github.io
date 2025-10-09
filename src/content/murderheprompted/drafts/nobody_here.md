@@ -1,1 +1,0 @@
-Aguardento si guarda intorno, visita la sua capa.
