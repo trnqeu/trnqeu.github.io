@@ -9,10 +9,10 @@ const pageDescription = `Learn more about ${author.name} and the ${title} blog`;
 <Layout title={`About | ${title}`} description={pageDescription}>
   <div class="about-page">
     <header class="page-header">
-      <h1 class="page-title">About</h1>
-      <hr class="page-rule" />
+      <h1 class="page-title">nobody in particular</h1>
+      <!-- <hr class="page-rule" /> -->
     </header>
-
+{/*
     <div class="author-section">
       <div class="author-avatar">
         {author.avatar ? (
@@ -93,13 +93,20 @@ const pageDescription = `Learn more about ${author.name} and the ${title} blog`;
         <li><strong>High Contrast</strong>: Clear visual separation between elements</li>
       </ul>
     </div>
+*/}
   </div>
+  
+
 </Layout>
 
 <style>
   .about-page {
     max-width: 800px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 70vh;
   }
 
   .page-header {
