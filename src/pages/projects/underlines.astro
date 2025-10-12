@@ -1,0 +1,156 @@
+---
+import Layout from '../../components/Layout.astro';
+import quotes from '../../../public/all_quotes.json';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Layout title="Underlines" description="A collection of quotes from the books I've read.">
+  <div class="project-page">
+    <header class="page-header">
+      <h1 class="page-title">Underlines</h1>
+      <p class="page-description">A collection of quotes from the books I've read.</p>
+      <hr class="page-rule" />
+    </header>
+
+    <div class="quotes-list">
+      {Object.values(quotes).map(book => (
+        <details class="book-entry">
+          <summary class="book-title">{book.title} <span class="book-author">{book.author}</span></summary>
+          <div class="quotes-content">
+            <ul>
+              {book.quotes.map(quote => (
+                <li>{quote}</li>
+              ))}
+            </ul>
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <div class="page-navigation">
+      <a href={`${base}projects`} class="back-link">← Back to All Projects</a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .project-page {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: calc(var(--grid-unit) * 8);
+  }
+
+  .page-title {
+    font-family: var(--font-heading-primary);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+    margin-bottom: calc(var(--grid-unit) * 3);
+  }
+
+  .page-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin-bottom: calc(var(--grid-unit) * 4);
+  }
+
+  .page-rule {
+    height: 4px;
+    background-color: var(--color-accent);
+    border: none;
+    width: 120px;
+    margin: 0 auto;
+  }
+
+  .quotes-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--grid-unit) * 2);
+    margin-bottom: calc(var(--grid-unit) * 8);
+  }
+
+  .book-entry {
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .book-title {
+    font-family: var(--font-heading-secondary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: calc(var(--grid-unit) * 2);
+    cursor: pointer;
+    background-color: var(--color-surface);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .book-author {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  .book-title:hover {
+    background-color: var(--color-surface-hover);
+  }
+
+  .quotes-content {
+    padding: calc(var(--grid-unit) * 2);
+    background-color: var(--color-background);
+  }
+
+  .quotes-content ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .quotes-content li {
+    padding: calc(var(--grid-unit) * 1.5) 0;
+    border-bottom: 1px solid var(--color-border-light);
+    line-height: 1.6;
+  }
+
+  .quotes-content li:last-child {
+    border-bottom: none;
+  }
+
+  .page-navigation {
+    text-align: center;
+    padding-top: calc(var(--grid-unit) * 4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .back-link {
+    font-family: var(--font-heading-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    padding: calc(var(--grid-unit)) calc(var(--grid-unit) * 2);
+    border: 2px solid var(--color-accent);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: inline-block;
+  }
+
+  .back-link:hover,
+  .back-link:focus {
+    background-color: var(--color-accent);
+    color: white;
+    text-decoration: none;
+  }
+</style>
