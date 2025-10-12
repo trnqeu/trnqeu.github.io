@@ -2,15 +2,27 @@ import rss from '@astrojs/rss';
 import { config } from '../config';
 
 export async function GET(context) {
-  const posts = import.meta.glob('../content/blog/*.md', { eager: true });
-  const items = Object.entries(posts).map(([path, post]) => {
-    const slug = path.split('/').pop().replace('.md', '');
-    return {
-      title: post.frontmatter.title,
-      pubDate: post.frontmatter.date,
-      description: post.frontmatter.excerpt || post.frontmatter.description,
-      link: `/blog/${slug}/`,
-    };
+  const posts = import.meta.glob(['../content/ideas/**/*.{md,mdx}', '../content/murderheprompted/**/*.{md,mdx}', '../content/ilcommissariogpt/**/*.{md,mdx}'], { eager: true });
+  const items = Object.entries(posts)
+    .filter(([path]) => !path.includes('/drafts/'))
+    .map(([path, post]) => {
+        const pathParts = path.split('/');
+        const slug = pathParts.pop().replace(/\.(md|mdx)$/, '');
+        const collection = pathParts.pop();
+
+        let link;
+        if (collection === 'ideas') {
+            link = `/blog/${slug}/`;
+        } else {
+            link = `/${collection}/${slug}/`;
+        }
+
+        return {
+            title: post.frontmatter.title,
+            pubDate: post.frontmatter.date,
+            description: post.frontmatter.excerpt || post.frontmatter.description,
+            link: link,
+        };
   });
   
   return rss({
