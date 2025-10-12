@@ -1,22 +1,48 @@
 ---
+// Component Imports
 import Layout from '../../components/Layout.astro';
+
+// Data Imports
 import quotes from '../../../public/all_quotes.json';
 
+// Constants
 const base = import.meta.env.BASE_URL;
+
+// Random Quote Logic
+const allBooks = Object.values(quotes);
+const randomBookIndex = Math.floor(Math.random() * allBooks.length);
+const randomBook = allBooks[randomBookIndex];
+const randomQuoteIndex = Math.floor(Math.random() * randomBook.quotes.length);
+const randomQuote = randomBook.quotes[randomQuoteIndex];
 ---
 
 <Layout title="Underlines" description="A collection of quotes from the books I've read.">
   <div class="project-page">
+    <!-- Page Header -->
     <header class="page-header">
       <h1 class="page-title">Underlines</h1>
       <p class="page-description">A collection of quotes from the books I've read.</p>
       <hr class="page-rule" />
     </header>
 
+    <!-- Random Quote Block -->
+    <div class="random-quote-block">
+      <h3 class="random-quote-title">One random quote:</h3>
+      <blockquote class="random-quote">
+        <p>{randomQuote}</p>
+        <footer>
+          <cite>{randomBook.title} - {randomBook.author}</cite>
+        </footer>
+      </blockquote>
+    </div>
+
+    <!-- Quotes List -->
     <div class="quotes-list">
       {Object.values(quotes).map(book => (
         <details class="book-entry">
-          <summary class="book-title">{book.title} <span class="book-author">{book.author}</span></summary>
+          <summary class="book-title">
+            {book.title} - <span class="book-author">{book.author}</span>
+          </summary>
           <div class="quotes-content">
             <ul>
               {book.quotes.map(quote => (
@@ -28,6 +54,7 @@ const base = import.meta.env.BASE_URL;
       ))}
     </div>
 
+    <!-- Page Navigation -->
     <div class="page-navigation">
       <a href={`${base}projects`} class="back-link">← Back to All Projects</a>
     </div>
@@ -35,6 +62,7 @@ const base = import.meta.env.BASE_URL;
 </Layout>
 
 <style>
+  /* General Page Styles */
   .project-page {
     max-width: 800px;
     margin: 0 auto;
@@ -71,6 +99,39 @@ const base = import.meta.env.BASE_URL;
     margin: 0 auto;
   }
 
+  /* Random Quote Styles */
+  .random-quote-block {
+    margin-bottom: calc(var(--grid-unit) * 8);
+    text-align: center;
+    padding: calc(var(--grid-unit) * 4);
+    background-color: var(--color-surface);
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+
+  .random-quote-title {
+    font-family: var(--font-heading-secondary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    margin-bottom: calc(var(--grid-unit) * 2);
+  }
+
+  .random-quote {
+    font-size: 1.5rem;
+    font-style: italic;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .random-quote footer {
+    margin-top: calc(var(--grid-unit) * 2);
+    font-size: 1rem;
+    font-style: normal;
+    color: var(--color-text-muted);
+  }
+
+  /* Quotes List Styles */
   .quotes-list {
     display: flex;
     flex-direction: column;
@@ -128,6 +189,7 @@ const base = import.meta.env.BASE_URL;
     border-bottom: none;
   }
 
+  /* Page Navigation Styles */
   .page-navigation {
     text-align: center;
     padding-top: calc(var(--grid-unit) * 4);
