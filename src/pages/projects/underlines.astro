@@ -34,6 +34,7 @@ const randomQuote = randomBook.quotes[randomQuoteIndex];
           <cite>{randomBook.title} - {randomBook.author}</cite>
         </footer>
       </blockquote>
+      <button id="refresh-quote">Refresh Quote</button>
     </div>
 
     <!-- Quotes List -->
@@ -131,6 +132,27 @@ const randomQuote = randomBook.quotes[randomQuoteIndex];
     color: var(--color-text-muted);
   }
 
+  #refresh-quote {
+    margin-top: calc(var(--grid-unit) * 4);
+    font-family: var(--font-heading-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    background-color: transparent;
+    padding: calc(var(--grid-unit)) calc(var(--grid-unit) * 2);
+    border: 2px solid var(--color-accent);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  #refresh-quote:hover,
+  #refresh-quote:focus {
+    background-color: var(--color-accent);
+    color: white;
+  }
+
   /* Quotes List Styles */
   .quotes-list {
     display: flex;
@@ -216,3 +238,17 @@ const randomQuote = randomBook.quotes[randomQuoteIndex];
     text-decoration: none;
   }
 </style>
+
+<script define:vars={{ quotes }}>
+  const allBooks = Object.values(quotes);
+
+  document.getElementById('refresh-quote').addEventListener('click', () => {
+    const randomBookIndex = Math.floor(Math.random() * allBooks.length);
+    const randomBook = allBooks[randomBookIndex];
+    const randomQuoteIndex = Math.floor(Math.random() * randomBook.quotes.length);
+    const randomQuote = randomBook.quotes[randomQuoteIndex];
+
+    document.querySelector('.random-quote p').innerHTML = randomQuote;
+    document.querySelector('.random-quote cite').innerHTML = `${randomBook.title} - ${randomBook.author}`;
+  });
+</script>
