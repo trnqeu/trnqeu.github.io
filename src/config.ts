@@ -11,6 +11,7 @@ export interface SiteConfig {
     twitter?: string;
     instagram?: string;
     linkedin?: string;
+    bluesky?: string;
     email?: string;
   };
   siteUrl: string;
@@ -25,8 +26,9 @@ export const config: SiteConfig = {
     // avatar: "/images/avatar.jpg" // Uncomment and add your avatar image to public/images/
   },
   social: {
-    github: "https://github.com/trnq-eu",
-    linkedin: "https://linkedin.com/in/yourusername",
+    github: "https://github.com/trnqeu",
+    linkedin: "https://linkedin.com/in/stefano-trinchero-8569316/",
+    bluesky: "https://bsky.app/profile/trnqeu.bsky.social",
     email: "s.trinchero@gmail.com"
   },
   siteUrl: "https://trnq.eu"
