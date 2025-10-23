@@ -2,32 +2,29 @@
 import Layout from '../../components/Layout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import { extractHeadings, filterHeadingsForTOC } from '../../utils/table-of-contents';
-import { calculateReadingTime, extractTextFromMarkdown } from '../../utils/reading-time';
 
 export async function getStaticPaths() {
   // Support both .md and .mdx files
-  const mdPostsGlob = import.meta.glob('../../content/blog/*.md', { eager: true });
-  const mdxPostsGlob = import.meta.glob('../../content/blog/*.mdx', { eager: true });
+  const mdPostsGlob = import.meta.glob('../../content/ideas/*.md', { eager: true });
+  const mdxPostsGlob = import.meta.glob('../../content/ideas/*.mdx', { eager: true });
   
   const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
   
   return allPosts.map((post: any) => {
     // For import.meta.glob, access raw content through compiledContent or body
     const rawContent = post.body || post.rawContent?.() || '';
-    const plainText = extractTextFromMarkdown(rawContent);
-    const readingTime = calculateReadingTime(plainText);
     const allHeadings = extractHeadings(rawContent);
     const tocHeadings = filterHeadingsForTOC(allHeadings);
     const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
     
     return {
       params: { slug },
-      props: { post, readingTime, tocHeadings, url: `/blog/${slug}` }
+      props: { post, tocHeadings, url: `/ideas/${slug}` }
     };
   });
 }
 
-const { post, readingTime, tocHeadings } = Astro.props;
+const { post, tocHeadings } = Astro.props;
 const { frontmatter, Content } = post as any;
 
 const pageTitle = frontmatter.title;
@@ -52,8 +49,10 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
             day: 'numeric'
           })}
         </time>
-        
-        <span class="post-reading-time">{readingTime}</span>
+
+        {frontmatter.author && (
+            <span class="post-author">by {frontmatter.author}</span>
+        )}
         
         {frontmatter.categories && frontmatter.categories.length > 0 && (
           <div class="post-categories">
@@ -93,7 +92,7 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
       )}
       
       <div class="post-navigation">
-        <a href="/blog" class="back-to-blog">← Back to Blog</a>
+        <a href="/ideas" class="back-to-blog">← Back to Ideas</a>
       </div>
     </footer>
   </article>
@@ -135,7 +134,7 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     letter-spacing: 0.05em;
   }
 
-  .post-reading-time {
+  .post-author {
     font-family: var(--font-mono);
     font-size: 0.9rem;
     color: var(--color-text-muted);
@@ -143,11 +142,11 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     letter-spacing: 0.05em;
   }
 
-  .post-reading-time::before {
+  /* .post-author::before {
     content: "•";
     margin: 0 calc(var(--grid-unit));
     color: var(--color-border);
-  }
+  } */
 
   .post-categories {
     display: flex;
