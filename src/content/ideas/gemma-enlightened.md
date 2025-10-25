@@ -4,7 +4,7 @@ author: Stefano Trinchero
 date: "2025-01-10"
 description: "A Kaggle competition submission to fine-tune Gemma-2 to preserve the words and thought of the Italian Enlightenment philosophy."
 excerpt: "Can a language model become an innovative tool for preserving a specific cultural context? This project is an attempt to fine-tune Gemma 2B to preserve a system of thought and the specific language used to articulate it."
-categories: ["AI", "NLP", "History"]
+categories: ["AI", "NLP", "History", "Lang [eng]"]
 tags: ["Gemma", "Fine-tuning", "Enlightenment", "Italian History"]
 
 ---

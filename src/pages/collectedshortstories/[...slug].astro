@@ -6,8 +6,8 @@ import { calculateReadingTime, extractTextFromMarkdown } from '../../utils/readi
 
 export async function getStaticPaths() {
   // Support both .md and .mdx files
-  const mdPostsGlob = import.meta.glob('../../content/murderheprompted/*.md', { eager: true });
-  const mdxPostsGlob = import.meta.glob('../../content/murderheprompted/*.mdx', { eager: true });
+  const mdPostsGlob = import.meta.glob('../../content/collectedshortstories/*.md', { eager: true });
+  const mdxPostsGlob = import.meta.glob('../../content/collectedshortstories/*.mdx', { eager: true });
   
   const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
   
@@ -22,7 +22,7 @@ export async function getStaticPaths() {
     
     return {
       params: { slug },
-      props: { post, readingTime, tocHeadings, url: `/murderheprompted/${slug}` }
+      props: { post, readingTime, tocHeadings, url: `/collectedshortstories/${slug}` }
     };
   });
 }
@@ -63,7 +63,7 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
         
 
         <div class="project-link-meta">
-          Project: <a href="/projects/murder-he-prompted">Murder, he prompted</a>
+          Project: <a href="/projects/collected-short-stories">Collected Short Stories</a>
         </div>
         
         <!-- <span class="post-reading-time">{readingTime}</span> -->
@@ -106,7 +106,7 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
       )}
       
       <div class="post-navigation">
-        <a href="/projects/murder-he-prompted" class="back-to-blog">← All the cases</a>
+        <a href="/projects/collected-short-stories" class="back-to-blog">← All the stories</a>
       </div>
     </footer>
   </article>
@@ -141,6 +141,14 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
   }
 
   .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-author {
     font-family: var(--font-mono);
     font-size: 0.9rem;
     color: var(--color-text-muted);

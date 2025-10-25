@@ -1,12 +1,14 @@
 ---
 import Layout from '../components/Layout.astro';
-const mdPostsGlob = import.meta.glob('../content/words/*.md', { eager: true });
-const mdxPostsGlob = import.meta.glob('../content/words/*.mdx', { eager: true });
+const mdPostsGlob = import.meta.glob('../content/ideas/*.md', { eager: true });
+const mdxPostsGlob = import.meta.glob('../content/ideas/*.mdx', { eager: true });
 const murderHePromptedPostsGlob = import.meta.glob('../content/murderheprompted/*.md', { eager: true });
 const murderHePromptedMdxPostsGlob = import.meta.glob('../content/murderheprompted/*.mdx', { eager: true });
+const collectedShortStoriesPostsGlob = import.meta.glob('../content/collectedshortstories/*.md', { eager: true });
+const collectedShortStoriesMdxPostsGlob = import.meta.glob('../content/collectedshortstories/*.mdx', { eager: true });
 
 
-const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob)] as any[];
+const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob), ...Object.values(collectedShortStoriesPostsGlob), ...Object.values(collectedShortStoriesMdxPostsGlob)] as any[];
 const sortedPosts = allPosts
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .slice(0, 3);
@@ -20,15 +22,16 @@ const base = import.meta.env.BASE_URL;
     <!-- Hero Section -->
     <section class="hero">
       <div class="hero-content">
-        <h1 class="hero-title">this is someone's website
-        </h1>
+        <h2 class="herp-subtitle">[words, thoughts, snippets]
+        </h2>
         <!-- <p class="hero-subtitle">This is someone's website</p> -->
-        <p class="hero-description">
+        <!-- <p class="hero-description">
           Contains human slop, the occasional code snippet, random thoughts
-        </p>
-        <hr class="hero-rule" />
+        </p> -->
+        <!-- <hr class="hero-rule" /> -->
       </div>
-    </section>
+    </section> 
+  
 
     <!-- Demo Section -->
     <section class="demo-section" id="demo">
@@ -41,7 +44,9 @@ const base = import.meta.env.BASE_URL;
               // 1. Check which folder the post is in to determine its URL path
               const postPath = post.file.includes('/murderheprompted/') 
                 ? 'murderheprompted/' 
-                : 'words/'; // All other posts go to the blog route
+                : post.file.includes('/collectedshortstories/')
+                ? 'collectedshortstories/'
+                : 'ideas/'; // All other posts go to the blog route
 
               // 2. Extract the clean filename (the slug)
               const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
@@ -65,7 +70,6 @@ const base = import.meta.env.BASE_URL;
                         day: 'numeric'
                       })}
                     </time>
-                    <span class="demo-post-reading-time">5 min read</span>
                   </div>
                   
                   {post.frontmatter.excerpt && (
@@ -85,15 +89,15 @@ const base = import.meta.env.BASE_URL;
           </div>
         )}
         
-        <div class="demo-actions">
+        <!-- <div class="demo-actions">
           {/* Note: `blog` needs to be prefixed with `base` as well for portability */}
-          <a href={`${base}blog`} class="btn btn-primary">View Blog</a>
-        </div>
+          <a href={`${base}blog`} class="btn btn-primary">Read all words</a>
+        </div> -->
       </div>
     </section>
 
     {/* ... The rest of your file is fine ... */}
-    <section class="features" id="features">
+    <!-- <section class="features" id="features">
         <div class="container">
           <h2 class="section-title">Design Philosophy</h2>
           <div class="features-grid">
@@ -124,6 +128,7 @@ const base = import.meta.env.BASE_URL;
           </div>
         </div>
       </section>
+       -->
   </div>
 </Layout>
 

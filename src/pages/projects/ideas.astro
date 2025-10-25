@@ -1,9 +1,9 @@
 ---
-import Layout from '../components/Layout.astro';
+import Layout from '../../components/Layout.astro';
 const base = import.meta.env.BASE_URL;
 
-const mdPostsGlob = import.meta.glob('../content/words/*.md', { eager: true });
-const mdxPostsGlob = import.meta.glob('../content/words/*.mdx', { eager: true });
+const mdPostsGlob = import.meta.glob('../../content/ideas/*.md', { eager: true });
+const mdxPostsGlob = import.meta.glob('../../content/ideas/*.mdx', { eager: true });
 
 const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
 const sortedPosts = allPosts
@@ -12,15 +12,15 @@ const sortedPosts = allPosts
     const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
     return {
       ...post,
-      url: `/words/${slug}`
+      url: `/ideas/${slug}`
     }
   });
 ---
 
-<Layout title="Words" description="Posts, short stories, random thoughts.">
+<Layout title="Ideas" description="Posts, short stories, random thoughts.">
   <div class="blog-page">
     <header class="blog-header">
-      <h1 class="blog-title">Words</h1>
+      <h1 class="blog-title">Ideas</h1>
       <p class="blog-description">
         Posts, short stories, random thoughts.
       </p>
@@ -63,7 +63,7 @@ const sortedPosts = allPosts
       </div>
     ) : (
       <div class="no-posts">
-        <p>No posts available yet. Start writing by creating files in <code>src/content/words/</code></p>
+        <p>No posts available yet. Start writing by creating files in <code>src/content/ideas/</code></p>
       </div>
     )}
   </div>

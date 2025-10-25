@@ -1,8 +1,8 @@
 ---
 import Layout from '../../components/Layout.astro';
 
-const collectionName = 'murderheprompted';
-const collectionGlob = import.meta.glob('../../content/murderheprompted/**/*.{md,mdx}', { eager: true });
+const collectionName = 'collectedshortstories';
+const collectionGlob = import.meta.glob('../../content/collectedshortstories/**/*.{md,mdx}', { eager: true });
 const posts = Object.values(collectionGlob) as any[];
 
 posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date(b.frontmatter.date).getTime());
@@ -10,11 +10,11 @@ posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date
 const base = import.meta.env.BASE_URL;
 ---
 
-<Layout title="Murder, he prompted" description="A collection of all the cases from the 'Murder, he prompted' series.">
+<Layout title="Collected short stories" description="An archive for a couple of short stories I've written back in the day.">
   <div class="project-page">
     <header class="page-header">
-      <h1 class="page-title">Murder, he prompted</h1>
-      <p class="page-description">Chief Prompter Jameson Aguardento reporting for duty.</p>
+      <h1 class="page-title">Collected short stories</h1>
+      <p class="page-description">An archive for a couple of short stories I've written back in the day.</p>
       <hr class="page-rule" />
     </header>
 
@@ -210,7 +210,7 @@ const base = import.meta.env.BASE_URL;
 
   .back-link:hover,
   .back-link:focus {
-    background-color: var(--color-accent);
+    backgro1-color: var(--color-accent);
     color: white;
     text-decoration: none;
   }

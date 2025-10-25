@@ -5,8 +5,8 @@ import { extractHeadings, filterHeadingsForTOC } from '../../utils/table-of-cont
 
 export async function getStaticPaths() {
   // Support both .md and .mdx files
-  const mdPostsGlob = import.meta.glob('../../content/words/*.md', { eager: true });
-  const mdxPostsGlob = import.meta.glob('../../content/words/*.mdx', { eager: true });
+  const mdPostsGlob = import.meta.glob('../../content/ideas/*.md', { eager: true });
+  const mdxPostsGlob = import.meta.glob('../../content/ideas/*.mdx', { eager: true });
   
   const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
   
@@ -19,7 +19,7 @@ export async function getStaticPaths() {
     
     return {
       params: { slug },
-      props: { post, tocHeadings, url: `/words/${slug}` }
+      props: { post, tocHeadings, url: `/ideas/${slug}` }
     };
   });
 }
@@ -52,6 +52,10 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
 
         {frontmatter.author && (
             <span class="post-author">by {frontmatter.author}</span>
+        )}
+
+        {frontmatter.lang && (
+            <span class="post-lang">{frontmatter.lang}</span>
         )}
         
         {frontmatter.categories && frontmatter.categories.length > 0 && (
@@ -92,7 +96,7 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
       )}
       
       <div class="post-navigation">
-        <a href="/words" class="back-to-blog">← Back to Words</a>
+        <a href="/projects/ideas" class="back-to-blog">← Back to Ideas</a>
       </div>
     </footer>
   </article>
@@ -135,6 +139,14 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
   }
 
   .post-author {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-lang {
     font-family: var(--font-mono);
     font-size: 0.9rem;
     color: var(--color-text-muted);

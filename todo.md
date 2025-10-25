@@ -12,7 +12,7 @@
 - Murder, he prompted
 - i casi del commissario gpt
 - prompts on canvas
-- words
+- ideas
 - random sentence
 - dhamma
 - automatic football
