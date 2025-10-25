@@ -6,8 +6,6 @@ const murderHePromptedPostsGlob = import.meta.glob('../content/murderheprompted/
 const murderHePromptedMdxPostsGlob = import.meta.glob('../content/murderheprompted/*.mdx', { eager: true });
 const collectedShortStoriesPostsGlob = import.meta.glob('../content/collectedshortstories/*.md', { eager: true });
 const collectedShortStoriesMdxPostsGlob = import.meta.glob('../content/collectedshortstories/*.mdx', { eager: true });
-
-
 const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob), ...Object.values(collectedShortStoriesPostsGlob), ...Object.values(collectedShortStoriesMdxPostsGlob)] as any[];
 const sortedPosts = allPosts
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
@@ -22,9 +20,9 @@ const base = import.meta.env.BASE_URL;
     <!-- Hero Section -->
     <section class="hero">
       <div class="hero-content">
-        <h2 class="herp-subtitle">[words, thoughts, snippets]
-        </h2>
-        <!-- <p class="hero-subtitle">This is someone's website</p> -->
+        <h1 class="hero-title">trnq
+        </h1>
+        <p class="hero-subtitle">[words, thoughts, snippets]</p>
         <!-- <p class="hero-description">
           Contains human slop, the occasional code snippet, random thoughts
         </p> -->
