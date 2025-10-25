@@ -5,8 +5,8 @@ import { extractHeadings, filterHeadingsForTOC } from '../../utils/table-of-cont
 
 export async function getStaticPaths() {
   // Support both .md and .mdx files
-  const mdPostsGlob = import.meta.glob('../../content/ideas/*.md', { eager: true });
-  const mdxPostsGlob = import.meta.glob('../../content/ideas/*.mdx', { eager: true });
+  const mdPostsGlob = import.meta.glob('../../content/words/*.md', { eager: true });
+  const mdxPostsGlob = import.meta.glob('../../content/words/*.mdx', { eager: true });
   
   const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
   
@@ -19,7 +19,7 @@ export async function getStaticPaths() {
     
     return {
       params: { slug },
-      props: { post, tocHeadings, url: `/ideas/${slug}` }
+      props: { post, tocHeadings, url: `/words/${slug}` }
     };
   });
 }
@@ -92,7 +92,7 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
       )}
       
       <div class="post-navigation">
-        <a href="/ideas" class="back-to-blog">← Back to Ideas</a>
+        <a href="/words" class="back-to-blog">← Back to Words</a>
       </div>
     </footer>
   </article>

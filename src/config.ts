@@ -19,7 +19,7 @@ export interface SiteConfig {
 
 export const config: SiteConfig = {
   title: "Trnq-eu",
-  description: "Stefano Trinchero's Personal Website. Contains human slop, code snippets, ideas on AI, programming, archives, time and whatever goes through my mind. Home of the 'Murder, he prompted' series.",
+  description: "Stefano Trinchero's Personal Website. Contains human slop, code snippets, words on AI, programming, archives, time and whatever goes through my mind. Home of the 'Murder, he prompted' series.",
   author: {
     name: "Stefano Trinchero",
     bio: "Data scientist, Occasional writer, Self-taught Grind Coder.",

@@ -2,7 +2,7 @@ import { defineCollection, z } from 'astro:content';
 
 
 
-const ideas = defineCollection({
+const words = defineCollection({
     type: 'content',
     schema: z.object({
         title: z.string(),
@@ -30,4 +30,4 @@ const murderheprompted = defineCollection({
     }),
 });
 
-export const collections = { ideas, murderheprompted };
+export const collections = { words, murderheprompted };

@@ -1,7 +1,7 @@
 ---
 import Layout from '../components/Layout.astro';
-const mdPostsGlob = import.meta.glob('../content/ideas/*.md', { eager: true });
-const mdxPostsGlob = import.meta.glob('../content/ideas/*.mdx', { eager: true });
+const mdPostsGlob = import.meta.glob('../content/words/*.md', { eager: true });
+const mdxPostsGlob = import.meta.glob('../content/words/*.mdx', { eager: true });
 const murderHePromptedPostsGlob = import.meta.glob('../content/murderheprompted/*.md', { eager: true });
 const murderHePromptedMdxPostsGlob = import.meta.glob('../content/murderheprompted/*.mdx', { eager: true });
 
@@ -41,7 +41,7 @@ const base = import.meta.env.BASE_URL;
               // 1. Check which folder the post is in to determine its URL path
               const postPath = post.file.includes('/murderheprompted/') 
                 ? 'murderheprompted/' 
-                : 'ideas/'; // All other posts go to the blog route
+                : 'words/'; // All other posts go to the blog route
 
               // 2. Extract the clean filename (the slug)
               const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
