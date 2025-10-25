@@ -62,9 +62,13 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
         )}
         
 
-        <div class="project-link-meta">
-          Project: <a href="/projects/collected-short-stories">Collected Short Stories</a>
-        </div>
+        {frontmatter.projects && frontmatter.projects.length > 0 && (
+          <div class="post-projects">
+            <a href={`/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '-')}`} class="project-tag">
+              {frontmatter.projects[0]}
+            </a>
+          </div>
+        )}
         
         <!-- <span class="post-reading-time">{readingTime}</span> -->
         

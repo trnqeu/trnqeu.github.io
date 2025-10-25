@@ -57,6 +57,15 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
         {frontmatter.lang && (
             <span class="post-lang">{frontmatter.lang}</span>
         )}
+
+       {frontmatter.projects && frontmatter.projects.length > 0 && (
+          <div class="post-projects">
+            <a href={`/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '-')}`} class="project-tag">
+              {frontmatter.projects[0]}
+            </a>
+          </div>
+        )}
+
         
         {frontmatter.categories && frontmatter.categories.length > 0 && (
           <div class="post-categories">
@@ -175,6 +184,19 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     text-transform: uppercase;
     letter-spacing: 0.05em;
     border-radius: 3px;
+    transition: background-color 0.2s ease;
+  }
+
+  .project-tag {
+    background-color: var(--color-accent);
+    color: white;
+    padding: calc(var(--grid-unit) / 2) calc(var(--grid-unit));
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 3px;
+    text-decoration: none;
     transition: background-color 0.2s ease;
   }
 

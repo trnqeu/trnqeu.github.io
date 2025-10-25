@@ -62,12 +62,14 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
         )}
         
 
-        <div class="project-link-meta">
-          Project: <a href="/projects/murder-he-prompted">Murder, he prompted</a>
-        </div>
-        
-        <!-- <span class="post-reading-time">{readingTime}</span> -->
-        
+        {frontmatter.projects && frontmatter.projects.length > 0 && (
+          <div class="post-projects">
+            <a href={`/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '-')}`} class="project-tag">
+              {frontmatter.projects[0]}
+            </a>
+          </div>
+        )}
+
         {frontmatter.categories && frontmatter.categories.length > 0 && (
           <div class="post-categories">
             {frontmatter.categories.map((category: string) => (
@@ -433,13 +435,17 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     background-color: var(--color-accent);
   }
 
-  .project-link-meta a {
-    color: var(--color-accent);
+  .project-tag {
+    background-color: var(--color-accent);
+    color: white;
+    padding: calc(var(--grid-unit) / 2) calc(var(--grid-unit));
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 3px;
     text-decoration: none;
-  }
-
-  .project-link-meta a:hover {
-    text-decoration: underline;
+    transition: background-color 0.2s ease;
   }
 
   .back-to-blog {

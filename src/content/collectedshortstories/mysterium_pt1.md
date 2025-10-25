@@ -6,8 +6,9 @@ description: "First part of a short story written for the Film TV Magazine."
 excerpt: "This is the first part of a short story originally published on the Film TV magazine in 2020."
 projects: ["Collected short stories"]
 categories: ["Fiction", "Lang [it]"]
-tags: ["fiction"]
 ---
+
+**1.**
 
 Avevo dato disposizioni precise. Le avevo impartite, le avevo ripetute, ma forse la volontà individuale non conta nulla e dietro la mia vita c’è uno spartito segreto che posso soltanto eseguire con maggiore o minore perizia, senza poter orientare le scelte di un arbitrio superiore. L’esistenza ridotta a esercizio di interpretazione di un destino.  
 
