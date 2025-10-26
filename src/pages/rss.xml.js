@@ -2,7 +2,7 @@ import rss from '@astrojs/rss';
 import { config } from '../config';
 
 export async function GET(context) {
-  const posts = import.meta.glob(['../content/ideas/**/*.{md,mdx}', '../content/murderheprompted/**/*.{md,mdx}', '../content/ilcommissariogpt/**/*.{md,mdx}'], { eager: true });
+  const posts = import.meta.glob(['../content/ideas/**/*.{md,mdx}', '../content/murderheprompted/**/*.{md,mdx}', '../content/ilcommissariogpt/**/*.{md,mdx}', '../content/collectedshortstories/**/*.{md,mdx}'])
   const items = Object.entries(posts)
     .filter(([path]) => !path.includes('/drafts/'))
     .map(([path, post]) => {
