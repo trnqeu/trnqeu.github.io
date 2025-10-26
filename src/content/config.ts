@@ -73,4 +73,21 @@ const ilcommissariogpt = defineCollection({
     }),
 });
 
-export const collections = { ideas, murderheprompted, collectedshortstories, drafts, ilcommissariogpt };
+const promptsoncanvas = defineCollection({
+        type: 'content',
+        schema: z.object({
+            title: z.string(),
+            description: z.string().optional(),
+            date: z.coerce.date(),
+            excerpt: z.string().optional(),
+            categories: z.array(z.string()).default([]),
+            tags: z.array(z.string()).default([]),
+            author: z.string().default('Anonymous'),
+            image: z.string().optional(),
+            frameStyle: z.enum(['simple', 'classic', 'gilded']),
+            }),
+});
+
+
+
+export const collections = { ideas, murderheprompted, collectedshortstories, drafts, ilcommissariogpt, promptsoncanvas};

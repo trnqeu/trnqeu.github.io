@@ -1,0 +1,24 @@
+.frame-simple {
+    background-color: #fff;
+    border: 15px solid #e0e0e0;
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    max-width: 400px;
+}
+
+.frame-classic {
+    background-color: #f4f1e9; 
+    border: 25px solid transparent;
+    border-image: url('/classic_frame.png') 30 round;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    margin: 20px;
+    max-width: 400 px;
+}
+
+.frame-gilded .content {
+    background: #fdfdfd;
+    padding: 20px;
+    border: 2px solid #c9a86b;
+}
