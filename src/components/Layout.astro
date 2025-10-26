@@ -95,10 +95,7 @@ const { title, description, showSidebar = false, image, type, publishedTime, can
           description: "<p>These cookies are necessary for the website to function properly and cannot be switched off. They help with things like logging in and setting your privacy preferences.</p>",
           required: true,
           onAccept: function() {
-            var cookieIcon = document.querySelector('#silktide-cookie-icon');
-            if (cookieIcon) {
-              cookieIcon.style.display = 'none';
-            }
+            console.log('Add logic for the required Necessary here');
           }
         },
         {
@@ -175,6 +172,29 @@ const { title, description, showSidebar = false, image, type, publishedTime, can
     });
   }
 
+</script>
+<script is:inline>
+  document.addEventListener('SilktideConsentChanged', function() {
+    if (!window.SilktideConsent) return;
+    var consent = window.SilktideConsent.getConsent();
+    if (consent && (consent.necessary || consent.analytics || consent.advertising)) {
+      var cookieIcon = document.querySelector('#silktide-cookie-icon');
+      if (cookieIcon) {
+        cookieIcon.style.display = 'none';
+      }
+    }
+  });
+
+  document.addEventListener('SilktideConsentReady', function() {
+    if (!window.SilktideConsent) return;
+    var consent = window.SilktideConsent.getConsent();
+    if (consent && (consent.necessary || consent.analytics || consent.advertising)) {
+      var cookieIcon = document.querySelector('#silktide-cookie-icon');
+      if (cookieIcon) {
+        cookieIcon.style.display = 'none';
+      }
+    }
+  });
 </script>
   </body>
 </html>
