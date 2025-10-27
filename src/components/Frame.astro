@@ -3,20 +3,20 @@
 import '../styles/frames.css';
 
 interface Props {
-    prompt: any; 
+    // This component now only needs to know which style to apply.
+    frameStyle?: string; 
 }
 
-const { prompt } = Astro.props;
+const { frameStyle } = Astro.props;
 
-
-const { Content } = await prompt.render();
-
-const frameClass = `frame-${prompt.frontmatter.frameStyle || 'simple'}`;
+// Use the passed style, or 'simple' as a fallback.
+const frameClass = `frame-${frameStyle || 'simple'}`;
 ---
 
 <div class={frameClass}>
   <div class="content">
-    <Content />
+    {/* This is a placeholder where the parent page will insert the content. */}
+    <slot />
   </div>
 </div>
 
@@ -30,7 +30,6 @@ const frameClass = `frame-${prompt.frontmatter.frameStyle || 'simple'}`;
     border-radius: 5px;
     height: 100%;
     box-sizing: border-box;
-    /* ✅ ADDED: This will make the text visible on your dark background */
-    color: #111; 
+    color: #111; /* Ensures text is visible on dark backgrounds */
   }
 </style>

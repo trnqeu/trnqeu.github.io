@@ -31,17 +31,28 @@ const sortedPosts = allPosts
     {sortedPosts.length > 0 ? (
       // ... inside your main page .astro file
 
-      <div class="posts-container">
-        {sortedPosts.map((post: any) => (
+     <div class="posts-container">
+        {sortedPosts.map((post: any) => {
+          // We get the Content component here, just like before.
+          const { Content } = post; 
+          return (
             <div class="post-item">
               <a href={post.url} class="frame-link">
-                <Frame prompt={post} />
+                {/* 
+                  ✅ KEY CHANGE: 
+                  - We pass the frameStyle as a simple prop.
+                  - We render the <Content /> component BETWEEN the <Frame> tags.
+                */}
+                <Frame frameStyle={post.frontmatter.frameStyle}>
+                  <Content />
+                </Frame>
               </a>
               <div class="caption">
                 <p class="caption-title">{post.frontmatter.title}</p>
               </div>
             </div>
-          ))}
+          );
+        })}
       </div>
     ) : (
       <div class="no-posts">
