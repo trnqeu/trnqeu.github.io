@@ -1,0 +1,133 @@
+---
+import Layout from '../../components/Layout.astro';
+import Frame from '../../components/Frame.astro';
+
+export async function getStaticPaths() {
+  const mdPostsGlob = import.meta.glob('../../content/promptsoncanvas/*.md', { eager: true });
+  const mdxPostsGlob = import.meta.glob('../../content/promptsoncanvas/*.mdx', { eager: true });
+  
+  const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
+  
+  return allPosts.map((post: any) => {
+    const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
+    
+    return {
+      params: { slug },
+      props: { post, url: `/promptsoncanvas/${slug}` }
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { frontmatter, Content } = post as any;
+
+const pageTitle = frontmatter.title;
+const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined;
+---
+
+<Layout 
+  title={pageTitle} 
+  description={frontmatter.description || frontmatter.excerpt}
+  type="article"
+  publishedTime={publishedTime}
+>
+  <article>
+    <header class="post-header">
+      <h1 class="post-title">{frontmatter.title}</h1>
+      
+      <div class="post-meta">
+        <time class="post-date" datetime={frontmatter.date}>
+          {new Date(frontmatter.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </time>
+      </div>
+    </header>
+
+    <Frame prompt={post} Content={Content} />
+
+    <footer class="post-footer">
+      <div class="post-navigation">
+        <a href="/projects/promptsoncanvas" class="back-to-blog">← Back to Prompts on Canvas</a>
+      </div>
+    </footer>
+  </article>
+</Layout>
+
+<style>
+  article {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .post-header {
+    margin-bottom: calc(var(--grid-unit) * 6);
+  }
+
+  .post-title {
+    font-family: var(--font-heading-primary);
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+    margin-bottom: calc(var(--grid-unit) * 3);
+  }
+
+  .post-meta {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--grid-unit) * 1.5);
+    margin-bottom: calc(var(--grid-unit) * 3);
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-footer {
+    border-top: 1px solid var(--color-border);
+    padding-top: calc(var(--grid-unit) * 3);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--grid-unit) * 3);
+  }
+
+  .back-to-blog {
+    font-family: var(--font-heading-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    padding: calc(var(--grid-unit)) calc(var(--grid-unit) * 2);
+    border: 2px solid var(--color-accent);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: inline-block;
+  }
+
+  .back-to-blog:hover,
+  .back-to-blog:focus {
+    background-color: var(--color-accent);
+    color: white;
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .post-title {
+      font-size: 2.25rem;
+    }
+
+    .post-meta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

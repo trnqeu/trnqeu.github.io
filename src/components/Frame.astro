@@ -1,0 +1,45 @@
+---
+import { type CollectionEntry } from 'astro:content';
+import '../styles/frames.css';
+
+interface Props {
+    prompt: CollectionEntry<'promptsoncanvas'>;
+    Content: any;
+}
+
+const { prompt, Content } = Astro.props;
+
+// Map the frameStyle from frontmatter to a CSS class
+const frameClass = `frame-${prompt.frontmatter.frameStyle}`;
+
+---
+
+<div class={frameClass}>
+  <div class="content">
+    <Content />
+    <p><em>{prompt.frontmatter.title}</em></p>
+    {prompt.frontmatter.artist && <p><small>{prompt.frontmatter.artist}, {prompt.frontmatter.year}</small></p>}
+  </div>
+</div>
+
+<style>
+  .content {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  em {
+    display: block;
+    margin-top: 1em;
+    font-style: italic;
+  }
+  small {
+    font-size: 0.8em;
+    color: #555;
+  }
+</style>
+
+
