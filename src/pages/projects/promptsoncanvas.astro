@@ -1,4 +1,5 @@
 ---
+// Your main page (e.g., src/pages/promptsoncanvas/index.astro)
 import Layout from '../../components/Layout.astro';
 import Frame from '../../components/Frame.astro';
 const base = import.meta.env.BASE_URL;
@@ -18,7 +19,7 @@ const sortedPosts = allPosts
   });
 ---
 
-<Layout title="Prompts on Canvas" description="A collection of prompts for generating images of famous paintings.">
+<Layout title="Prompts on Canvas" description="Masterpieces of generative art.">
   <div class="blog-page">
     <header class="blog-header">
       <h1 class="blog-title">Prompts on Canvas</h1>
@@ -33,9 +34,14 @@ const sortedPosts = allPosts
         {sortedPosts.map((post: any) => {
           const { Content } = post;
           return (
-            <a href={post.url} class="post-item">
-              <Frame prompt={post} Content={Content} />
-            </a>
+            <div class="post-item">
+              <a href={post.url} class="frame-link">
+                <Frame prompt={post} Content={Content} />
+              </a>
+              <div class="caption">
+                <p class="caption-title">{post.frontmatter.title}</p>
+              </div>
+            </div>
           );
         })}
       </div>
@@ -49,15 +55,14 @@ const sortedPosts = allPosts
 
 <style>
   .blog-page {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 0;
+    padding: 0 2rem;
   }
 
   .blog-header {
     text-align: center;
     margin-bottom: calc(var(--grid-unit) * 5);
-    padding; 0 1rem;
   }
 
   .blog-title {
@@ -75,12 +80,11 @@ const sortedPosts = allPosts
     font-size: 1.25rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
-    margin-bottom: calc(var(--grid-unit) * 4);
+    margin-bottom: calc(var(--grid-unit) * 3);
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
   }
-
 
   .blog-rule {
     height: 4px;
@@ -88,43 +92,45 @@ const sortedPosts = allPosts
     border: none;
     width: 120px;
     margin: 0 auto;
+    margin-bottom: calc(var(--grid-unit) * 4); 
   }
 
   .posts-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-    gap: calc(var(--grid-unit) * 4);
-    /* justify-items: center; */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: calc(var(--grid-unit) * 6);
   }
 
   .post-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .frame-link {
+    display: block;
     width: 100%;
-    text-decoration: none; /* Removes underline from link */
-    color: inherit; /* Keeps text color normal */
+    text-decoration: none;
+    color: inherit;
     transition: transform 0.2s ease-out;
+    margin-bottom: calc(var(--grid-unit) * 2);
+  }
+  
+  .frame-link:hover {
+      transform: scale(1.03);
+  }
+
+  .caption {
+    text-align: center;
+  }
+  
+  .caption-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
   }
 
   .no-posts {
     text-align: center;
     padding: calc(var(--grid-unit) * 6);
-    color: var(--color-text-muted);
-    font-style: italic;
-  }
-
-  .no-posts code {
-    background-color: var(--color-surface);
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-family: var(--font-mono);
-  }
-
-  @media (max-width: 768px) {
-    .blog-title {
-      font-size: 2.5rem;
-    }
-
-    .blog-description {
-      font-size: 1.125rem;
-    }
   }
 </style>

@@ -1,24 +1,22 @@
 ---
+// src/components/Frame.astro
 import { type CollectionEntry } from 'astro:content';
 import '../styles/frames.css';
 
 interface Props {
-    prompt: CollectionEntry<'promptsoncanvas'>;
+    prompt: any;
     Content: any;
 }
 
 const { prompt, Content } = Astro.props;
 
-// Map the frameStyle from frontmatter to a CSS class
-const frameClass = `frame-${prompt.frontmatter.frameStyle}`;
-
+// Use the frameStyle from frontmatter, or 'simple' as a fallback
+const frameClass = `frame-${prompt.frontmatter.frameStyle || 'simple'}`;
 ---
 
 <div class={frameClass}>
   <div class="content">
     <Content />
-    <p><em>{prompt.frontmatter.title}</em></p>
-    {prompt.frontmatter.artist && <p><small>{prompt.frontmatter.artist}, {prompt.frontmatter.year}</small></p>}
   </div>
 </div>
 
@@ -30,16 +28,8 @@ const frameClass = `frame-${prompt.frontmatter.frameStyle}`;
     background-color: #f5f5f5;
     padding: 20px;
     border-radius: 5px;
-  }
-  em {
-    display: block;
-    margin-top: 1em;
-    font-style: italic;
-  }
-  small {
-    font-size: 0.8em;
-    color: #555;
+    /* This ensures the content area fills the frame vertically */
+    height: 100%; 
+    box-sizing: border-box;
   }
 </style>
-
-
