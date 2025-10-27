@@ -29,20 +29,19 @@ const sortedPosts = allPosts
     </header>
 
     {sortedPosts.length > 0 ? (
+      // ... inside your main page .astro file
+
       <div class="posts-container">
-        {sortedPosts.map((post: any) => {
-          const { Content } = post;
-          return (
+        {sortedPosts.map((post: any) => (
             <div class="post-item">
               <a href={post.url} class="frame-link">
-                <Frame prompt={post} Content={Content} />
+                <Frame prompt={post} />
               </a>
               <div class="caption">
                 <p class="caption-title">{post.frontmatter.title}</p>
               </div>
             </div>
-          );
-        })}
+          ))}
       </div>
     ) : (
       <div class="no-posts">

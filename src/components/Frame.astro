@@ -1,16 +1,16 @@
 ---
 // src/components/Frame.astro
-import { type CollectionEntry } from 'astro:content';
 import '../styles/frames.css';
 
 interface Props {
-    prompt: any;
-    Content: any;
+    prompt: any; 
 }
 
-const { prompt, Content } = Astro.props;
+const { prompt } = Astro.props;
 
-// Use the frameStyle from frontmatter, or 'simple' as a fallback
+
+const { Content } = await prompt.render();
+
 const frameClass = `frame-${prompt.frontmatter.frameStyle || 'simple'}`;
 ---
 
@@ -28,8 +28,9 @@ const frameClass = `frame-${prompt.frontmatter.frameStyle || 'simple'}`;
     background-color: #f5f5f5;
     padding: 20px;
     border-radius: 5px;
-    /* This ensures the content area fills the frame vertically */
-    height: 100%; 
+    height: 100%;
     box-sizing: border-box;
+    /* ✅ ADDED: This will make the text visible on your dark background */
+    color: #111; 
   }
 </style>
