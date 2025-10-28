@@ -38,11 +38,6 @@ const sortedPosts = allPosts
           return (
             <div class="post-item">
               <a href={post.url} class="frame-link">
-                {/* 
-                  ✅ KEY CHANGE: 
-                  - We pass the frameStyle as a simple prop.
-                  - We render the <Content /> component BETWEEN the <Frame> tags.
-                */}
                 <Frame frameStyle={post.frontmatter.frameStyle}>
                   <Content />
                 </Frame>
@@ -98,11 +93,9 @@ const sortedPosts = allPosts
 
   .posts-container {
     display: grid;
-    /* This rule forces wider frames */
     grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-    /* This rule stops frames from stretching vertically */
     align-items: start;
-    gap: 3rem;
+    gap: 1.5rem;
   }
 
   .post-item {

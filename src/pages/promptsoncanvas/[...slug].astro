@@ -46,7 +46,10 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
       </div>
     </header>
 
-    <Frame prompt={post} Content={Content} />
+    <Frame frameStyle={frontmatter.frameStyle}>
+      <Content />
+    </Frame>
+    
 
     <footer class="post-footer">
       <div class="post-navigation">
