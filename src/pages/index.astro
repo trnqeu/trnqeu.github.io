@@ -9,7 +9,7 @@ const collectedShortStoriesMdxPostsGlob = import.meta.glob('../content/collected
 const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob), ...Object.values(collectedShortStoriesPostsGlob), ...Object.values(collectedShortStoriesMdxPostsGlob)] as any[];
 const sortedPosts = allPosts
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
-  .slice(0, 3);
+  .slice(0, 10);
 
 // Get the base path for creating correct links, which works on any domain
 const base = import.meta.env.BASE_URL;
@@ -44,6 +44,8 @@ const base = import.meta.env.BASE_URL;
                 ? 'murderheprompted/' 
                 : post.file.includes('/collectedshortstories/')
                 ? 'collectedshortstories/'
+                : post.file.includes('/promptsoncanvas/')
+                ? 'promptsoncanvas/'
                 : 'ideas/'; // All other posts go to the blog route
 
               // 2. Extract the clean filename (the slug)

@@ -28,40 +28,42 @@ const sortedPosts = allPosts
       <hr class="blog-rule" />
     </header>
 
-    {sortedPosts.length > 0 ? (
-      // ... inside your main page .astro file
-
-     <div class="posts-container">
-        {sortedPosts.map((post: any) => {
-          // We get the Content component here, just like before.
-          const { Content } = post; 
-          return (
-            <div class="post-item">
-              <a href={post.url} class="frame-link">
-                <Frame frameStyle={post.frontmatter.frameStyle}>
-                  <Content />
-                </Frame>
-              </a>
-              <div class="caption">
-                <p class="caption-title">{post.frontmatter.title}</p>
+    <div class="project-page"> 
+      {sortedPosts.length > 0 ? (
+        <div class="posts-container">
+          {sortedPosts.map((post: any) => {
+            const { Content } = post; 
+            return (
+              <div class="post-item">
+                <a href={post.url} class="frame-link">
+                  <Frame frameStyle={post.frontmatter.frameStyle}>
+                    <Content />
+                  </Frame>
+                </a>
+                <div class="caption">
+                  <p class="caption-title">{post.frontmatter.title}</p>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    ) : (
-      <div class="no-posts">
-        <p>No posts available yet. Start writing by creating files in <code>src/content/promptsoncanvas/</code></p>
-      </div>
-    )}
+            );
+          })}
+        </div>
+      ) : (
+        <div class="no-posts">
+          <p>No posts available yet. Start writing by creating files in <code>src/content/promptsoncanvas/</code></p>
+        </div>
+      )}
+    </div>
   </div>
 </Layout>
 
 <style>
   .blog-page {
-    max-width: 1600px;
-    margin: 0 auto;
     padding: 0 2rem;
+  }
+
+  .project-page {
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   .blog-header {
