@@ -43,7 +43,29 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
             day: 'numeric'
           })}
         </time>
+
+        {frontmatter.author && (
+            <span class="post-author">by {frontmatter.author}</span>
+        )}
       </div>
+
+      {frontmatter.projects && frontmatter.projects.length > 0 && (
+        <div class="post-projects">
+          <a href={`/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '')}`} class="project-tag">
+            {frontmatter.projects[0]}
+          </a>
+        </div>
+      )}
+
+      {frontmatter.categories && frontmatter.categories.length > 0 && (
+        <div class="post-categories">
+          {frontmatter.categories.map((category: string) => (
+            <a href={`/categories/${category.toLowerCase().split(' ')[0].replace('[', '').replace(']', '')}`} class="category-tag">
+              {category}
+            </a>
+          ))}
+        </div>
+      )}
     </header>
 
     <Frame frameStyle={frontmatter.frameStyle}>
@@ -87,12 +109,22 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     margin-bottom: calc(var(--grid-unit) * 3);
   }
 
-  .post-date {
+  .post-date, .post-author {
     font-family: var(--font-mono);
     font-size: 0.9rem;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  .post-projects {
+    margin-bottom: calc(var(--grid-unit) * 2);
+  }
+
+  .post-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--grid-unit));
   }
 
   .post-footer {
@@ -132,5 +164,37 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
       flex-direction: column;
       align-items: flex-start;
     }
+  }
+
+  .category-tag {
+    background-color: var(--color-text-primary);
+    color: white;
+    padding: calc(var(--grid-unit) / 2) calc(var(--grid-unit));
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+  }
+
+  .category-tag:hover,
+  .category-tag:focus {
+    background-color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  /* Dark mode category tag styles */
+  :global([data-theme="dark"]) .category-tag {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+  }
+
+  :global([data-theme="dark"]) .category-tag:hover,
+  :global([data-theme="dark"]) .category-tag:focus {
+    background-color: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
   }
 </style>
