@@ -3,12 +3,14 @@ title: "Mysterium"
 date: "2019-10-01"
 author: Stefano Trinchero
 description: "A short short story written for Film TV Magazine."
-excerpt: "This is a short story in four parts originally published on the Film TV magazine in 2020. It was supposed to be a novel. Maybe one day."
+excerpt: "This is a short story in four parts originally published on the Film TV magazine in 2020."
 projects: ["Collected short stories"]
 categories: ["Fiction", "Lang [it]"]
 ---
 
-## 1.
+[Download PDF](/documents/mysterium.pdf)
+
+**1.**
 
 Avevo dato disposizioni precise. Le avevo impartite, le avevo ripetute, ma forse la volontà individuale non conta nulla e dietro la mia vita c’è uno spartito segreto che posso soltanto eseguire con maggiore o minore perizia, senza poter orientare le scelte di un arbitrio superiore. L’esistenza ridotta a esercizio di interpretazione di un destino.  
 
@@ -39,7 +41,7 @@ Aveva ragione, in qualche modo. Non posso dire di detestare la musica ma sono un
 
 Il silenzio mi è sacro, eppure quella sera il mio breve rito è stato vergognosamente profanato. Nonostante le raccomandazioni, le suppliche, le minacce, ho sentito bussare per tre volte alla mia porta.
 
-## 2.
+**2.**
 
 Il sovrintendente. Proprio lui che aveva giurato di aver compreso le mie parole, lui che era quasi svenuto per avermi sentito formulare una richiesta tanto ovvia da minare le fondamenta della sua professionalità, ora spalancava la porta del mio camerino senza aver ricevuto da me un cenno o una parola che potessero essere scambiati per un invito. 
 
@@ -91,7 +93,7 @@ Nel porre la domanda ha allungato un braccio verso di me. Le dita scheletriche d
 
 Cercai di convincermi di essere vittima di un'illusione, di un potere di suggestione che avrei infranto facilmente. Ho capito che quella donna stava cercando di farmi contrarre un debito nei suoi confronti. Ho capito che voleva qualcosa da me ed era qualcosa di infinitamente prezioso. Ho capito tutto fin da subito eppure capire non mi è servito a nulla.
 
-## 3.
+**3**
 
 Torno spesso a setacciare ogni parola di quel breve dialogo chiedendomi dove e quando avrei potuto oppormi, protestare, interferire col destino. Ci penso così intensamente da illudermi di poter raggiungere il passato. La realtà svanisce e al suo posto i miei occhi inquadrano il ricordo, denso come un oggetto. Mi sorprendo a pronunciare intere frasi come se fossi ancora lì, dentro a quella stanza, davanti a lei.
 
@@ -183,4 +185,42 @@ Un tempo avrei accolto le sue parole come un’onta mortale, ma in quel momento 
 
 «Posso aiutarla», ha aggiunto. «Raggiunga Sarpi e insieme completerete il Mysterium.»
 
+**4**
 
+Io, che ho annullato intere tournée e rifiutato milioni solo per non dovermi sobbarcare viaggi ben più brevi, sono salito su tre diversi aerei, ognuno più piccolo e malfermo del precedente, per farmi condurre in un punto sperduto dell’India settentrionale dove Sarpi mi attendeva con la sua troupe. 
+
+L’atmosfera era tesa. Le riprese procedevano a rilento a causa degli ostacoli opposti dall’incombere dell’inverno. Le maestranze e gli attori erano sfiancati da settimane di riprese ad alta quota e forse per questo sono stato accolto da loro come un eroe, nella speranza che il mio contributo musicale potesse diradare l’incertezza che spingeva Sarpi a ripetere sempre le stesse scene senza mai trovare soddisfazione. C’erano stati piccoli incidenti provocati dalla sfortuna o dall’impreparazione della troupe ad affrontare la montagna. I ritardi si accumulavano, intere scene venivano cancellate, riscritte o improvvisate senza una logica apparente. Sarpi era l’unico ad avere piena coscienza di quel caos. 
+
+Il film raccontava la storia di una gigantesca compagnia di attori e orchestrali che risaliva una montagna sacra per mettere in scena il Mysterium di Scriabin, una delle grandi utopie artistiche irrealizzate del ‘900. Era facile intuire come Sarpi alimentasse la frustrazione di attori e musicisti per trasferire alla finzione il dolore, la fatica, l’isteria da loro accumulati nella realtà. Manipolava materiali altamente infiammabili con l’intento di provocare un’esplosione controllata. 
+
+Io mi sentivo esonerato da tutte quelle difficoltà. Non potevo lamentarmi di nulla, 
+nemmeno del freddo. Alloggiavo a 2000 metri di altitudine in un lussuoso resort per ricchi turisti in cerca di una confortevole avventura himalayana. I locali erano stati interamente affittati dalla produzione e mi era stata destinata la suite più grande. Al centro del salotto era posato un magnifico Steinway degli anni ‘20 perfettamente restaurato. Ogni sera Sarpi mi portava i giornalieri da visionare. Li proiettava contro l’unica parete spoglia della stanza. Osservavo in silenzio, lasciavo che le immagini guidassero le dita, accennavo motivi sempre più lunghi, sempre più complessi. 
+
+Sarpi non commentava mai eppure percepivo la sua soddisfazione. Eravamo contaminati da un’ispirazione reciproca, i nostri lavori si rincorrevano l’un l’altro intrecciandosi come fili di seta che avrebbero condotto lo spettatore alla sontuosa scena finale, quella che avrebbe avuto per protagonista Ecaterina Glazkhova.
+
+«Quando arriverà madame Glazkhova?»
+
+«Presto», mi ha risposto laconicamente Sarpi. 
+
+ «In cosa consiste la sua parte?»
+
+«Lo scopo del Mysterium è la ricerca del mistero ultimo e madame Glazkhova è la protagonista del film. Ecco qual è la sua parte: il grande mistero. Dio, o la morte, non ho mai capito la differenza.»
+
+Una mattina Sarpi ha bussato alla mia porta. Ero sorpreso di vederlo a quell’ora.
+
+«Maestro, mi servono le sue mani.»
+
+«Le mie mani sono al suo servizio», ho risposto indicando il pianoforte alle mie spalle.
+
+«Ho bisogno di riprenderle. Oggi giriamo la scena finale e voglio inquadrarle le mani mentre esegue l’etude al centro del ghiacciaio. Non ci vorrà molto.»
+
+«Ma lo studio non è ancora completo!»
+
+«Non lo sarà mai se non smetterà di comporlo. La costumista sarà qui tra poco. La aspetto di sotto.»
+
+Avrei voluto chiedere di nuovo notizie di Ecaterina Glazkhova ma non è servito. Percepivo la sua presenza intorno a me, mi sentivo nuovamente pervaso da quell’incapacità di agire secondo la mia volontà. Non ho potuto che assecondare la richiesta di Sarpi.
+
+Un pianoforte a coda era posato al centro di una distesa di ghiaccio. Affiorava dal sottile strato di neve fresca caduto la notte precedente. Ai lati del pianoforte era stati collocati una macchina da presa puntata sulla tastiera e un microfono direzionato verso la cassa armonica. Quando ho raggiunto il pianoforte, accompagnato da un’assistente di produzione, ero spossato dal viaggio in elicottero e dalla lunga camminata su un terreno insidioso, eppure mi sono seduto, ho atteso 
+il segnale di Sarpi e ho iniziato a suonare la mia personale ricostruzione del finale del Mysterium. 
+
+La tempesta è arrivata all’improvviso. Il livello di concentrazione che avevo raggiunto mi ha impedito di veder sparire l’orizzonte. L’aria si è oscurata, la neve ha iniziato a cadere con violenza in ogni direzione togliendomi vista e respiro. Ho commesso l’errore di alzarmi dallo sgabello, di iniziare a camminare senza una meta, senza rendermi conto che in questo modo avrei depistato i soccorsi. Procedevo camminando attraverso il muro di neve quando un bagliore ha rischiarato per un momento la cima della montagna sopra di me. Come in un incubo potevo attraversare grandi distanze con lo sguardo. Ho visto Ecaterina Glazkhova incastonata sulla cima della montagna, una mostruosa sirena dal busto di donna, la cui parte inferiore del corpo era costituita da una sterminata distesa di roccia e ghiaccio. Ho sentito il suo sguardo posarsi su di me, l’ho vista scomparire inghiottita dalla tempesta. Stremato dal gelo, ho vagato per ore attraverso un deserto di ghiaccio prima di perdere conoscenza. Mi sono risvegliato in un letto d’ospedale. Non ricordavo nulla. Volti sconosciuti mi interrogavano senza ricevere risposta. Ho sollevato le mani. Le ho subito riabbassate nella speranza di cancellare l’orrore ma oggi so che quello sguardo durerà per tutta la vita. Non è servito chiudere gli occhi per smettere di vedere le due falangi amputate per l’ipotermia. Ecco come ho potuto smettere di essere il più grande pianista vivente per diventare un compositore mediocre. Forse un giorno il mio Studio per pianoforte e note fantasma verrà annoverato, al fianco dei concerti per mano sinistra di Hindemith e Ravel, come un caposaldo della letteratura pianistica per mutilati.
