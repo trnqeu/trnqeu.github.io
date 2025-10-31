@@ -3,8 +3,8 @@
     border: 15px solid #000000;
     padding: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-    max-width: 400px;
+    /* margin: 20px;
+    max-width: 400px; */
 }
 
 .frame-classic {
@@ -13,8 +13,8 @@
     border-image: url('/classic_frame.png') 30 round;
     padding: 20px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    margin: 20px;
-    max-width: 400 px;
+    /* margin: 20px;
+    max-width: 400 px; */
 }
 
 .frame-gilded .content {

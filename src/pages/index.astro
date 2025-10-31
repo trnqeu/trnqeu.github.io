@@ -6,7 +6,9 @@ const murderHePromptedPostsGlob = import.meta.glob('../content/murderheprompted/
 const murderHePromptedMdxPostsGlob = import.meta.glob('../content/murderheprompted/*.mdx', { eager: true });
 const collectedShortStoriesPostsGlob = import.meta.glob('../content/collectedshortstories/*.md', { eager: true });
 const collectedShortStoriesMdxPostsGlob = import.meta.glob('../content/collectedshortstories/*.mdx', { eager: true });
-const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob), ...Object.values(collectedShortStoriesPostsGlob), ...Object.values(collectedShortStoriesMdxPostsGlob)] as any[];
+const promptsOnCanvasPostsGlob = import.meta.glob('../content/promptsoncanvas/*.md', { eager: true });
+const promptsOnCanvasMdxPostsGlob = import.meta.glob('../content/promptsoncanvas/*.mdx', { eager: true });
+const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob), ...Object.values(collectedShortStoriesPostsGlob), ...Object.values(collectedShortStoriesMdxPostsGlob), ...Object.values(promptsOnCanvasPostsGlob), ...Object.values(promptsOnCanvasMdxPostsGlob)] as any[];
 const sortedPosts = allPosts
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .slice(0, 10);

@@ -62,7 +62,8 @@ const sortedPosts = allPosts
   }
 
   .project-page {
-    max-width: 1200px;
+    /* max-width: 1200px; */
+    max-width: 1440px;
     margin: 0 auto;
   }
 
@@ -95,14 +96,24 @@ const sortedPosts = allPosts
 
   .posts-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+    /* 
+      Spiegazione della nuova regola:
+      - Usiamo '1fr 1fr' per creare due colonne di larghezza uguale.
+      - Il browser le farà occupare tutto lo spazio disponibile nel .project-page.
+    */
+    grid-template-columns: 1fr 1fr;
     align-items: start;
-    gap: 1.5rem;
+    /* Riduciamo lo spazio tra i quadri */
+    gap: 1.5rem; 
+    /* Centriamo la griglia nel suo contenitore */
+    justify-content: center;
   }
 
   .post-item {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    /* max-width: 520px; */
   }
 
   .frame-link {
@@ -128,4 +139,16 @@ const sortedPosts = allPosts
     color: var(--color-text-secondary);
     text-align: center;
   }
+
+  @media (max-width: 768px) {
+    .posts-container {
+      /* Su mobile, torniamo a una colonna sola */
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* .post-item :global(.content p) {
+  font-size: 0.8rem; 
+  line-height: 1.4; 
+} */
 </style>
