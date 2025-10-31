@@ -22,3 +22,7 @@
     padding: 20px;
     border: 2px solid #c9a86b;
 }
+
+[data-theme="dark"] .frame-simple {
+    border-color: #1d1c19; /* dark mode */
+}
