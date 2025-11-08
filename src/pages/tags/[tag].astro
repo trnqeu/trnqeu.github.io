@@ -64,6 +64,11 @@ function getUrlFromFile(file) {
                 day: 'numeric'
               })}
             </time>
+            {post.frontmatter.lang && (
+              <a href={`${base}language/${post.frontmatter.lang.toLowerCase()}`} class="post-lang">
+                {post.frontmatter.lang}
+              </a>
+            )}
           </div>
           
           {post.frontmatter.excerpt && (
@@ -165,6 +170,18 @@ function getUrlFromFile(file) {
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  .post-lang {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-lang:hover {
+    color: var(--color-accent);
   }
 
   .post-excerpt {

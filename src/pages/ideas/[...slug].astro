@@ -55,7 +55,7 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
         )}
 
         {frontmatter.lang && (
-            <span class="post-lang">{frontmatter.lang}</span>
+            <a href={`/language/${frontmatter.lang.toLowerCase()}`} class="post-lang">{frontmatter.lang}</a>
         )}
 
        {frontmatter.projects && frontmatter.projects.length > 0 && (
@@ -161,6 +161,10 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  .post-lang:hover {
+    color: var(--color-accent);
   }
 
   /* .post-author::before {

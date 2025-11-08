@@ -53,6 +53,10 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
           })}
         </time>
 
+        {frontmatter.lang && (
+            <a href={`/language/${frontmatter.lang.toLowerCase()}`} class="post-lang">{frontmatter.lang}</a>
+        )}
+
         <div class="project-link-meta">
           Project: <a href="/projects/il-commissario-gpt">I casi del Commissario GPT</a>
         </div>
@@ -137,6 +141,18 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  .post-lang {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-lang:hover {
+    color: var(--color-accent);
   }
 
   .post-reading-time {

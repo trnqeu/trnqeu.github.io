@@ -5,31 +5,29 @@ export async function getStaticPaths() {
   const allPostsGlob = import.meta.glob('../../content/**/*.{md,mdx}', { eager: true });
   const allPosts = Object.values(allPostsGlob) as any[];
   
-  const allCategories = new Set<string>();
+  const allLanguages = new Set<string>();
   allPosts.forEach((post: any) => {
-    if (post.frontmatter.categories) {
-      post.frontmatter.categories.forEach((category: string) => {
-        allCategories.add(category.toLowerCase());
-      });
+    if (post.frontmatter.lang) {
+      allLanguages.add(post.frontmatter.lang.toLowerCase());
     }
   });
 
-  return Array.from(allCategories).map((category: string) => {
-    const postsWithCategory = allPosts.filter((post: any) => 
-      post.frontmatter.categories && post.frontmatter.categories.map(c => c.toLowerCase()).includes(category)
+  return Array.from(allLanguages).map((language: string) => {
+    const postsWithLanguage = allPosts.filter((post: any) => 
+      post.frontmatter.lang && post.frontmatter.lang.toLowerCase() === language
     ).sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
 
     return {
-      params: { category },
+      params: { language },
       props: {
-        category,
-        posts: postsWithCategory
+        language,
+        posts: postsWithLanguage
       }
     };
   });
 }
 
-const { category, posts } = Astro.props;
+const { language, posts } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
 function getUrlFromFile(file) {
@@ -37,12 +35,12 @@ function getUrlFromFile(file) {
 }
 ---
 
-<Layout title={`Category: ${category}`} description={`All posts in category ${category}`}>
-  <div class="category-page">
+<Layout title={`Language: ${language}`} description={`All posts in ${language}`}>
+  <div class="language-page">
     <header class="page-header">
-      <h1 class="page-title">Category: {category}</h1>
+      <h1 class="page-title">Language: {language}</h1>
       <p class="page-description">
-        {posts.length} article{posts.length === 1 ? '' : 's'} in this category
+        {posts.length} article{posts.length === 1 ? '' : 's'} in this language
       </p>
       <hr class="page-rule" />
     </header>
@@ -64,11 +62,6 @@ function getUrlFromFile(file) {
                 day: 'numeric'
               })}
             </time>
-            {post.frontmatter.lang && (
-              <a href={`${base}language/${post.frontmatter.lang.toLowerCase()}`} class="post-lang">
-                {post.frontmatter.lang}
-              </a>
-            )}
           </div>
           
           {post.frontmatter.excerpt && (
@@ -83,13 +76,13 @@ function getUrlFromFile(file) {
     </div>
 
     <div class="page-navigation">
-      <a href={`${base}categories`} class="back-link">← Back to All Categories</a>
+      <a href={`${base}languages`} class="back-link">← All Languages</a>
     </div>
   </div>
 </Layout>
 
 <style>
-  .category-page {
+  .language-page {
     max-width: 800px;
     margin: 0 auto;
   }
@@ -170,18 +163,6 @@ function getUrlFromFile(file) {
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-  }
-
-  .post-lang {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .post-lang:hover {
-    color: var(--color-accent);
   }
 
   .post-excerpt {

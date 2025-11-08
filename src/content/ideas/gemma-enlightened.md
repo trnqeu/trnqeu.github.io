@@ -5,9 +5,9 @@ date: "2025-01-10"
 description: "A Kaggle competition submission to fine-tune Gemma-2 to preserve the words and thought of the Italian Enlightenment philosophy."
 excerpt: "Can a language model become an innovative tool for preserving a specific cultural context? This project is an attempt to fine-tune Gemma 2B to preserve a system of thought and the specific language used to articulate it."
 projects: ["Ideas"]
-categories: ["AI", "NLP", "History", "Lang [eng]"]
+categories: ["AI", "NLP", "History"]
 tags: ["Gemma", "Fine-tuning", "Enlightenment", "Italian History"]
-
+lang: "en"
 ---
 
 *This text was originally [published on Kaggle](https://www.kaggle.com/code/stefanotrinchero/gemma-enlightened) as a submission for the contest [Google - Unlock Global Communication with Gemma](https://www.kaggle.com/competitions/gemma-language-tuning)* 
@@ -496,7 +496,7 @@ len(df)
 df.head()
 ```
 
-```{=html}
+```
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -898,4 +898,8 @@ dataset could yield even more refined outputs---perhaps with longer and
 more structured responses---the initial results are encouraging and
 suggest that this approach could play a significant role in future
 efforts to preserve and engage with cultural heritage.
+
+
+
+
 

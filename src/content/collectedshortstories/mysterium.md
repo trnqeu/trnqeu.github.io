@@ -5,7 +5,8 @@ author: Stefano Trinchero
 description: "A short short story written for Film TV Magazine."
 excerpt: "This is a short story in four parts originally published on the Film TV magazine in 2020."
 projects: ["Collected short stories"]
-categories: ["Fiction", "Lang [it]"]
+categories: ["Fiction"]
+lang: "it"
 ---
 
 [Download PDF](/documents/mysterium.pdf)

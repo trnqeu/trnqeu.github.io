@@ -47,6 +47,10 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
         {frontmatter.author && (
             <span class="post-author">by {frontmatter.author}</span>
         )}
+
+        {frontmatter.lang && (
+            <a href={`/language/${frontmatter.lang.toLowerCase()}`} class="post-lang">{frontmatter.lang}</a>
+        )}
       </div>
 
       {frontmatter.projects && frontmatter.projects.length > 0 && (
@@ -109,12 +113,16 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     margin-bottom: calc(var(--grid-unit) * 3);
   }
 
-  .post-date, .post-author {
+  .post-date, .post-author, .post-lang {
     font-family: var(--font-mono);
     font-size: 0.9rem;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  .post-lang:hover {
+    color: var(--color-accent);
   }
 
   .post-projects {

@@ -1,6 +1,7 @@
 ---
 title: "Everything is an icon"
 date: 2025-10-09
+lang: "en"
 ---
 
 Everything's an icon these days.

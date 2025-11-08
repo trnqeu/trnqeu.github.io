@@ -5,6 +5,7 @@ description: "Exploring the fascinating intersection between Bauhaus functionali
 excerpt: "An examination of how opposing design philosophies can create compelling visual narratives in contemporary digital spaces."
 categories: ["Design", "Typography", "History"]
 tags: ["Bauhaus", "Modernism", "Web Design", "Visual Culture"]
+lang: "en"
 ---
 
 # The Aesthetic Tension of Modernist Design

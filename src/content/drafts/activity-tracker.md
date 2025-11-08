@@ -5,6 +5,7 @@ description: "My personal learning tracker"
 excerpt: "I'm quite the compulsory learner, so I'm trying to keep track of all the courses and tutorials I do."
 categories: ["Learning"]
 tags: ["Learning", "Coding"]
+lang: "en"
 ---
 
 # My personal learning tracker

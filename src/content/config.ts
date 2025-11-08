@@ -13,6 +13,7 @@ const ideas = defineCollection({
         tags: z.array(z.string()).default([]),
         author: z.string().default('Anonymous'),
         image: z.string().optional(),
+        lang: z.string(),
     }),
 });
 
@@ -27,6 +28,7 @@ const murderheprompted = defineCollection({
         tags: z.array(z.string()).default([]),
         author: z.string().default('Anonymous'),
         image: z.string().optional(),
+        lang: z.string(),
     }),
 });
 
@@ -41,6 +43,7 @@ const collectedshortstories = defineCollection({
         tags: z.array(z.string()).default([]),
         author: z.string().default('Anonymous'),
         image: z.string().optional(),
+        lang: z.string(),
     }),
 });
 
@@ -56,6 +59,7 @@ const drafts = defineCollection({
         tags: z.array(z.string()).default([]),
         author: z.string().default('Anonymous'),
         image: z.string().optional(),
+        lang: z.string(),
     }),
 });
 
@@ -70,6 +74,7 @@ const ilcommissariogpt = defineCollection({
         tags: z.array(z.string()).default([]),
         author: z.string().default('Anonymous'),
         image: z.string().optional(),
+        lang: z.string(),
     }),
 });
 
@@ -85,6 +90,7 @@ const promptsoncanvas = defineCollection({
             author: z.string().default('Anonymous'),
             image: z.string().optional(),
             frameStyle: z.enum(['simple', 'classic', 'gilded']),
+            lang: z.string(),
             }),
 });
 
