@@ -2,8 +2,8 @@
 title: "Mysterium"
 date: "2019-10-01"
 author: Stefano Trinchero
-description: "A short short story written for Film TV Magazine."
-excerpt: "This is a short story in four parts originally published on the Film TV magazine in 2020."
+description: "Racconto scritto nel 2019 per la rivista Film TV."
+excerpt: "Un racconto in quattro parti scritto nel 2019 e pubblicato nel 2020 all'interno della rubrica 'Feuilleton' della rivista Film TV. Editing a cura di Carolina Crespi."
 projects: ["Collected short stories"]
 categories: ["Fiction"]
 lang: "it"
