@@ -6,8 +6,8 @@ import { calculateReadingTime, extractTextFromMarkdown } from '../../utils/readi
 
 export async function getStaticPaths() {
   // Support both .md and .mdx files
-  const mdPostsGlob = import.meta.glob('../../content/collectedshortstories/*.md', { eager: true });
-  const mdxPostsGlob = import.meta.glob('../../content/collectedshortstories/*.mdx', { eager: true });
+  const mdPostsGlob = import.meta.glob('../../content/shortstories/*.md', { eager: true });
+  const mdxPostsGlob = import.meta.glob('../../content/shortstories/*.mdx', { eager: true });
   
   const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
   
@@ -22,7 +22,7 @@ export async function getStaticPaths() {
     
     return {
       params: { slug },
-      props: { post, readingTime, tocHeadings, url: `/collectedshortstories/${slug}` }
+      props: { post, readingTime, tocHeadings, url: `/shortstories/${slug}` }
     };
   });
 }
@@ -52,6 +52,17 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
             day: 'numeric'
           })}
         </time>
+        {frontmatter.originalDate && (
+          <>
+            <time class="post-original-date" datetime={frontmatter.originalDate}>
+              Original date: {new Date(frontmatter.originalDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+          </>
+        )}
 
         {frontmatter.author && (
             <span class="post-author">by {frontmatter.author}</span>
@@ -83,6 +94,10 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
           </div>
         )}
       </div>
+
+      {frontmatter.description && (
+        <p class="post-description">{frontmatter.description}</p>
+      )}
       
       <!-- {frontmatter.excerpt && (
         <p class="post-excerpt">{frontmatter.excerpt}</p>
@@ -145,13 +160,21 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     margin-bottom: calc(var(--grid-unit) * 3);
   }
 
-  .post-date {
+  .post-date,
+  .post-original-date {
     font-family: var(--font-mono);
     font-size: 0.9rem;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
+
+  .post-original-date::before {
+    content: "•";
+    margin: 0 calc(var(--grid-unit));
+    color: var(--color-border);
+  }
+
 /* 
   .post-author {
     font-family: var(--font-mono);
@@ -223,6 +246,14 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     background-color: var(--color-accent);
     color: white;
     border-color: var(--color-accent);
+  }
+
+  .post-description {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: 0;
   }
 
   .post-excerpt {

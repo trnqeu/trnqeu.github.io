@@ -1,8 +1,8 @@
 ---
 import Layout from '../../components/Layout.astro';
 
-const collectionName = 'collectedshortstories';
-const collectionGlob = import.meta.glob('../../content/collectedshortstories/**/*.{md,mdx}', { eager: true });
+const collectionName = 'shortstories';
+const collectionGlob = import.meta.glob('../../content/shortstories/**/*.{md,mdx}', { eager: true });
 const posts = Object.values(collectionGlob) as any[];
 
 posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date(b.frontmatter.date).getTime());
@@ -10,7 +10,7 @@ posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date
 const base = import.meta.env.BASE_URL;
 ---
 
-<Layout title="Collected short stories" description="An archive for a couple of short stories I've written back in the day.">
+<Layout title="Short stories" description="An archive for a couple of short stories I've written back in the day.">
   <div class="project-page">
     <header class="page-header">
       <h1 class="page-title">Collected short stories</h1>

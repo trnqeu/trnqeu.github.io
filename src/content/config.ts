@@ -32,7 +32,7 @@ const murderheprompted = defineCollection({
     }),
 });
 
-const collectedshortstories = defineCollection({
+const shortstories = defineCollection({
     type: 'content',
     schema: z.object({
         title: z.string(),
@@ -44,6 +44,7 @@ const collectedshortstories = defineCollection({
         author: z.string().default('Anonymous'),
         image: z.string().optional(),
         lang: z.string(),
+        originalDate: z.coerce.date().optional(),
     }),
 });
 
@@ -96,4 +97,4 @@ const promptsoncanvas = defineCollection({
 
 
 
-export const collections = { ideas, murderheprompted, collectedshortstories, drafts, ilcommissariogpt, promptsoncanvas};
+export const collections = { ideas, murderheprompted, shortstories, drafts, ilcommissariogpt, promptsoncanvas};

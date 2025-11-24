@@ -6,7 +6,7 @@ export async function GET() {
   const collections = {
     ideas: await getCollection('ideas'),
     murderheprompted: await getCollection('murderheprompted'),
-    collectedshortstories: await getCollection('collectedshortstories'),
+    shortstories: await getCollection('shortstories'),
     ilcommissariogpt: await getCollection('ilcommissariogpt'),
     promptsoncanvas: await getCollection('promptsoncanvas'),
   };
