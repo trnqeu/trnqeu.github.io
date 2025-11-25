@@ -89,6 +89,7 @@ Non so perché me la sono presa con i succhi di frutta, sarà stato l’imbarazz
 «Forse mi è rimasto un cioccolatino da qualche parte.»
 
 Sono andato a recuperare un cioccolatino che sarà stato vecchio di due anni. Non mi ricordo neanche dove l’avevo preso. Dal colore sembrava ancora buono e il bambino è stato contento di mangiarselo. Da bere, alla fine, non gli ho dato niente.
+
 Ho acceso il caffè e sono rimasto in cucina ad aspettare che venisse su, per togliermi un attimo dall’imbarazzo. Mi è spiaciuto lasciarli da soli ma volevo prima cercare qualcosa di intelligente da dire. Non mi è venuto in mente niente e sono tornato di là con la tazzina in una mano e il barattolo dello zucchero nell’altra.
 
 «Tu non lo prendi?», mi ha chiesto.

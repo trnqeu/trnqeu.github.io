@@ -8,7 +8,7 @@ export interface Props {
   canonical?: string;
 }
 
-import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+import { config, SITE_TITLE, SITE_DESCRIPTION } from '../config';
 
 const {
   title = SITE_TITLE,
@@ -22,11 +22,20 @@ const {
 const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`;
 const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: config.author.name,
+  url: config.siteUrl,
+  sameAs: Object.values(config.social).filter(link => link),
+  email: config.social.email,
+};
 ---
 
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
-<meta name="author" content="Stefano Trinchero" />
+<meta name="author" content={config.author.name} />
 
 <link rel="canonical" href={canonicalURL} />
 
@@ -48,3 +57,5 @@ const imageURL = new URL(image, Astro.site);
 
 <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
 <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
+<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
