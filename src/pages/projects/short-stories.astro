@@ -60,7 +60,7 @@ const base = import.meta.env.BASE_URL;
     const postsList = document.querySelector('.posts-list');
     const posts = Array.from(postsList.querySelectorAll('.post-item'));
 
-    let isAscending = true;
+    let isAscending = false;
 
     sortToggle.addEventListener('click', () => {
       isAscending = !isAscending;

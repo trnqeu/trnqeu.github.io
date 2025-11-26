@@ -36,6 +36,7 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
   description={frontmatter.description || frontmatter.excerpt}
   type="article"
   publishedTime={publishedTime}
+  lang={frontmatter.lang}
 >
   <article class="blog-post">
     <header class="post-header">
@@ -43,7 +44,7 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
       
       <div class="post-meta">
         <time class="post-date" datetime={frontmatter.date}>
-          {new Date(frontmatter.date).toLocaleDateString('en-US', {
+          {new Date(frontmatter.date).toLocaleDateString(frontmatter.lang || 'en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
