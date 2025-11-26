@@ -5,7 +5,7 @@ const collectionName = 'shortstories';
 const collectionGlob = import.meta.glob('../../content/shortstories/**/*.{md,mdx}', { eager: true });
 const posts = Object.values(collectionGlob) as any[];
 
-posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date(b.frontmatter.date).getTime());
+posts.sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
 
 const base = import.meta.env.BASE_URL;
 ---
@@ -19,7 +19,7 @@ const base = import.meta.env.BASE_URL;
     </header>
 
     <div class="sort-controls">
-      <button id="sort-toggle">Sort by Date (Newest First)</button>
+      <button id="sort-toggle">Sort by Date (Oldest First)</button>
     </div>
     <div class="posts-list">
       {posts.map((post: any) => (
