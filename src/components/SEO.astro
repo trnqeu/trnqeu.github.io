@@ -6,6 +6,7 @@ export interface Props {
   type?: 'website' | 'article';
   publishedTime?: string;
   canonical?: string;
+  addHreflangLinks?: boolean;
 }
 
 import { config, SITE_TITLE, SITE_DESCRIPTION } from '../config';
@@ -17,6 +18,7 @@ const {
   type = 'website',
   publishedTime,
   canonical,
+  addHreflangLinks = false,
 } = Astro.props;
 
 const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`;
@@ -38,6 +40,14 @@ const personSchema = {
 <meta name="author" content={config.author.name} />
 
 <link rel="canonical" href={canonicalURL} />
+
+{addHreflangLinks && (
+  <>
+    <link rel="alternate" hreflang="it" href={new URL('/language/it', Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL('/language/en', Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+  </>
+)}
 
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
