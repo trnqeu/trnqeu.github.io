@@ -1,15 +1,15 @@
 ---
-import Layout from '../components/Layout.astro';
-import { config } from '../config';
+import Layout from '../../components/Layout.astro';
+import { config } from '../../config';
 
 const { title, author, social } = config;
-const pageDescription = `Scopri di più su ${author.name} e sul blog ${title}`;
+const pageDescription = `Learn more about ${author.name} and the ${title} blog`;
 ---
 
-<Layout title={`Chi sono | ${title}`} description={pageDescription} lang="it">
+<Layout title={`About | ${title}`} description={pageDescription} lang="en">
   <div class="about-page">
     <header class="page-header">
-      <h2 class="page-title">Chi sono</h2>
+      <h2 class="page-title">About</h2>
       <!-- <hr class="page-rule" /> -->
     </header>
 
@@ -75,34 +75,30 @@ const pageDescription = `Scopri di più su ${author.name} e sul blog ${title}`;
     </div>
 
     <div class="content-section">
+      <h2>About This Website</h2>
       <p>
-      Ciao! Qui Stefano Trinchero. 
-<br>    
-
-      Ho creato questo sito per archiviare e pubblicare alcuni progetti e idee a cui ho lavorato negli ultimi tempi.
+        Hi. Stefano Trinchero here. 
 <br>
-
-      Di solito si tratta di racconti o pensieri su temi vari quali la programmazione, l'intelligenza artificiale, il tempo, gli archivi, la memoria, a volte addirittura il buddismo. 
 <br>
-      
-      Insomma, se mi passa per la testa e ho voglia di scriverlo lo metto qui. Altrimenti lo lascio passare.
+        I created this website because I needed a place to dump projects and ideas and short stories and other stuff I've been working on.
+<br>
+<br>
+        It's about whatever goes through my mind, really, and usually my mind get stuck on literary fiction, or programming, or AI, archives, time, memory, even buddhism sometimes. 
+<br>
+        I like having a laugh from time to time, so I do my best to write funny stuff. 
 <br><br>
-
-
-      Non aspettatevi consistenza o regolarità negli aggiornamenti. 
-<br>
-
-      Troverete contenuti in due lingue, in italiano e in inglese. 
-      Mi scuso per la confusione ma cerco di creare i contenuti nella lingua che di volta in volta ritengo più indicata.
+        Don't expect consistency, or updates regularity, or any kind of meaning or <i>file rouge</i>. 
+<br>      
+        Just feel free to browse around, see if something catches your attention.
 <br><br>
-
-      Fate un giro. Spero troverete qualcosa di interessante.
-
+        You will find content in two different languages, Italian and English. I apologize for the confusion. 
+<br><br>
+        Thanks for sticking around.
+<br>
       </p>
     </div>
   </div>
   
-
 </Layout>
 
 <style>
