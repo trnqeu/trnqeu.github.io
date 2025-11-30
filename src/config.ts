@@ -3,7 +3,10 @@ export interface SiteConfig {
   description: string;
   author: {
     name: string;
-    bio: string;
+    bio: {
+      it: string;
+      en: string;
+    };
     avatar?: string;
   };
   social: {
@@ -22,7 +25,10 @@ export const config: SiteConfig = {
   description: "Stefano Trinchero's Personal Website. Contains human slop, code snippets, ideas on AI, programming, archives, time and whatever goes through my mind. Home of the 'Murder, he prompted' series.",
   author: {
     name: "Stefano Trinchero",
-    bio: "Self-proclaimed data scientist, Self-taught Grind Coder, Occasional Writer.",
+    bio: {
+      it: "Nessuno in particolare",
+      en: "Self-proclaimed data scientist, Self-taught Grind Coder, Occasional Writer.",
+    },
     // avatar: "/images/avatar.jpg" // Uncomment and add your avatar image to public/images/
   },
   social: {

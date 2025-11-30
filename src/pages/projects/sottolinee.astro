@@ -16,25 +16,25 @@ const randomQuoteIndex = Math.floor(Math.random() * randomBook.quotes.length);
 const randomQuote = randomBook.quotes[randomQuoteIndex];
 ---
 
-<Layout title="Underlines" description="A collection of quotes from the books I've read.">
+<Layout title="Sottolinee" description="Una collezione di sottolineature da libri che ho letto.">
   <div class="project-page">
     <!-- Page Header -->
     <header class="page-header">
-      <h1 class="page-title">Underlines</h1>
-      <p class="page-description">A collection of quotes from the books I've read.</p>
+      <h1 class="page-title">Sottolinee</h1>
+      <p class="page-description">Una collezione di sottolineature.</p>
       <hr class="page-rule" />
     </header>
 
     <!-- Random Quote Block -->
     <div class="random-quote-block">
-      <h3 class="random-quote-title">One random quote:</h3>
+      <h3 class="random-quote-title">Una citazione a caso:</h3>
       <blockquote class="random-quote">
         <p>{randomQuote}</p>
         <footer>
           <cite>{randomBook.title} - {randomBook.author}</cite>
         </footer>
       </blockquote>
-      <button id="refresh-quote">Refresh Quote</button>
+      <button id="refresh-quote">Aggiorna</button>
     </div>
 
     <!-- Quotes List -->
