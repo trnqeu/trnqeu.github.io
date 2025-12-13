@@ -27,14 +27,20 @@ export interface Props {
   type?: 'website' | 'article';
   publishedTime?: string;
   canonical?: string;
-  lang?: string;
+  lang?: 'en' | 'it';
 }
 
-const { title, description, showSidebar = false, image, type, publishedTime, canonical, lang } = Astro.props;
+const { title, description, showSidebar = false, image, type, publishedTime, canonical } = Astro.props;
+
+ // Determine language from URL, fallback to prop or 'en'
+const lang: 'en' | 'it' = (Astro.props.lang === 'en' || Astro.props.lang === 'it') 
+  ? Astro.props.lang 
+  : (Astro.url.pathname.startsWith('/en/') ? 'en' : 'it');
+
 ---
 
 <!DOCTYPE html>
-<html lang={lang || 'en'}>
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -63,12 +69,12 @@ const { title, description, showSidebar = false, image, type, publishedTime, can
   </head>
   <body>
     <div class="site-wrapper">
-      <Header />
+      <Header lang={lang} />
       
       <main class="main-content" class:list={{ 'with-sidebar': showSidebar }}>
         {showSidebar && (
           <aside class="sidebar">
-            <Sidebar />
+            <Sidebar lang={lang} />
           </aside>
         )}
         

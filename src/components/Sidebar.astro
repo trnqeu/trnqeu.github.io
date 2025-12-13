@@ -11,6 +11,32 @@ const recentPosts = allPosts
   .slice(0, 5);
 
 const categories = [...new Set(allPosts.flatMap((post: any) => post.frontmatter.categories || []))];
+
+export interface Props {
+  lang?: 'en' | 'it';
+}
+
+const { lang = 'en' } = Astro.props;
+
+const sidebarTranslations = {
+  en: {
+    recent_posts: "Recent Posts",
+    categories: "Categories"
+  },
+  it: {
+    recent_posts: "Articoli Recenti",
+    categories: "Categorie"
+  }
+};
+
+const t = sidebarTranslations[lang] || sidebarTranslations.en;
+
+const localeDateOptions: Intl.DateTimeFormatOptions = {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric'
+};
+
 ---
 
 <div class="sidebar-content">
@@ -47,7 +73,7 @@ const categories = [...new Set(allPosts.flatMap((post: any) => post.frontmatter.
   <!-- Recent Posts Section -->
   {recentPosts.length > 0 && (
     <section class="recent-posts">
-      <h3 class="section-title">Recent Posts</h3>
+      <h3 class="section-title">{t.recent_posts}</h3>
       <ul class="post-list">
         {recentPosts.map(post => (
           <li class="post-item">
@@ -55,11 +81,7 @@ const categories = [...new Set(allPosts.flatMap((post: any) => post.frontmatter.
               {post.frontmatter.title}
             </a>
             <time class="post-date" datetime={post.frontmatter.date}>
-              {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
-              })}
+              {new Date(post.frontmatter.date).toLocaleDateString(lang === 'it' ? 'it-IT' : 'en-US', localeDateOptions)}
             </time>
           </li>
         ))}
@@ -70,7 +92,7 @@ const categories = [...new Set(allPosts.flatMap((post: any) => post.frontmatter.
   <!-- Categories Section -->
   {categories.length > 0 && (
     <section class="categories">
-      <h3 class="section-title">Categories</h3>
+      <h3 class="section-title">{t.categories}</h3>
       <ul class="category-list">
         {categories.map(category => (
           <li class="category-item">

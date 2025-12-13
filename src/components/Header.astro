@@ -3,6 +3,33 @@ import { config } from '../config';
 import ThemeToggle from './ThemeToggle.astro';
 
 const { base = '' } = Astro.site ? { base: import.meta.env.BASE_URL } : { base: '' };
+
+// Define translations
+
+const navTranslations = {
+  en: {
+    home: "Home",
+    projects: 'Projects',
+    languages: 'Languages',
+    sottolinee: 'Underlines',
+    about: 'About',
+    search_placeholder: 'Search articles...'
+  },
+  it: {
+    home: 'Home',
+    projects: 'Progetti',
+    languages: 'Lingue',
+    sottolinee: 'Sottolinee',
+    about: 'Info',
+    search_placeholder: 'Cerca articoli...'
+  }
+};
+
+ // Get the lang prop, default to 'en'
+const { lang = 'en' }: { lang?: 'en' | 'it' } = Astro.props;
+const t = navTranslations[lang] || navTranslations.en;
+
+
 ---
 
 <header class="site-header">
@@ -26,10 +53,10 @@ const { base = '' } = Astro.site ? { base: import.meta.env.BASE_URL } : { base: 
       <nav class="main-navigation" role="navigation" aria-label="Main navigation">
         <ul class="nav-list">
           <li><a href={base} class="nav-link">Home</a></li>
-          <li><a href={base + "projects"} class="nav-link">Projects</a></li>
-          <li><a href={base + "languages"} class="nav-link">Languages</a></li>
-          <li><a href={base + "projects/sottolinee"} class="nav-link">Sottolinee</a></li>
-          <li><a href={base + "about"} class="nav-link">About</a></li>
+          <li><a href={base + "projects"} class="nav-link">{t.projects}</a></li>
+          <li><a href={base + "languages"} class="nav-link">{t.languages}</a></li>
+          <li><a href={base + "projects/sottolinee"} class="nav-link">{t.sottolinee}</a></li>
+          <li><a href={base + "about"} class="nav-link">{t.about}</a></li>
         </ul>
       </nav>
       
@@ -65,11 +92,11 @@ const { base = '' } = Astro.site ? { base: import.meta.env.BASE_URL } : { base: 
 
 <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
   <ul class="mobile-nav-list">
-    <li><a href={base} class="mobile-nav-link">Home</a></li>
-    <li><a href={base + "projects"} class="mobile-nav-link">Projects</a></li>
-    <li><a href={base + "languages"} class="mobile-nav-link">Languages</a></li>
-    <li><a href={base + "projects/sottolinee"} class="mobile-nav-link">Sottolinee</a></li>
-    <li><a href={base + "about"} class="mobile-nav-link">About</a></li>
+    <li><a href={base} class="mobile-nav-link">{t.home}</a></li>
+    <li><a href={base + "projects"} class="mobile-nav-link">{t.projects}</a></li>
+    <li><a href={base + "languages"} class="mobile-nav-link">{t.languages}</a></li>
+    <li><a href={base + "projects/sottolinee"} class="mobile-nav-link">{t.sottolinee}</a></li>
+    <li><a href={base + "about"} class="mobile-nav-link">{t.about}</a></li>
   </ul>
 </nav>
 
