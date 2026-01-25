@@ -1,0 +1,94 @@
+---
+import Layout from '../../components/Layout.astro';
+
+---
+
+<Layout title="Catalogazione Libri">
+  <main class="p-8">
+    <h1 class="text-2xl font-bold mb-4">Aggiungi Nuovo Libro</h1>
+    
+    <div class="flex gap-2 mb-8">
+      <input type="text" id="searchQuery" class="border p-2" placeholder="Titolo o ISBN...">
+      <button id="searchBtn" class="bg-red-600 text-white px-4">Search on Google Books</button>
+    </div>
+
+    <div id="preview" class="hidden border p-4 bg-gray-50">
+      <img id="prevCover" src="" class="w-32 mb-2">
+      <h2 id="prevTitle" class="font-bold"></h2>
+      <p id="prevAuthor"></p>
+      <button id="saveBtn" class="mt-4 bg-black text-white px-6 py-2">Confirm and Save</button>
+    </div>
+  </main>
+
+  <script>
+  import { actions } from 'astro:actions';
+
+  // Interface (ora scritta bene)
+  interface BookData {
+    title: string;
+    author: string;
+    description: string;
+    coverUrl: string;
+  }
+
+  // Correzione riga 34: : per il tipo, | per l'unione
+  let currentBook: BookData | null = null;
+
+  const searchBtn = document.getElementById('searchBtn');
+  const searchQuery = document.getElementById('searchQuery') as HTMLInputElement;
+  const prevTitle = document.getElementById('prevTitle');
+  const prevCover = document.getElementById('prevCover') as HTMLImageElement;
+  const previewDiv = document.getElementById('preview');
+  const saveBtn = document.getElementById('saveBtn');
+
+  searchBtn?.addEventListener('click', async () => {
+    const q = searchQuery.value;
+    if (!q) return;
+
+    try {
+        const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}`)
+        const data = await res.json();
+
+        if (!data.items) {
+            alert("No book found");
+            return;
+        }
+
+        const info = data.items[0].volumeInfo;
+
+        currentBook = {
+            title: info.title,
+            author: info.authors?.join(', ') || 'Unknown',
+            description: info.description || '',
+            coverUrl: info.imageLinks?.thumbnail.replace('http:', 'https:') || ''
+        };
+
+        if (prevTitle) prevTitle.innerText = currentBook.title;
+        if (prevCover) prevCover.src = currentBook.coverUrl;
+        previewDiv?.classList.remove('hidden');
+    } catch (err) {
+        console.error("Error during search:", err);
+    }
+  });
+
+  saveBtn?.addEventListener('click', async () => {
+    if (!currentBook) return;
+
+    // TO-DO: create a login to generate JWT Token
+    const token = "IL_TUO_TOKEN_JWT_QUI"; 
+    
+    const { data, error } = await actions.addBook({ 
+      ...currentBook,
+      token: token 
+    });
+
+    if (!error) {
+      alert(`Success! Saved: ${data.title}`);
+      previewDiv?.classList.add('hidden');
+      searchQuery.value = "";
+    } else {
+      alert("Error: " + error.message);
+    }
+  });
+</script>
+</Layout>
