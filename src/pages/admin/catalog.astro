@@ -2,13 +2,18 @@
 import Layout from "../../components/Layout.astro";
 ---
 
-<Layout title="Admin - Catalogazione Libri" description="Pannello di amministrazione per il catalogo libri.">
+<Layout
+    title="Admin - Catalogazione Libri"
+    description="Pannello di amministrazione per il catalogo libri."
+>
     <main class="admin-page">
         <!-- Sezione Login -->
         <section id="loginSection" class="auth-section">
             <div class="auth-card">
                 <h1 class="auth-title">Accesso Catalogo</h1>
-                <p class="auth-subtitle">Inserisci la password per gestire il database</p>
+                <p class="auth-subtitle">
+                    Inserisci la password per gestire il database
+                </p>
                 <div class="auth-form">
                     <input
                         type="password"
@@ -16,7 +21,9 @@ import Layout from "../../components/Layout.astro";
                         class="auth-input"
                         placeholder="Password admin"
                     />
-                    <button id="loginBtn" class="btn btn-primary w-full">Entra</button>
+                    <button id="loginBtn" class="btn btn-primary w-full"
+                        >Entra</button
+                    >
                 </div>
             </div>
         </section>
@@ -39,16 +46,24 @@ import Layout from "../../components/Layout.astro";
                         class="search-input"
                         placeholder="Cerca per Titolo o ISBN..."
                     />
-                    <button id="searchBtn" class="btn btn-primary">Cerca</button>
+                    <button id="searchBtn" class="btn btn-primary">Cerca</button
+                    >
+                    <button id="manualBtn" class="btn btn-secondary ml-2"
+                        >Manuale</button
+                    >
                 </div>
-                <p class="search-hint">I dati verranno recuperati via Google Books API</p>
+                <p class="search-hint">
+                    Cerca su Google Books oppure inserisci i dati manualmente
+                </p>
             </div>
 
             <div id="bookFormContainer" class="hidden">
                 <hr class="red-rule" />
                 <div class="book-form-card">
-                    <h3 class="form-title">Dettagli Libro Identificato</h3>
-                    
+                    <h3 class="form-title" id="formHeaderTitle">
+                        Dettagli Libro
+                    </h3>
+
                     <div class="form-grid">
                         <div class="form-preview">
                             <span class="preview-label">Copertina</span>
@@ -58,34 +73,54 @@ import Layout from "../../components/Layout.astro";
                                     class="hidden"
                                     alt="Cover"
                                 />
-                                <div id="noCover" class="no-cover">Nessuna anteprima</div>
+                                <div id="noCover" class="no-cover">
+                                    Nessuna anteprima
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-fields">
                             <div class="field-group">
                                 <label for="formTitle">Titolo</label>
-                                <input type="text" id="formTitle" class="form-input" />
+                                <input
+                                    type="text"
+                                    id="formTitle"
+                                    class="form-input"
+                                />
                             </div>
 
                             <div class="field-group">
                                 <label for="formAuthor">Autore</label>
-                                <input type="text" id="formAuthor" class="form-input" />
+                                <input
+                                    type="text"
+                                    id="formAuthor"
+                                    class="form-input"
+                                />
                             </div>
 
                             <div class="field-row">
                                 <div class="field-group">
                                     <label for="formPublisher">Editore</label>
-                                    <input type="text" id="formPublisher" class="form-input" />
+                                    <input
+                                        type="text"
+                                        id="formPublisher"
+                                        class="form-input"
+                                    />
                                 </div>
                                 <div class="field-group small">
                                     <label for="formLanguage">Lingua</label>
-                                    <input type="text" id="formLanguage" class="form-input text-center" />
+                                    <input
+                                        type="text"
+                                        id="formLanguage"
+                                        class="form-input text-center"
+                                    />
                                 </div>
                                 <div class="field-group small">
                                     <label for="formFormat">Formato</label>
                                     <select id="formFormat" class="form-select">
-                                        <option value="Cartaceo">Cartaceo</option>
+                                        <option value="Cartaceo"
+                                            >Cartaceo</option
+                                        >
                                         <option value="Ebook">Ebook</option>
                                     </select>
                                 </div>
@@ -95,12 +130,19 @@ import Layout from "../../components/Layout.astro";
 
                     <div class="field-group full-width">
                         <label for="formDescription">Descrizione</label>
-                        <textarea id="formDescription" rows="8" class="form-textarea"></textarea>
+                        <textarea
+                            id="formDescription"
+                            rows="8"
+                            class="form-textarea"></textarea>
                     </div>
 
                     <div class="field-group opacity-50">
                         <label for="formCoverUrl">URL Immagine</label>
-                        <input type="text" id="formCoverUrl" class="form-input font-mono text-xs" />
+                        <input
+                            type="text"
+                            id="formCoverUrl"
+                            class="form-input font-mono text-xs"
+                        />
                     </div>
 
                     <div class="form-actions">
@@ -137,7 +179,7 @@ import Layout from "../../components/Layout.astro";
             width: 100%;
             max-width: 400px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
 
         .auth-title {
@@ -209,6 +251,10 @@ import Layout from "../../components/Layout.astro";
         .search-box {
             display: flex;
             gap: calc(var(--grid-unit));
+        }
+
+        .ml-2 {
+            margin-left: calc(var(--grid-unit));
         }
 
         .search-input {
@@ -309,7 +355,9 @@ import Layout from "../../components/Layout.astro";
             letter-spacing: 0.05em;
         }
 
-        .form-input, .form-select, .form-textarea {
+        .form-input,
+        .form-select,
+        .form-textarea {
             padding: calc(var(--grid-unit) * 1.5);
             border: 1px solid var(--color-border);
             border-radius: 4px;
@@ -399,6 +447,7 @@ import Layout from "../../components/Layout.astro";
         const logoutBtn = document.getElementById("logoutBtn");
 
         const searchBtn = document.getElementById("searchBtn");
+        const manualBtn = document.getElementById("manualBtn");
         const searchQuery = document.getElementById(
             "searchQuery",
         ) as HTMLInputElement;
@@ -470,6 +519,26 @@ import Layout from "../../components/Layout.astro";
             updateUI();
         });
 
+        // --- LOGICA MANUALE ---
+        manualBtn?.addEventListener("click", () => {
+            // Pulisce i campi
+            fTitle.value = "";
+            fAuthor.value = "";
+            fPublisher.value = "";
+            fLanguage.value = "it";
+            fDescription.value = "";
+            fCoverUrl.value = "";
+
+            // Resetta anteprima
+            fCoverPreview.classList.add("hidden");
+            fCoverPreview.removeAttribute("src");
+            if (noCover) noCover.classList.remove("hidden");
+
+            // Mostra il form
+            bookFormContainer?.classList.remove("hidden");
+            bookFormContainer?.scrollIntoView({ behavior: "smooth" });
+        });
+
         // --- LOGICA RICERCA ---
         searchBtn?.addEventListener("click", async () => {
             const q = searchQuery.value;
@@ -510,7 +579,7 @@ import Layout from "../../components/Layout.astro";
                 }
 
                 bookFormContainer?.classList.remove("hidden");
-                bookFormContainer?.scrollIntoView({ behavior: 'smooth' });
+                bookFormContainer?.scrollIntoView({ behavior: "smooth" });
             } catch (err) {
                 console.error("Errore ricerca:", err);
             } finally {
