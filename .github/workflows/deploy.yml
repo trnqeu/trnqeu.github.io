@@ -42,6 +42,7 @@ jobs:
         run: npm run build
         env:
           SITE: https://trnq.eu
+          PUBLIC_GOOGLE_BOOKS_API_KEY: ${{ secrets.PUBLIC_GOOGLE_BOOKS_API_KEY }}
           # BASE_PATH: /
       
       - name: Upload artifact
