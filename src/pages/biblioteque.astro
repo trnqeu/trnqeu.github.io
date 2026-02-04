@@ -1,0 +1,581 @@
+---
+import Layout from "../components/Layout.astro";
+---
+
+<Layout title="Biblioteca - Trnq.eu" description="La mia e-biblioteca.">
+    <main class="catalog-page">
+        <header class="catalog-header">
+            <h1 class="font-oswald text-4xl mb-4 text-accent">
+                Esplora il Catalogo
+            </h1>
+            <p class="mb-8 text-text-muted">
+                Cerca per titolo, autore o descrivi ciò che vuoi leggere.
+            </p>
+
+            <div class="controls-container">
+                <!-- Search Area -->
+                <div class="search-area">
+                    <div class="search-mode-toggles">
+                        <button id="modeText" class="mode-btn active"
+                            >Testo</button
+                        >
+                        <button id="modeSemantic" class="mode-btn"
+                            >Semantica</button
+                        >
+                    </div>
+                    <div class="input-wrapper">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Cerca..."
+                            class="search-input"
+                        />
+                        <button id="searchBtn" class="action-btn">Cerca</button>
+                    </div>
+                </div>
+
+                <!-- View Toggles -->
+                <div class="view-toggles">
+                    <button
+                        id="viewGrid"
+                        class="view-btn active"
+                        title="Griglia"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><rect x="3" y="3" width="7" height="7"></rect><rect
+                                x="14"
+                                y="3"
+                                width="7"
+                                height="7"></rect><rect
+                                x="14"
+                                y="14"
+                                width="7"
+                                height="7"></rect><rect
+                                x="3"
+                                y="14"
+                                width="7"
+                                height="7"></rect></svg
+                        >
+                    </button>
+                    <button
+                        id="viewStack"
+                        class="view-btn"
+                        title="Pila di Libri"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"
+                            ></path><path
+                                d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+                            ></path></svg
+                        >
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Loading State -->
+        <div id="loader" class="loader hidden">Caricamento libri...</div>
+
+        <!-- Results Area -->
+        <div id="resultsContainer" class="results-container view-grid">
+            <!-- Books injected here via JS -->
+        </div>
+    </main>
+</Layout>
+
+<style>
+    .catalog-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    /* Header & Controls */
+    .catalog-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .controls-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+        align-items: center;
+        background: var(--color-surface);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid var(--color-border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-area {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        flex: 1;
+        max-width: 600px;
+    }
+
+    .search-mode-toggles {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .mode-btn {
+        background: none;
+        border: none;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        padding-bottom: 2px;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .mode-btn.active {
+        color: var(--color-accent);
+        border-bottom-color: var(--color-accent);
+        font-weight: bold;
+    }
+
+    .input-wrapper {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        background: var(--color-background);
+        color: var(--color-text-primary);
+        font-size: 1rem;
+    }
+
+    .action-btn {
+        background: var(--color-accent);
+        color: white;
+        border: none;
+        padding: 0 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: var(--font-heading-secondary);
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 0.05em;
+        transition: filter 0.2s;
+    }
+
+    .action-btn:hover {
+        filter: brightness(1.1);
+    }
+
+    .view-toggles {
+        display: flex;
+        gap: 0.5rem;
+        background: var(--color-background);
+        padding: 0.25rem;
+        border-radius: 6px;
+        border: 1px solid var(--color-border);
+    }
+
+    .view-btn {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        border-radius: 4px;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .view-btn.active {
+        background: var(--color-surface);
+        color: var(--color-accent);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .loader {
+        text-align: center;
+        padding: 4rem;
+        font-style: italic;
+        color: var(--color-text-muted);
+    }
+
+    /* Results Container */
+    .results-container {
+        transition: all 0.5s ease;
+    }
+
+    /* GRID VIEW */
+    .results-container.view-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    /* STACK VIEW (SPINES) */
+    .results-container.view-stack {
+        display: flex;
+        flex-direction: column-reverse; /* Stack from bottom like a real pile */
+        align-items: center;
+        gap: 0;
+        max-width: 600px;
+        margin: 4rem auto;
+        perspective: 1000px;
+    }
+
+    /* Book Components (Injectable) */
+    :global(.book-card) {
+        background: var(--color-surface);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s;
+        border: 1px solid var(--color-border);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    :global(.book-card:hover) {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    :global(.book-cover-img) {
+        width: 100%;
+        aspect-ratio: 2/3;
+        object-fit: cover;
+        background: #eee;
+    }
+
+    :global(.book-info) {
+        padding: 1rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    :global(.book-title) {
+        font-family: var(--font-heading-primary);
+        font-size: 1.1rem;
+        line-height: 1.2;
+        margin-bottom: 0.5rem;
+        color: var(--color-text-primary);
+    }
+
+    :global(.book-author) {
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+    }
+
+    /* SPINE STYLING */
+    :global(.book-spine) {
+        width: 300px; /* Fixed width for the stack */
+        height: 40px; /* Varies randomly via inline style ideally, but base height here */
+        background: linear-gradient(
+            90deg,
+            #444,
+            #666 5%,
+            #555 10%,
+            #444 95%,
+            #333
+        );
+        margin-bottom: -1px; /* Stack tightly */
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1.5rem;
+        color: #fff;
+        font-family: var(--font-heading-secondary);
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition:
+            transform 0.2s,
+            margin 0.2s;
+        box-shadow:
+            inset 0 0 10px rgba(0, 0, 0, 0.5),
+            0 5px 5px rgba(0, 0, 0, 0.2);
+        position: relative;
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
+        border-right: 2px solid rgba(0, 0, 0, 0.3);
+    }
+
+    :global(.book-spine:hover) {
+        transform: translateX(-30px);
+        z-index: 10;
+        margin-bottom: 15px;
+        margin-top: 15px;
+    }
+
+    :global(.book-spine-title) {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    :global(.book-spine-author) {
+        font-size: 0.75rem;
+        opacity: 0.8;
+    }
+
+    @media (max-width: 600px) {
+        .controls-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+
+<script>
+    interface Book {
+        title: string;
+        author: string;
+        coverUrl?: string;
+    }
+
+    // State
+    let allBooks: Book[] = [];
+    let currentBooks: Book[] = [];
+    let currentSearchMode = "text"; // 'text' | 'semantic'
+    let currentViewMode = "grid"; // 'grid' | 'stack'
+
+    const container = document.getElementById("resultsContainer");
+    const searchInput = document.getElementById(
+        "searchInput",
+    ) as HTMLInputElement;
+    const searchBtn = document.getElementById("searchBtn");
+    const loader = document.getElementById("loader");
+
+    interface ApiResponse {
+        data: Book[];
+        pagination: {
+            total: number;
+            page: number;
+            limit: number;
+            totalPages: number;
+        };
+    }
+
+    // Load Initial Random Books
+    async function loadBooks() {
+        showLoader(true);
+        try {
+            // 1. Get total pages first (using the same limit we'll use for fetching)
+            const PAGE_SIZE = 24;
+            const firstRes = await fetch(
+                `https://book-api.trnq.eu/api/catalog?limit=${PAGE_SIZE}`,
+            );
+            const firstData = await firstRes.json();
+            const totalPages = firstData.pagination?.totalPages || 1;
+
+            // 2. Pick a random page
+            const randomPage = Math.floor(Math.random() * totalPages) + 1;
+
+            // 3. Fetch that random page
+            const res = await fetch(
+                `https://book-api.trnq.eu/api/catalog?page=${randomPage}&limit=${PAGE_SIZE}`,
+            );
+            if (!res.ok) throw new Error("API Error");
+            const data = await res.json();
+
+            // The catalog endpoint returns { data: [...], pagination: {...} }
+            const books = data.data || [];
+            allBooks = books.sort(() => 0.5 - Math.random()); // Shuffle the page results too
+            currentBooks = [...allBooks];
+            renderBooks(currentBooks);
+        } catch (e) {
+            console.error(e);
+            if (container)
+                container.innerHTML = `<p class="text-center text-red-500">Errore nel caricamento dei libri.</p>`;
+        } finally {
+            showLoader(false);
+        }
+    }
+
+    // Render Functions
+    function renderBooks(books: Book[]) {
+        if (!container) return;
+        currentBooks = books; // Update current set
+        container.innerHTML = "";
+
+        // Switch class for view mode
+        container.className = `results-container view-${currentViewMode}`;
+
+        if (books.length === 0) {
+            container.innerHTML =
+                '<p class="text-center w-full py-8 text-text-muted">Nessun libro trovato.</p>';
+            return;
+        }
+
+        if (currentViewMode === "grid") {
+            books.forEach((book: Book) => {
+                const div = document.createElement("div");
+                div.className = "book-card";
+                div.innerHTML = `
+          <img src="${book.coverUrl || "/placeholder-book.png"}" alt="${book.title}" class="book-cover-img" loading="lazy">
+          <div class="book-info">
+            <h3 class="book-title">${book.title}</h3>
+            <p class="book-author">${book.author}</p>
+          </div>
+        `;
+                container.appendChild(div);
+            });
+        } else {
+            // Stack View (Spines)
+            books.forEach((book: Book, i: number) => {
+                const div = document.createElement("div");
+                div.className = "book-spine";
+                // Randomize spine colors slightly for realism
+                const hue = Math.floor(Math.random() * 360);
+                const sat = 20 + Math.floor(Math.random() * 30); // Low saturation for realistic look
+                const lig = 20 + Math.floor(Math.random() * 30); // Darker spines
+                // div.style.backgroundColor = `hsl(${hue}, ${sat}%, ${lig}%)`;
+                // Instead of vibrant colors, let's stick to the CSS gradient but maybe vary height/thickness
+                const thickness = 35 + Math.floor(Math.random() * 25);
+                div.style.height = `${thickness}px`;
+
+                // Random slight margin shift for "messy stack" look
+                const shift = Math.floor(Math.random() * 10) - 5;
+                div.style.marginLeft = `${shift}px`;
+
+                div.innerHTML = `
+          <span class="book-spine-title">${book.title}</span>
+          <span class="book-spine-author">${book.author}</span>
+        `;
+                container.appendChild(div);
+            });
+        }
+    }
+
+    // Search Logic
+    async function performSearch() {
+        const q = searchInput.value.trim();
+
+        if (currentSearchMode === "text") {
+            // Client-side filter or standard API if needed.
+            // Since we load all books initially, client-side is faster for "text" mode on the random set.
+            // BUT if we want to search the WHOLE DB, we should use the API.
+            // Let's use API for robustness.
+            showLoader(true);
+            try {
+                // Fallback to local filtering if query is empty to restore random set
+                if (!q) {
+                    // Restore random shuffle of all books
+                    allBooks.sort(() => 0.5 - Math.random());
+                    renderBooks(allBooks);
+                    showLoader(false);
+                    return;
+                }
+
+                const res = await fetch(
+                    `https://book-api.trnq.eu/api/catalog?search=${encodeURIComponent(q)}`,
+                );
+                const data = await res.json();
+                renderBooks(data.data || []);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                showLoader(false);
+            }
+        } else {
+            // Semantic Search
+            if (!q) return;
+            showLoader(true);
+            try {
+                const res = await fetch(
+                    `https://book-api.trnq.eu/api/search/similar?query=${encodeURIComponent(q)}&limit=10`,
+                );
+                const data = await res.json();
+                // The API returns similar books, render them
+                renderBooks(data);
+            } catch (e) {
+                console.error(e);
+                alert("Errore nella ricerca semantica");
+            } finally {
+                showLoader(false);
+            }
+        }
+    }
+
+    function showLoader(show: boolean) {
+        if (show) {
+            loader?.classList.remove("hidden");
+            container?.classList.add("hidden");
+        } else {
+            loader?.classList.add("hidden");
+            container?.classList.remove("hidden");
+        }
+    }
+
+    // Event Listeners
+    document.getElementById("modeText")?.addEventListener("click", (e) => {
+        currentSearchMode = "text";
+        updateToggleUI("mode", e.target as HTMLElement);
+        searchInput.placeholder = "Cerca per titolo o autore...";
+    });
+
+    document.getElementById("modeSemantic")?.addEventListener("click", (e) => {
+        currentSearchMode = "semantic";
+        updateToggleUI("mode", e.target as HTMLElement);
+        searchInput.placeholder =
+            "Descrivi il libro (es. 'romanzo sull'amore')...";
+    });
+
+    document.getElementById("viewGrid")?.addEventListener("click", (e) => {
+        currentViewMode = "grid";
+        updateToggleUI("view", e.currentTarget as HTMLElement); // Use currentTarget for button with SVG
+        // Re-render current data
+        // optimization: store current displayed data
+        renderBooks(currentBooks); // Re-render current data
+    });
+
+    document.getElementById("viewStack")?.addEventListener("click", (e) => {
+        currentViewMode = "stack";
+        updateToggleUI("view", e.currentTarget as HTMLElement);
+        renderBooks(currentBooks); // Re-render current data
+    });
+
+    searchBtn?.addEventListener("click", performSearch);
+    searchInput?.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") performSearch();
+    });
+
+    function updateToggleUI(type: string, activeBtn: HTMLElement) {
+        const selector = type === "mode" ? ".mode-btn" : ".view-btn";
+        document
+            .querySelectorAll(selector)
+            .forEach((btn) => btn.classList.remove("active"));
+        activeBtn.classList.add("active");
+    }
+
+    // Init
+    loadBooks();
+</script>
