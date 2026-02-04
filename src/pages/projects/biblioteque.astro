@@ -2,14 +2,15 @@
 import Layout from "../../components/Layout.astro";
 ---
 
-<Layout title="Biblioteca - Trnq.eu" description="La mia e-biblioteca.">
+<Layout title="Biblioteca - Trnq.eu" description="My e-biblioteque.">
     <main class="catalog-page">
         <header class="catalog-header">
             <h1 class="font-oswald text-4xl mb-4 text-accent">
-                Esplora il Catalogo
+                My ebooks catalogue
             </h1>
             <p class="mb-8 text-text-muted">
-                Cerca per titolo, autore o descrivi ciò che vuoi leggere.
+                Search by title author or use the semantic search and just write
+                what you would like to read
             </p>
 
             <div class="controls-container">
@@ -17,17 +18,17 @@ import Layout from "../../components/Layout.astro";
                 <div class="search-area">
                     <div class="search-mode-toggles">
                         <button id="modeText" class="mode-btn active"
-                            >Testo</button
+                            >Text search</button
                         >
                         <button id="modeSemantic" class="mode-btn"
-                            >Semantica</button
+                            >Semantic search</button
                         >
                     </div>
                     <div class="input-wrapper">
                         <input
                             type="text"
                             id="searchInput"
-                            placeholder="Cerca..."
+                            placeholder="Search..."
                             class="search-input"
                         />
                         <button id="searchBtn" class="action-btn">Cerca</button>
@@ -92,7 +93,7 @@ import Layout from "../../components/Layout.astro";
         </header>
 
         <!-- Loading State -->
-        <div id="loader" class="loader hidden">Caricamento libri...</div>
+        <div id="loader" class="loader hidden">Loading books...</div>
 
         <!-- Results Area -->
         <div id="resultsContainer" class="results-container view-grid">
@@ -546,7 +547,7 @@ import Layout from "../../components/Layout.astro";
         currentSearchMode = "semantic";
         updateToggleUI("mode", e.target as HTMLElement);
         searchInput.placeholder =
-            "Descrivi il libro (es. 'romanzo sull'amore')...";
+            "Describe the book (e.g. Python manuals or philosophical novels...)";
     });
 
     document.getElementById("viewGrid")?.addEventListener("click", (e) => {
