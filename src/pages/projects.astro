@@ -1,23 +1,28 @@
 ---
-import Layout from '../components/Layout.astro';
+import Layout from "../components/Layout.astro";
 
 const base = import.meta.env.BASE_URL;
 
 const projects = [
   {
+    title: "Biblioteque",
+    description: "La mia e-biblioteca.",
+    slug: "biblioteque",
+  },
+  {
     title: "Ideas",
     description: "Posts, random thoughts.",
-    slug: "ideas"
+    slug: "ideas",
   },
   {
     title: "Prompts on Canvas",
     description: "Masterpieces of generative art",
-    slug: "promptsoncanvas"
+    slug: "promptsoncanvas",
   },
   {
     title: "Murder, he prompted",
     description: "Chief Prompter Jameson Aguardento reporting for duty.",
-    slug: "murder-he-prompted"
+    slug: "murder-he-prompted",
   },
   // {
   //   title: "I casi del Commissario GPT",
@@ -27,44 +32,49 @@ const projects = [
   {
     title: "Sottolinee",
     description: "Una collezione di sottolineature.",
-    slug: "sottolinee"
+    slug: "sottolinee",
   },
   {
     title: "Racconti / Short Stories",
     description: "A collection of short stories I've written in the past.",
-    slug: "short-stories"
-  }
+    slug: "short-stories",
+  },
 ];
 ---
 
-<Layout title="Projects" description="Browse through the projects." showSidebar={false} lang="en">
+<Layout
+  title="Projects"
+  description="Browse through the projects."
+  showSidebar={false}
+  lang="en"
+>
   <div class="projects-page">
     <header class="page-header">
       <h1 class="page-title">Projects</h1>
-      <p class="page-description">
-        Browse through the projects.
-      </p>
+      <p class="page-description">Browse through the projects.</p>
       <hr class="page-rule" />
     </header>
 
     <div class="projects-grid">
-      {projects.map((project) => (
-        <div class="project-card">
-          <a href={`${base}projects/${project.slug}`} class="project-link">
-            <h2 class="project-title">{project.title}</h2>
-            <p class="project-description">
-              {project.description}
-            </p>
-          </a>
-        </div>
-      ))}
+      {
+        projects.map((project) => (
+          <div class="project-card">
+            <a href={`${base}projects/${project.slug}`} class="project-link">
+              <h2 class="project-title">{project.title}</h2>
+              <p class="project-description">{project.description}</p>
+            </a>
+          </div>
+        ))
+      }
     </div>
 
-    {projects.length === 0 && (
-      <div class="no-projects">
-        <p>No projects found.</p>
-      </div>
-    )}
+    {
+      projects.length === 0 && (
+        <div class="no-projects">
+          <p>No projects found.</p>
+        </div>
+      )
+    }
   </div>
 </Layout>
 
@@ -114,7 +124,10 @@ const projects = [
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 6px;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
     overflow: hidden;
   }
 
