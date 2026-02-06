@@ -1,5 +1,5 @@
 ---
-title: "La piccola faccia"
+title: "L'ultimo libro"
 date: "2026-02-06"
 original_date: "2021-12-04"
 author: Stefano Trinchero
