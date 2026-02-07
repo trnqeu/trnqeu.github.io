@@ -14,7 +14,7 @@ Due cose mi piacciono tantissimo: i libri e i database. E allora com'è possibil
 
 Allora mi sono deciso e ho impiegato qualche mattina per realizzare [questo progetto di cui sono moderatamente soddisfatto](https://trnq.eu/projects/biblioteque/). 
 
-Il mio principale problema è che compro tantissimi ebook, ho pochissimo tempo per leggere e finisco per dimenticarmi dei libri che ho comprato.   
+Il mio principale problema è che compro tantissimi ebook, ho pochissimo tempo per leggere e finisco per dimenticarmi dei libri che ho comprato, perdendomi la possiblità di leggere il libro giusto al momento giusto.   
 
 
 Devo dire la verità, non sono molto soddisfatto degli embedding multilingua. A un certo punto ho anche pensato di rifare tutti gli embedding utillizzando un altro modello, ma dopo essermi consultato con Antigravity ho rinunciato. 
