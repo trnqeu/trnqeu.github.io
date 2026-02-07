@@ -1,0 +1,248 @@
+---
+import Layout from "../../components/Layout.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
+import {
+    extractHeadings,
+    filterHeadingsForTOC,
+} from "../../utils/table-of-contents";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+    const allDrafts = await getCollection("drafts");
+
+    return allDrafts.map((post) => {
+        // For collections, access raw content through body
+        const rawContent = post.body || "";
+        const allHeadings = extractHeadings(rawContent);
+        const tocHeadings = filterHeadingsForTOC(allHeadings);
+        const slug = post.slug;
+
+        return {
+            params: { slug },
+            props: { post, tocHeadings },
+        };
+    });
+}
+
+const { post, tocHeadings } = Astro.props;
+const { data: frontmatter } = post;
+const { Content } = await post.render();
+
+const pageTitle = frontmatter.title;
+const publishedTime = frontmatter.date
+    ? new Date(frontmatter.date).toISOString()
+    : undefined;
+---
+
+<Layout
+    title={pageTitle}
+    description={frontmatter.description || frontmatter.excerpt}
+    type="article"
+    publishedTime={publishedTime}
+    lang={frontmatter.lang as "en" | "it"}
+>
+    <article class="blog-post">
+        <header class="post-header">
+            <div class="draft-badge">DRAFT PREVIEW</div>
+            <h1 class="post-title">{frontmatter.title}</h1>
+
+            <div class="post-meta">
+                <time
+                    class="post-date"
+                    datetime={new Date(frontmatter.date).toISOString()}
+                >
+                    {
+                        new Date(frontmatter.date).toLocaleDateString(
+                            frontmatter.lang || "en-US",
+                            {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                            },
+                        )
+                    }
+                </time>
+
+                {
+                    frontmatter.author && (
+                        <span class="post-author">by {frontmatter.author}</span>
+                    )
+                }
+
+                {
+                    frontmatter.lang && (
+                        <span class="post-lang">{frontmatter.lang}</span>
+                    )
+                }
+
+                {
+                    frontmatter.categories &&
+                        frontmatter.categories.length > 0 && (
+                            <div class="post-categories">
+                                {frontmatter.categories.map((category) => (
+                                    <span class="category-tag">{category}</span>
+                                ))}
+                            </div>
+                        )
+                }
+            </div>
+
+            {
+                frontmatter.excerpt && (
+                    <p class="post-excerpt">{frontmatter.excerpt}</p>
+                )
+            }
+
+            <hr class="monumental-rule" />
+        </header>
+
+        <TableOfContents headings={tocHeadings} />
+
+        <div class="post-content">
+            <Content />
+        </div>
+
+        <footer class="post-footer">
+            <div class="post-navigation">
+                <a href="/" class="back-to-blog">← Back to Home</a>
+            </div>
+        </footer>
+    </article>
+</Layout>
+
+<style>
+    .draft-badge {
+        background-color: #f59e0b;
+        color: black;
+        display: inline-block;
+        padding: 4px 12px;
+        font-family: var(--font-mono);
+        font-weight: 900;
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+        letter-spacing: 0.1em;
+    }
+
+    .blog-post {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .post-header {
+        margin-bottom: calc(var(--grid-unit) * 6);
+    }
+
+    .post-title {
+        font-family: var(--font-heading-primary);
+        font-size: 3rem;
+        font-weight: 900;
+        color: var(--color-accent);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 1.1;
+        margin-bottom: calc(var(--grid-unit) * 3);
+    }
+
+    .post-meta {
+        display: flex;
+        flex-direction: column;
+        gap: calc(var(--grid-unit) * 1.5);
+        margin-bottom: calc(var(--grid-unit) * 3);
+    }
+
+    .post-date,
+    .post-author,
+    .post-lang {
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .post-categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: calc(var(--grid-unit));
+    }
+
+    .category-tag {
+        background-color: var(--color-text-primary);
+        color: white;
+        padding: calc(var(--grid-unit) / 2) calc(var(--grid-unit));
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 3px;
+    }
+
+    .post-excerpt {
+        font-size: 1.25rem;
+        line-height: 1.5;
+        color: var(--color-text-secondary);
+        font-style: italic;
+        margin: 0;
+    }
+
+    .monumental-rule {
+        height: 6px;
+        background-color: var(--color-accent);
+        border: none;
+        margin: calc(var(--grid-unit) * 4) 0;
+        width: 100%;
+    }
+
+    .post-content {
+        font-size: 1.125rem;
+        line-height: 1.7;
+        margin-bottom: calc(var(--grid-unit) * 6);
+    }
+
+    .post-content :global(blockquote) {
+        border-left: 4px solid var(--color-border);
+        padding: calc(var(--grid-unit) * 2) calc(var(--grid-unit) * 3);
+        margin: calc(var(--grid-unit) * 4) 0;
+        background-color: var(--color-surface);
+        font-style: italic;
+        font-size: 1.1rem;
+        color: var(--color-text-secondary);
+    }
+
+    .post-content :global(blockquote.blockquote-accent) {
+        border-left-color: var(--color-accent);
+    }
+
+    .post-content :global(blockquote.blockquote-blue) {
+        border-left-color: #3b82f6;
+    }
+
+    .post-content :global(blockquote.blockquote-yellow) {
+        border-left-color: #f59e0b;
+    }
+
+    .post-footer {
+        border-top: 1px solid var(--color-border);
+        padding-top: calc(var(--grid-unit) * 3);
+    }
+
+    .back-to-blog {
+        font-family: var(--font-heading-secondary);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-accent);
+        padding: calc(var(--grid-unit)) calc(var(--grid-unit) * 2);
+        border: 2px solid var(--color-accent);
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        display: inline-block;
+    }
+
+    .back-to-blog:hover {
+        background-color: var(--color-accent);
+        color: white;
+        text-decoration: none;
+    }
+</style>

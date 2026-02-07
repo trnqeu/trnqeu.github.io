@@ -1,0 +1,9 @@
+{
+    "cSpell.language": "en,it",
+    "cSpell.enabled": true,
+    "cSpell.enabledFileTypes": {
+        "markdown": true,
+        "astro": true,
+        "mdx": true
+    }
+}
