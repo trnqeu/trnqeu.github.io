@@ -89,8 +89,75 @@ import Layout from "../../components/Layout.astro";
                         >
                     </button>
                 </div>
+
+                <div class="admin-access-trigger">
+                    <button
+                        id="showLoginBtn"
+                        class="admin-btn"
+                        title="Admin Access"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            style="margin-right: 6px;"
+                        >
+                            <rect
+                                x="3"
+                                y="11"
+                                width="18"
+                                height="11"
+                                rx="2"
+                                ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span>Admin Access</span>
+                    </button>
+                </div>
             </div>
         </header>
+
+        <!-- Login section (Hidden by default) -->
+        <section id="loginSection" class="auth-section hidden">
+            <div class="auth-card">
+                <h2 class="auth-title">Admin Access</h2>
+                <p class="auth-subtitle">Insert password to edit books</p>
+                <div class="auth-form">
+                    <input
+                        type="password"
+                        id="adminPassword"
+                        class="auth-input"
+                        placeholder="Password admin"
+                    />
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button
+                            id="loginBtn"
+                            class="action-btn"
+                            style="flex: 1;">Enter</button
+                        >
+                        <button id="closeLoginBtn" class="view-btn"
+                            >Cancel</button
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin state (Showed only if logged in) -->
+        <div id="adminHeader" class="admin-status-bar hidden">
+            <span class="admin-tag">Admin Mode On</span>
+            <button
+                id="logoutBtn"
+                style="background: none; border: none; color: white; text-decoration: underline; cursor: pointer; font-size: 0.8rem;"
+                >Esci</button
+            >
+        </div>
 
         <!-- Loading State -->
         <div id="loader" class="loader hidden">Loading books...</div>
@@ -107,6 +174,73 @@ import Layout from "../../components/Layout.astro";
         max-width: 1200px;
         margin: 0 auto;
         padding: 2rem 1rem;
+    }
+
+    .admin-access-trigger {
+        display: flex;
+        align-items: center;
+    }
+
+    .admin-status-bar {
+        background: var(--color-accent);
+        color: white;
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+    }
+
+    .admin-tag {
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+    }
+
+    /* Auth Section (adapted from catalog.astro) */
+    .auth-section {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(4px);
+    }
+
+    .auth-card {
+        background-color: var(--color-surface);
+        border: 1px solid var(--color-border);
+        padding: 2rem;
+        border-radius: 8px;
+        width: 100%;
+        max-width: 350px;
+        text-align: center;
+    }
+
+    .auth-title {
+        font-family: var(--font-heading-primary);
+        font-size: 2rem;
+        color: var(--color-accent);
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-input {
+        width: 100%;
+        padding: 0.8rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        background: var(--color-background);
+        color: var(--color-text-primary);
+        text-align: center;
+    }
+
+    .hidden {
+        display: none !important;
     }
 
     /* Header & Controls */
@@ -357,6 +491,7 @@ import Layout from "../../components/Layout.astro";
 
 <script>
     interface Book {
+        id: string;
         title: string;
         author: string;
         coverUrl?: string;
@@ -420,6 +555,73 @@ import Layout from "../../components/Layout.astro";
             showLoader(false);
         }
     }
+
+    // Login elements
+    const loginSection = document.getElementById("loginSection");
+    const adminHeader = document.getElementById("adminHeader");
+    const adminPassword = document.getElementById(
+        "adminPassword",
+    ) as HTMLInputElement;
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const showLoginBtn = document.getElementById("showLoginBtn");
+    const closeLoginBtn = document.getElementById("closeLoginBtn");
+
+    // Function to update interface after loggin in
+    function updateAdminUI() {
+        const token = localStorage.getItem("admin_token");
+        const loginSection = document.getElementById("loginSection");
+        const adminHeader = document.getElementById("adminHeader");
+        const showLoginBtn = document.getElementById("showLoginBtn");
+
+        if (token) {
+            // If logged
+            adminHeader?.classList.remove("hidden");
+            if (showLoginBtn) showLoginBtn.style.display = "none";
+            loginSection?.classList.add("hidden");
+        } else {
+            // If not logged
+            adminHeader?.classList.add("hidden");
+            if (showLoginBtn) showLoginBtn.style.display = "block";
+            loginSection?.classList.add("hidden");
+        }
+    }
+
+    // Login / Logout events
+    showLoginBtn?.addEventListener("click", () => {
+        loginSection?.classList.remove("hidden");
+    });
+    closeLoginBtn?.addEventListener("click", () => {
+        loginSection?.classList.add("hidden");
+    });
+
+    loginBtn?.addEventListener("click", async () => {
+        const password = adminPassword.value;
+        if (!password) return;
+        try {
+            const res = await fetch("https://book-api.trnq.eu/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password }),
+            });
+            const data = await res.json();
+            if (data.token) {
+                localStorage.setItem("admin_token", data.token);
+                updateAdminUI();
+                alert("Accesso admin effettuato!");
+            } else {
+                alert("Password Errata");
+            }
+        } catch (e) {
+            alert("Server non raggiungibile");
+        }
+    });
+    logoutBtn?.addEventListener("click", () => {
+        localStorage.removeItem("admin_token");
+        updateAdminUI();
+    });
+    // Inizializza UI Admin
+    updateAdminUI();
 
     // Render Functions
     function renderBooks(books: Book[]) {

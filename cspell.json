@@ -4,15 +4,16 @@
     "words": [
         "Antigravity",
         "Astro",
-        "Postgres",
-        "postgre",
-        "Pg-vector",
-        "vectorize",
+        "biblioteque",
         "multilingua",
+        "Pg-vector",
+        "postgre",
+        "Postgres",
         "sottolinee",
         "trnq",
-        "volks",
-        "typo"
+        "typo",
+        "vectorize",
+        "volks"
     ],
     "ignorePaths": [
         "node_modules",
