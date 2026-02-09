@@ -159,15 +159,88 @@ import Layout from "../../components/Layout.astro";
             >
         </div>
 
-        <!-- Loading State -->
-        <div id="loader" class="loader hidden">Loading books...</div>
+        <!--Modal with book details-->
+        <div id="bookModal" class="modal-overlay hidden">
+            <div class="modal-card">
+                <button id="closeModalBtn" class="close-modal">
+                    &times;
+                </button>
+                <div class="modal-grid">
+                    <!-- Cover preview -->
+                    <div class="modal-cover-section">
+                        <img
+                            id="modalCoverImg"
+                            src=""
+                            alt="Copertina"
+                            class="modal-cover-preview"
+                        />
+                        <div id="modalNoCover" class="no-cover hidden">
+                            Senza Copertina
+                        </div>
+                    </div>
 
-        <!-- Results Area -->
-        <div id="resultsContainer" class="results-container view-grid">
-            <!-- Books injected here via JS -->
+                    <!-- Detail and Form -->
+                    <div class="modal-info-section">
+                        <div id="modalReadMode">
+                            <h2 id="viewTitle" class="modal-title"></h2>
+                            <p id="viewAuthor" class="modal-author"></p>
+                            <p id="viewDescription" class="modal-description">
+                            </p>
+                        </div>
+                        <div id="modalEditMode" class="hidden">
+                            <h2 class="text-accent mb-4">Edit Book Details</h2>
+                            <div class="field-group">
+                                <label>Title</label>
+                                <input
+                                    type="text"
+                                    id="editTitle"
+                                    class="auth-input"
+                                />
+                            </div>
+                            <div class="field-group">
+                                <label>Author</label>
+                                <input
+                                    type="text"
+                                    id="editAuthor"
+                                    class="auth-input"
+                                />
+                            </div>
+                            <div class="field-group">
+                                <label>Cover URL</label>
+                                <input
+                                    type="text"
+                                    id="editCoverUrl"
+                                    class="auth-input font-mono text-xs"
+                                />
+                            </div>
+                            <div class="field-group">
+                                <label>Description</label>
+                                <textarea
+                                    id="editDescription"
+                                    class="auth-input"
+                                    rows="5"
+                                    style="text-align: left;"></textarea>
+                            </div>
+                            <button
+                                id="saveBookBtn"
+                                class="action-btn w-full mt-4"
+                                >Save to Database</button
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </Layout>
+
+<!-- Loading State -->
+<div id="loader" class="loader hidden">Loading books...</div>
+
+<!-- Results Area -->
+<div id="resultsContainer" class="results-container view-grid">
+    <!-- Books injected here via JS -->
+</div>
 
 <style>
     .catalog-page {
@@ -197,6 +270,109 @@ import Layout from "../../components/Layout.astro";
         text-transform: uppercase;
         font-size: 0.7rem;
         letter-spacing: 0.1em;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 2000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        backdrop-filter: blur(8px);
+    }
+    .modal-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        width: 100%;
+        max-width: 800px;
+        position: relative;
+        overflow: hidden;
+        animation: modalAppear 0.3s ease-out;
+    }
+    @keyframes modalAppear {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        background: none;
+        border: none;
+        color: var(--color-text-muted);
+        font-size: 2rem;
+        cursor: pointer;
+        z-index: 10;
+    }
+    .modal-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        height: 100%;
+    }
+    .modal-cover-section {
+        background: #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid var(--color-border);
+    }
+    .modal-cover-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .modal-info-section {
+        padding: 3rem;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    .modal-title {
+        font-family: var(--font-heading-primary);
+        font-size: 2.5rem;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+        color: var(--color-text-primary);
+    }
+    .modal-author {
+        font-size: 1.2rem;
+        color: var(--color-accent);
+        margin-bottom: 2rem;
+        font-weight: bold;
+    }
+    .modal-description {
+        line-height: 1.6;
+        color: var(--color-text-muted);
+    }
+    .field-group {
+        margin-bottom: 1rem;
+        text-align: left;
+    }
+    .field-group label {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+        margin-bottom: 4px;
+        font-weight: bold;
+    }
+    @media (max-width: 700px) {
+        .modal-grid {
+            grid-template-columns: 1fr;
+        }
+        .modal-cover-section {
+            aspect-ratio: 2/3;
+        }
     }
 
     /* Auth Section (adapted from catalog.astro) */
@@ -567,6 +743,70 @@ import Layout from "../../components/Layout.astro";
     const showLoginBtn = document.getElementById("showLoginBtn");
     const closeLoginBtn = document.getElementById("closeLoginBtn");
 
+    // Elementi della Modale
+    const bookModal = document.getElementById("bookModal");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const modalReadMode = document.getElementById("modalReadMode");
+    const modalEditMode = document.getElementById("modalEditMode");
+
+    // View elements
+    const viewTitle = document.getElementById("viewTitle");
+    const viewAuthor = document.getElementById("viewAuthor");
+    const viewDescription = document.getElementById("viewDescription");
+    const modalCoverImg = document.getElementById(
+        "modalCoverImg",
+    ) as HTMLImageElement;
+
+    // Edit elements
+    const editTitle = document.getElementById("editTitle") as HTMLInputElement;
+    const editAuthor = document.getElementById(
+        "editAuthor",
+    ) as HTMLInputElement;
+    const editCoverUrl = document.getElementById(
+        "editCoverUrl",
+    ) as HTMLInputElement;
+    const editDescription = document.getElementById(
+        "editDescription",
+    ) as HTMLTextAreaElement;
+    const saveBookBtn = document.getElementById("saveBookBtn");
+
+    let selectedBook: Book | null = null;
+
+    function openBookModal(book: Book) {
+        selectedBook = book;
+        const token = localStorage.getItem("admin_token");
+
+        if (viewTitle) viewTitle.textContent = book.title;
+        if (viewAuthor) viewAuthor.textContent = book.author;
+        if (viewDescription)
+            viewDescription.textContent =
+                (book as any).description || "No description available.";
+
+        if (modalCoverImg)
+            modalCoverImg.src = book.coverUrl || "/placeholder-book.png";
+
+        if (editTitle) editTitle.value = book.title;
+        if (editAuthor) editAuthor.value = book.author;
+        if (editCoverUrl) editCoverUrl.value = book.coverUrl || "";
+        if (editDescription)
+            editDescription.value = (book as any).description || "";
+
+        if (token) {
+            modalReadMode?.classList.add("hidden");
+            modalEditMode?.classList.remove("hidden");
+        } else {
+            modalReadMode?.classList.remove("hidden");
+            modalEditMode?.classList.add("hidden");
+        }
+
+        bookModal?.classList.remove("hidden");
+    }
+
+    // Close modal
+    closeModalBtn?.addEventListener("click", () =>
+        bookModal?.classList.add("hidden"),
+    );
+
     // Function to update interface after loggin in
     function updateAdminUI() {
         const token = localStorage.getItem("admin_token");
@@ -642,6 +882,8 @@ import Layout from "../../components/Layout.astro";
             books.forEach((book: Book) => {
                 const div = document.createElement("div");
                 div.className = "book-card";
+                div.style.cursor = "pointer";
+                div.onclick = () => openBookModal(book);
                 div.innerHTML = `
           <img src="${book.coverUrl || "/placeholder-book.png"}" alt="${book.title}" class="book-cover-img" loading="lazy">
           <div class="book-info">
@@ -677,6 +919,53 @@ import Layout from "../../components/Layout.astro";
             });
         }
     }
+
+    saveBookBtn?.addEventListener("click", async () => {
+        if (!selectedBook) return;
+        const token = localStorage.getItem("admin_token");
+
+        const updatedData = {
+            ...selectedBook,
+            title: editTitle.value,
+            author: editAuthor.value,
+            coverUrl: editCoverUrl.value,
+            description: editDescription.value,
+        };
+
+        try {
+            const res = await fetch(
+                `https://book-api.trnq.eu/api/books/${selectedBook.id}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(updatedData),
+                },
+            );
+
+            if (res.ok) {
+                alert("Libro aggiornato con successo!");
+                bookModal?.classList.add("hidden");
+                loadBooks();
+            } else {
+                // --- QUESTA PARTE CI DIRÀ L'ERRORE REALE ---
+                const errorInfo = await res
+                    .json()
+                    .catch(() => ({ error: "Errore sconosciuto" }));
+                alert(
+                    "❌ Errore API: " +
+                        (errorInfo.error ||
+                            errorInfo.message ||
+                            "Risposta non valida"),
+                );
+                console.error("Errore Dettagliato:", errorInfo);
+            }
+        } catch (e) {
+            alert("Errore di connessione: " + e);
+        }
+    });
 
     // Search Logic
     async function performSearch() {
