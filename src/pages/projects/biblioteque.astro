@@ -925,11 +925,13 @@ import Layout from "../../components/Layout.astro";
         const token = localStorage.getItem("admin_token");
 
         const updatedData = {
-            ...selectedBook,
             title: editTitle.value,
             author: editAuthor.value,
             coverUrl: editCoverUrl.value,
             description: editDescription.value,
+            publishingHouse: (selectedBook as any).publishingHouse || "",
+            language: (selectedBook as any).language || "it",
+            format: (selectedBook as any).format || "Ebook",
         };
 
         try {
@@ -946,24 +948,24 @@ import Layout from "../../components/Layout.astro";
             );
 
             if (res.ok) {
-                alert("Libro aggiornato con successo!");
+                alert("Book updated successfully!");
                 bookModal?.classList.add("hidden");
                 loadBooks();
             } else {
                 // --- QUESTA PARTE CI DIRÀ L'ERRORE REALE ---
                 const errorInfo = await res
                     .json()
-                    .catch(() => ({ error: "Errore sconosciuto" }));
+                    .catch(() => ({ error: "Unknown error" }));
                 alert(
-                    "❌ Errore API: " +
+                    "API error: " +
                         (errorInfo.error ||
                             errorInfo.message ||
-                            "Risposta non valida"),
+                            "Response not valid"),
                 );
-                console.error("Errore Dettagliato:", errorInfo);
+                console.error("Error:", errorInfo);
             }
         } catch (e) {
-            alert("Errore di connessione: " + e);
+            alert("Connection error: " + e);
         }
     });
 
@@ -1010,7 +1012,7 @@ import Layout from "../../components/Layout.astro";
                 renderBooks(data);
             } catch (e) {
                 console.error(e);
-                alert("Errore nella ricerca semantica");
+                alert("Error in semantic search");
             } finally {
                 showLoader(false);
             }
