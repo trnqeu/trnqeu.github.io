@@ -782,8 +782,12 @@ import Layout from "../../components/Layout.astro";
             viewDescription.textContent =
                 (book as any).description || "No description available.";
 
-        if (modalCoverImg)
+        if (modalCoverImg) {
             modalCoverImg.src = book.coverUrl || "/placeholder-book.png";
+            modalCoverImg.onerror = () => {
+                modalCoverImg.src = "/placeholder-book.png";
+            };
+        }
 
         if (editTitle) editTitle.value = book.title;
         if (editAuthor) editAuthor.value = book.author;
@@ -884,8 +888,12 @@ import Layout from "../../components/Layout.astro";
                 div.className = "book-card";
                 div.style.cursor = "pointer";
                 div.onclick = () => openBookModal(book);
+                // Optimization: use a smaller resolution for the grid to avoid 429
+                const gridCoverUrl = book.coverUrl
+                    ? book.coverUrl.replace("w600-h900", "w200-h300")
+                    : "/placeholder-book.png";
                 div.innerHTML = `
-          <img src="${book.coverUrl || "/placeholder-book.png"}" alt="${book.title}" class="book-cover-img" loading="lazy">
+          <img src="${gridCoverUrl}" alt="${book.title}" class="book-cover-img" loading="lazy" onerror="this.src='/placeholder-book.png';">
           <div class="book-info">
             <h3 class="book-title">${book.title}</h3>
             <p class="book-author">${book.author}</p>
@@ -952,7 +960,6 @@ import Layout from "../../components/Layout.astro";
                 bookModal?.classList.add("hidden");
                 loadBooks();
             } else {
-                // --- QUESTA PARTE CI DIRÀ L'ERRORE REALE ---
                 const errorInfo = await res
                     .json()
                     .catch(() => ({ error: "Unknown error" }));
