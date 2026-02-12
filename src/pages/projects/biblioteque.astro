@@ -676,8 +676,22 @@ import Layout from "../../components/Layout.astro";
     // State
     let allBooks: Book[] = [];
     let currentBooks: Book[] = [];
-    let currentSearchMode = "text"; // 'text' | 'semantic'
-    let currentViewMode = "grid"; // 'grid' | 'stack'
+    let currentViewMode: "grid" | "stack" = "grid";
+    let currentSearchMode: "text" | "semantic" = "text";
+    const API_BASE_URL = "https://book-api.trnq.eu";
+
+    function getCoverUrl(book: any) {
+        let url = book.coverUrl;
+        if (!url) return "/placeholder-book.png";
+        if (url.startsWith("http")) return url;
+
+        // Ensure relative path starts with /covers/
+        if (!url.startsWith("/covers/")) {
+            url = "/covers/" + url.replace(/^\//, "");
+        }
+
+        return `${API_BASE_URL}${url}`;
+    }
 
     const container = document.getElementById("resultsContainer");
     const searchInput = document.getElementById(
@@ -783,7 +797,7 @@ import Layout from "../../components/Layout.astro";
                 (book as any).description || "No description available.";
 
         if (modalCoverImg) {
-            modalCoverImg.src = book.coverUrl || "/placeholder-book.png";
+            modalCoverImg.src = getCoverUrl(book);
             modalCoverImg.onerror = () => {
                 modalCoverImg.src = "/placeholder-book.png";
             };
@@ -811,7 +825,7 @@ import Layout from "../../components/Layout.astro";
         bookModal?.classList.add("hidden"),
     );
 
-    // Function to update interface after loggin in
+    // Function to update interface after logging in
     function updateAdminUI() {
         const token = localStorage.getItem("admin_token");
         const loginSection = document.getElementById("loginSection");
@@ -889,9 +903,10 @@ import Layout from "../../components/Layout.astro";
                 div.style.cursor = "pointer";
                 div.onclick = () => openBookModal(book);
                 // Optimization: use a smaller resolution for the grid to avoid 429
-                const gridCoverUrl = book.coverUrl
-                    ? book.coverUrl.replace("w600-h900", "w200-h300")
-                    : "/placeholder-book.png";
+                const baseCoverUrl = getCoverUrl(book);
+                const gridCoverUrl = baseCoverUrl.includes("google.com")
+                    ? baseCoverUrl.replace("w600-h900", "w200-h300")
+                    : baseCoverUrl;
                 div.innerHTML = `
           <img src="${gridCoverUrl}" alt="${book.title}" class="book-cover-img" loading="lazy" onerror="this.src='/placeholder-book.png';">
           <div class="book-info">
