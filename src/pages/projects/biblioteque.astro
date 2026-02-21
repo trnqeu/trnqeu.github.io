@@ -21,7 +21,10 @@ import Layout from "../../components/Layout.astro";
                             >Text search</button
                         >
                         <button id="modeSemantic" class="mode-btn"
-                            >Semantic search</button
+                            >Semantic search (MiniLM-L12)</button
+                        >
+                        <button id="modeGemma" class="mode-btn"
+                            >Semantic search (Gemma)</button
                         >
                     </div>
                     <div class="input-wrapper">
@@ -677,7 +680,7 @@ import Layout from "../../components/Layout.astro";
     let allBooks: Book[] = [];
     let currentBooks: Book[] = [];
     let currentViewMode: "grid" | "stack" = "grid";
-    let currentSearchMode: "text" | "semantic" = "text";
+    let currentSearchMode: "text" | "semantic" | "gemma" = "text";
     const API_BASE_URL = "https://book-api.trnq.eu";
 
     function getCoverUrl(book: any) {
@@ -1026,8 +1029,10 @@ import Layout from "../../components/Layout.astro";
             if (!q) return;
             showLoader(true);
             try {
+                const model =
+                    currentSearchMode === "gemma" ? "gemma" : "xenova";
                 const res = await fetch(
-                    `https://book-api.trnq.eu/api/search/similar?query=${encodeURIComponent(q)}&limit=10`,
+                    `https://book-api.trnq.eu/api/search/similar?query=${encodeURIComponent(q)}&limit=10&model=${model}`,
                 );
                 const data = await res.json();
                 // The API returns similar books, render them
@@ -1063,6 +1068,13 @@ import Layout from "../../components/Layout.astro";
         updateToggleUI("mode", e.target as HTMLElement);
         searchInput.placeholder =
             "Describe the book (e.g. Python manuals or philosophical novels...)";
+    });
+
+    document.getElementById("modeGemma")?.addEventListener("click", (e) => {
+        currentSearchMode = "gemma";
+        updateToggleUI("mode", e.target as HTMLElement);
+        searchInput.placeholder =
+            "Describe a book to search, like South-American novels or legal thriller...";
     });
 
     document.getElementById("viewGrid")?.addEventListener("click", (e) => {
