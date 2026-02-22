@@ -154,16 +154,6 @@ import Layout from "../../components/Layout.astro";
             </div>
         </section>
 
-        <!-- Admin state (Showed only if logged in) -->
-        <div id="adminHeader" class="admin-status-bar hidden">
-            <span class="admin-tag">Admin Mode On</span>
-            <button
-                id="logoutBtn"
-                style="background: none; border: none; color: white; text-decoration: underline; cursor: pointer; font-size: 0.8rem;"
-                >Esci</button
-            >
-        </div>
-
         <!--Modal with book details-->
         <div id="bookModal" class="modal-overlay hidden">
             <div class="modal-card">
@@ -236,439 +226,450 @@ import Layout from "../../components/Layout.astro";
                 </div>
             </div>
         </div>
+
+        <!-- Loading State -->
+        <div id="loader" class="loader hidden">Loading books...</div>
+
+        <!-- Results Area -->
+        <div id="resultsContainer" class="results-container view-grid">
+            <!-- Books injected here via JS -->
+        </div>
+
+        <!-- Admin state (Showed only if logged in) -->
+        <div id="adminHeader" class="admin-status-bar hidden">
+            <span class="admin-tag">Admin Mode On</span>
+            <button
+                id="logoutBtn"
+                style="background: none; border: none; color: white; text-decoration: underline; cursor: pointer; font-size: 0.8rem;"
+                >Esci</button
+            >
+        </div>
+
+        <style>
+            .catalog-page {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 2rem 1rem;
+            }
+
+            .admin-access-trigger {
+                display: flex;
+                align-items: center;
+            }
+
+            .admin-status-bar {
+                background: var(--color-accent);
+                color: white;
+                padding: 0.5rem 1rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-radius: 6px;
+                margin-top: 2rem;
+                margin-bottom: 0;
+            }
+
+            .admin-tag {
+                font-weight: bold;
+                text-transform: uppercase;
+                font-size: 0.7rem;
+                letter-spacing: 0.1em;
+            }
+
+            /* Modal Styles */
+            .modal-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 2000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                backdrop-filter: blur(8px);
+            }
+            .modal-card {
+                background: var(--color-surface);
+                border: 1px solid var(--color-border);
+                border-radius: 12px;
+                width: 100%;
+                max-width: 800px;
+                position: relative;
+                overflow: hidden;
+                animation: modalAppear 0.3s ease-out;
+            }
+            @keyframes modalAppear {
+                from {
+                    opacity: 0;
+                    transform: scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+            .close-modal {
+                position: absolute;
+                top: 1rem;
+                right: 1.5rem;
+                background: none;
+                border: none;
+                color: var(--color-text-muted);
+                font-size: 2rem;
+                cursor: pointer;
+                z-index: 10;
+            }
+            .modal-grid {
+                display: grid;
+                grid-template-columns: 300px 1fr;
+                height: 100%;
+            }
+            .modal-cover-section {
+                background: #111;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-right: 1px solid var(--color-border);
+            }
+            .modal-cover-preview {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .modal-info-section {
+                padding: 3rem;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+            .modal-title {
+                font-family: var(--font-heading-primary);
+                font-size: 2.5rem;
+                line-height: 1.1;
+                margin-bottom: 0.5rem;
+                color: var(--color-text-primary);
+            }
+            .modal-author {
+                font-size: 1.2rem;
+                color: var(--color-accent);
+                margin-bottom: 2rem;
+                font-weight: bold;
+            }
+            .modal-description {
+                line-height: 1.6;
+                color: var(--color-text-muted);
+            }
+            .field-group {
+                margin-bottom: 1rem;
+                text-align: left;
+            }
+            .field-group label {
+                display: block;
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                color: var(--color-text-muted);
+                margin-bottom: 4px;
+                font-weight: bold;
+            }
+            @media (max-width: 700px) {
+                .modal-grid {
+                    grid-template-columns: 1fr;
+                }
+                .modal-cover-section {
+                    aspect-ratio: 2/3;
+                }
+            }
+
+            /* Auth Section (adapted from catalog.astro) */
+            .auth-section {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 1000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                backdrop-filter: blur(4px);
+            }
+
+            .auth-card {
+                background-color: var(--color-surface);
+                border: 1px solid var(--color-border);
+                padding: 2rem;
+                border-radius: 8px;
+                width: 100%;
+                max-width: 350px;
+                text-align: center;
+            }
+
+            .auth-title {
+                font-family: var(--font-heading-primary);
+                font-size: 2rem;
+                color: var(--color-accent);
+                margin-bottom: 0.5rem;
+            }
+
+            .auth-input {
+                width: 100%;
+                padding: 0.8rem;
+                margin-bottom: 1rem;
+                border: 1px solid var(--color-border);
+                border-radius: 4px;
+                background: var(--color-background);
+                color: var(--color-text-primary);
+                text-align: center;
+            }
+
+            .hidden {
+                display: none !important;
+            }
+
+            /* Header & Controls */
+            .catalog-header {
+                text-align: center;
+                margin-bottom: 3rem;
+            }
+
+            .controls-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 2rem;
+                align-items: center;
+                background: var(--color-surface);
+                padding: 1.5rem;
+                border-radius: 12px;
+                border: 1px solid var(--color-border);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            }
+
+            .search-area {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                flex: 1;
+                max-width: 600px;
+            }
+
+            .search-mode-toggles {
+                display: flex;
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .mode-btn {
+                background: none;
+                border: none;
+                color: var(--color-text-muted);
+                cursor: pointer;
+                padding-bottom: 2px;
+                border-bottom: 2px solid transparent;
+                transition: all 0.2s;
+            }
+
+            .mode-btn.active {
+                color: var(--color-accent);
+                border-bottom-color: var(--color-accent);
+                font-weight: bold;
+            }
+
+            .input-wrapper {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .search-input {
+                flex: 1;
+                padding: 0.8rem 1rem;
+                border: 1px solid var(--color-border);
+                border-radius: 6px;
+                background: var(--color-background);
+                color: var(--color-text-primary);
+                font-size: 1rem;
+            }
+
+            .action-btn {
+                background: var(--color-accent);
+                color: white;
+                border: none;
+                padding: 0 1.5rem;
+                border-radius: 6px;
+                cursor: pointer;
+                font-family: var(--font-heading-secondary);
+                text-transform: uppercase;
+                font-weight: bold;
+                letter-spacing: 0.05em;
+                transition: filter 0.2s;
+            }
+
+            .action-btn:hover {
+                filter: brightness(1.1);
+            }
+
+            .view-toggles {
+                display: flex;
+                gap: 0.5rem;
+                background: var(--color-background);
+                padding: 0.25rem;
+                border-radius: 6px;
+                border: 1px solid var(--color-border);
+            }
+
+            .view-btn {
+                background: none;
+                border: none;
+                padding: 0.5rem;
+                border-radius: 4px;
+                color: var(--color-text-muted);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .view-btn.active {
+                background: var(--color-surface);
+                color: var(--color-accent);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .loader {
+                text-align: center;
+                padding: 4rem;
+                font-style: italic;
+                color: var(--color-text-muted);
+            }
+
+            /* Results Container */
+            .results-container {
+                transition: all 0.5s ease;
+            }
+
+            /* GRID VIEW */
+            .results-container.view-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 2rem;
+                padding: 1rem;
+            }
+
+            /* STACK VIEW (SPINES) */
+            .results-container.view-stack {
+                display: flex;
+                flex-direction: column-reverse; /* Stack from bottom like a real pile */
+                align-items: center;
+                gap: 0;
+                max-width: 600px;
+                margin: 4rem auto;
+                perspective: 1000px;
+            }
+
+            /* Book Components (Injectable) */
+            :global(.book-card) {
+                background: var(--color-surface);
+                border-radius: 8px;
+                overflow: hidden;
+                transition: transform 0.3s;
+                border: 1px solid var(--color-border);
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            :global(.book-card:hover) {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            :global(.book-cover-img) {
+                width: 100%;
+                aspect-ratio: 2/3;
+                object-fit: cover;
+                background: #eee;
+            }
+
+            :global(.book-info) {
+                padding: 1rem;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            :global(.book-title) {
+                font-family: var(--font-heading-primary);
+                font-size: 1.1rem;
+                line-height: 1.2;
+                margin-bottom: 0.5rem;
+                color: var(--color-text-primary);
+            }
+
+            :global(.book-author) {
+                font-size: 0.9rem;
+                color: var(--color-text-muted);
+            }
+
+            /* SPINE STYLING */
+            :global(.book-spine) {
+                width: 300px; /* Fixed width for the stack */
+                height: 40px; /* Varies randomly via inline style ideally, but base height here */
+                background: linear-gradient(
+                    90deg,
+                    #444,
+                    #666 5%,
+                    #555 10%,
+                    #444 95%,
+                    #333
+                );
+                margin-bottom: -1px; /* Stack tightly */
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 1.5rem;
+                color: #fff;
+                font-family: var(--font-heading-secondary);
+                font-size: 0.85rem;
+                cursor: pointer;
+                transition:
+                    transform 0.2s,
+                    margin 0.2s;
+                box-shadow:
+                    inset 0 0 10px rgba(0, 0, 0, 0.5),
+                    0 5px 5px rgba(0, 0, 0, 0.2);
+                position: relative;
+                border-left: 2px solid rgba(255, 255, 255, 0.1);
+                border-right: 2px solid rgba(0, 0, 0, 0.3);
+            }
+
+            :global(.book-spine:hover) {
+                transform: translateX(-30px);
+                z-index: 10;
+                margin-bottom: 15px;
+                margin-top: 15px;
+            }
+
+            :global(.book-spine-title) {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            :global(.book-spine-author) {
+                font-size: 0.75rem;
+                opacity: 0.8;
+            }
+
+            @media (max-width: 600px) {
+                .controls-container {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+            }
+        </style>
     </main>
 </Layout>
-
-<!-- Loading State -->
-<div id="loader" class="loader hidden">Loading books...</div>
-
-<!-- Results Area -->
-<div id="resultsContainer" class="results-container view-grid">
-    <!-- Books injected here via JS -->
-</div>
-
-<style>
-    .catalog-page {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem 1rem;
-    }
-
-    .admin-access-trigger {
-        display: flex;
-        align-items: center;
-    }
-
-    .admin-status-bar {
-        background: var(--color-accent);
-        color: white;
-        padding: 0.5rem 1rem;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        border-radius: 6px;
-        margin-bottom: 2rem;
-    }
-
-    .admin-tag {
-        font-weight: bold;
-        text-transform: uppercase;
-        font-size: 0.7rem;
-        letter-spacing: 0.1em;
-    }
-
-    /* Modal Styles */
-    .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 2000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 2rem;
-        backdrop-filter: blur(8px);
-    }
-    .modal-card {
-        background: var(--color-surface);
-        border: 1px solid var(--color-border);
-        border-radius: 12px;
-        width: 100%;
-        max-width: 800px;
-        position: relative;
-        overflow: hidden;
-        animation: modalAppear 0.3s ease-out;
-    }
-    @keyframes modalAppear {
-        from {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-    .close-modal {
-        position: absolute;
-        top: 1rem;
-        right: 1.5rem;
-        background: none;
-        border: none;
-        color: var(--color-text-muted);
-        font-size: 2rem;
-        cursor: pointer;
-        z-index: 10;
-    }
-    .modal-grid {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        height: 100%;
-    }
-    .modal-cover-section {
-        background: #111;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-right: 1px solid var(--color-border);
-    }
-    .modal-cover-preview {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .modal-info-section {
-        padding: 3rem;
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-    .modal-title {
-        font-family: var(--font-heading-primary);
-        font-size: 2.5rem;
-        line-height: 1.1;
-        margin-bottom: 0.5rem;
-        color: var(--color-text-primary);
-    }
-    .modal-author {
-        font-size: 1.2rem;
-        color: var(--color-accent);
-        margin-bottom: 2rem;
-        font-weight: bold;
-    }
-    .modal-description {
-        line-height: 1.6;
-        color: var(--color-text-muted);
-    }
-    .field-group {
-        margin-bottom: 1rem;
-        text-align: left;
-    }
-    .field-group label {
-        display: block;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        color: var(--color-text-muted);
-        margin-bottom: 4px;
-        font-weight: bold;
-    }
-    @media (max-width: 700px) {
-        .modal-grid {
-            grid-template-columns: 1fr;
-        }
-        .modal-cover-section {
-            aspect-ratio: 2/3;
-        }
-    }
-
-    /* Auth Section (adapted from catalog.astro) */
-    .auth-section {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 1000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(4px);
-    }
-
-    .auth-card {
-        background-color: var(--color-surface);
-        border: 1px solid var(--color-border);
-        padding: 2rem;
-        border-radius: 8px;
-        width: 100%;
-        max-width: 350px;
-        text-align: center;
-    }
-
-    .auth-title {
-        font-family: var(--font-heading-primary);
-        font-size: 2rem;
-        color: var(--color-accent);
-        margin-bottom: 0.5rem;
-    }
-
-    .auth-input {
-        width: 100%;
-        padding: 0.8rem;
-        margin-bottom: 1rem;
-        border: 1px solid var(--color-border);
-        border-radius: 4px;
-        background: var(--color-background);
-        color: var(--color-text-primary);
-        text-align: center;
-    }
-
-    .hidden {
-        display: none !important;
-    }
-
-    /* Header & Controls */
-    .catalog-header {
-        text-align: center;
-        margin-bottom: 3rem;
-    }
-
-    .controls-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 2rem;
-        align-items: center;
-        background: var(--color-surface);
-        padding: 1.5rem;
-        border-radius: 12px;
-        border: 1px solid var(--color-border);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .search-area {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        flex: 1;
-        max-width: 600px;
-    }
-
-    .search-mode-toggles {
-        display: flex;
-        gap: 1rem;
-        font-size: 0.9rem;
-    }
-
-    .mode-btn {
-        background: none;
-        border: none;
-        color: var(--color-text-muted);
-        cursor: pointer;
-        padding-bottom: 2px;
-        border-bottom: 2px solid transparent;
-        transition: all 0.2s;
-    }
-
-    .mode-btn.active {
-        color: var(--color-accent);
-        border-bottom-color: var(--color-accent);
-        font-weight: bold;
-    }
-
-    .input-wrapper {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .search-input {
-        flex: 1;
-        padding: 0.8rem 1rem;
-        border: 1px solid var(--color-border);
-        border-radius: 6px;
-        background: var(--color-background);
-        color: var(--color-text-primary);
-        font-size: 1rem;
-    }
-
-    .action-btn {
-        background: var(--color-accent);
-        color: white;
-        border: none;
-        padding: 0 1.5rem;
-        border-radius: 6px;
-        cursor: pointer;
-        font-family: var(--font-heading-secondary);
-        text-transform: uppercase;
-        font-weight: bold;
-        letter-spacing: 0.05em;
-        transition: filter 0.2s;
-    }
-
-    .action-btn:hover {
-        filter: brightness(1.1);
-    }
-
-    .view-toggles {
-        display: flex;
-        gap: 0.5rem;
-        background: var(--color-background);
-        padding: 0.25rem;
-        border-radius: 6px;
-        border: 1px solid var(--color-border);
-    }
-
-    .view-btn {
-        background: none;
-        border: none;
-        padding: 0.5rem;
-        border-radius: 4px;
-        color: var(--color-text-muted);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .view-btn.active {
-        background: var(--color-surface);
-        color: var(--color-accent);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .loader {
-        text-align: center;
-        padding: 4rem;
-        font-style: italic;
-        color: var(--color-text-muted);
-    }
-
-    /* Results Container */
-    .results-container {
-        transition: all 0.5s ease;
-    }
-
-    /* GRID VIEW */
-    .results-container.view-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 2rem;
-        padding: 1rem;
-    }
-
-    /* STACK VIEW (SPINES) */
-    .results-container.view-stack {
-        display: flex;
-        flex-direction: column-reverse; /* Stack from bottom like a real pile */
-        align-items: center;
-        gap: 0;
-        max-width: 600px;
-        margin: 4rem auto;
-        perspective: 1000px;
-    }
-
-    /* Book Components (Injectable) */
-    :global(.book-card) {
-        background: var(--color-surface);
-        border-radius: 8px;
-        overflow: hidden;
-        transition: transform 0.3s;
-        border: 1px solid var(--color-border);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    :global(.book-card:hover) {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    :global(.book-cover-img) {
-        width: 100%;
-        aspect-ratio: 2/3;
-        object-fit: cover;
-        background: #eee;
-    }
-
-    :global(.book-info) {
-        padding: 1rem;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
-
-    :global(.book-title) {
-        font-family: var(--font-heading-primary);
-        font-size: 1.1rem;
-        line-height: 1.2;
-        margin-bottom: 0.5rem;
-        color: var(--color-text-primary);
-    }
-
-    :global(.book-author) {
-        font-size: 0.9rem;
-        color: var(--color-text-muted);
-    }
-
-    /* SPINE STYLING */
-    :global(.book-spine) {
-        width: 300px; /* Fixed width for the stack */
-        height: 40px; /* Varies randomly via inline style ideally, but base height here */
-        background: linear-gradient(
-            90deg,
-            #444,
-            #666 5%,
-            #555 10%,
-            #444 95%,
-            #333
-        );
-        margin-bottom: -1px; /* Stack tightly */
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 1.5rem;
-        color: #fff;
-        font-family: var(--font-heading-secondary);
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition:
-            transform 0.2s,
-            margin 0.2s;
-        box-shadow:
-            inset 0 0 10px rgba(0, 0, 0, 0.5),
-            0 5px 5px rgba(0, 0, 0, 0.2);
-        position: relative;
-        border-left: 2px solid rgba(255, 255, 255, 0.1);
-        border-right: 2px solid rgba(0, 0, 0, 0.3);
-    }
-
-    :global(.book-spine:hover) {
-        transform: translateX(-30px);
-        z-index: 10;
-        margin-bottom: 15px;
-        margin-top: 15px;
-    }
-
-    :global(.book-spine-title) {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    :global(.book-spine-author) {
-        font-size: 0.75rem;
-        opacity: 0.8;
-    }
-
-    @media (max-width: 600px) {
-        .controls-container {
-            flex-direction: column;
-            align-items: stretch;
-        }
-    }
-</style>
 
 <script>
     interface Book {
