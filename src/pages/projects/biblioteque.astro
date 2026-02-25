@@ -1070,14 +1070,14 @@ import Layout from "../../components/Layout.astro";
         currentSearchMode = "semantic";
         updateToggleUI("mode", e.target as HTMLElement);
         searchInput.placeholder =
-            "Describe the book (e.g. Python manuals or philosophical novels...)";
+            "Describe a book, like 'crime story with an antihero', 'Romanzo di spionaggio ma con una certa profondità intellettuale'...";
     });
 
     document.getElementById("modeGemma")?.addEventListener("click", (e) => {
         currentSearchMode = "gemma";
         updateToggleUI("mode", e.target as HTMLElement);
         searchInput.placeholder =
-            "Describe a book to search, like South-American novels or legal thriller...";
+            "Describe a book, like 'crime story with an antihero', 'Romanzo di spionaggio ma con una certa profondità intellettuale'...";
     });
 
     document.getElementById("viewGrid")?.addEventListener("click", (e) => {
