@@ -93,37 +93,6 @@ import Layout from "../../components/Layout.astro";
                         >
                     </button>
                 </div>
-
-                <div class="admin-access-trigger">
-                    <button
-                        id="showLoginBtn"
-                        class="admin-btn"
-                        title="Admin Access"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            style="margin-right: 6px;"
-                        >
-                            <rect
-                                x="3"
-                                y="11"
-                                width="18"
-                                height="11"
-                                rx="2"
-                                ry="2"></rect>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg>
-                        <span>Admin Access</span>
-                    </button>
-                </div>
             </div>
         </header>
 
@@ -235,14 +204,37 @@ import Layout from "../../components/Layout.astro";
             <!-- Books injected here via JS -->
         </div>
 
-        <!-- Admin state (Showed only if logged in) -->
-        <div id="adminHeader" class="admin-status-bar hidden">
-            <span class="admin-tag">Admin Mode On</span>
-            <button
-                id="logoutBtn"
-                style="background: none; border: none; color: white; text-decoration: underline; cursor: pointer; font-size: 0.8rem;"
-                >Esci</button
-            >
+        <!-- Admin state (Persistent bar at the bottom) -->
+        <div id="adminHeader" class="admin-status-bar">
+            <div id="adminLoggedOutContent" class="admin-bar-content">
+                <button
+                    id="showLoginBtn"
+                    class="admin-btn-simple"
+                    title="Admin Access"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        style="margin-right: 6px;"
+                    >
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"
+                        ></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span>Admin Access</span>
+                </button>
+            </div>
+            <div id="adminLoggedInContent" class="admin-bar-content hidden">
+                <span class="admin-tag">Admin Mode On</span>
+                <button id="logoutBtn" class="logout-link">Esci</button>
+            </div>
         </div>
 
         <style>
@@ -261,12 +253,42 @@ import Layout from "../../components/Layout.astro";
                 background: var(--color-accent);
                 color: white;
                 padding: 0.5rem 1rem;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
                 border-radius: 6px;
                 margin-top: 2rem;
                 margin-bottom: 0;
+            }
+
+            .admin-bar-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+
+            .admin-btn-simple {
+                background: none;
+                border: none;
+                color: white;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                font-size: 0.8rem;
+                padding: 0;
+                opacity: 0.8;
+                transition: opacity 0.2s;
+            }
+
+            .admin-btn-simple:hover {
+                opacity: 1;
+            }
+
+            .logout-link {
+                background: none;
+                border: none;
+                color: white;
+                text-decoration: underline;
+                cursor: pointer;
+                font-size: 0.8rem;
             }
 
             .admin-tag {
@@ -834,19 +856,21 @@ import Layout from "../../components/Layout.astro";
     // Function to update interface after logging in
     function updateAdminUI() {
         const token = localStorage.getItem("admin_token");
+        const adminLoggedOutContent = document.getElementById(
+            "adminLoggedOutContent",
+        );
+        const adminLoggedInContent = document.getElementById(
+            "adminLoggedInContent",
+        );
         const loginSection = document.getElementById("loginSection");
-        const adminHeader = document.getElementById("adminHeader");
-        const showLoginBtn = document.getElementById("showLoginBtn");
 
         if (token) {
-            // If logged
-            adminHeader?.classList.remove("hidden");
-            if (showLoginBtn) showLoginBtn.style.display = "none";
+            adminLoggedOutContent?.classList.add("hidden");
+            adminLoggedInContent?.classList.remove("hidden");
             loginSection?.classList.add("hidden");
         } else {
-            // If not logged
-            adminHeader?.classList.add("hidden");
-            if (showLoginBtn) showLoginBtn.style.display = "block";
+            adminLoggedOutContent?.classList.remove("hidden");
+            adminLoggedInContent?.classList.add("hidden");
             loginSection?.classList.add("hidden");
         }
     }
