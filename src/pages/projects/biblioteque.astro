@@ -204,6 +204,26 @@ import Layout from "../../components/Layout.astro";
             <!-- Books injected here via JS -->
         </div>
 
+        <!-- Pagination Controls -->
+        <div
+            id="paginationControls"
+            class="pagination-footer flex justify-center items-center gap-4 mt-8 mb-4"
+        >
+            <button
+                id="prevPageBtn"
+                class="action-btn py-2 px-4 opacity-50 cursor-not-allowed"
+                disabled
+            >
+                &larr; Precedente
+            </button>
+            <span id="pageIndicator" class="text-text-muted font-mono text-sm">
+                Page ... of ...
+            </span>
+            <button id="nextPageBtn" class="action-btn py-2 px-4">
+                Next &rarr;
+            </button>
+        </div>
+
         <!-- Admin state (Persistent bar at the bottom) -->
         <div id="adminHeader" class="admin-status-bar">
             <div id="adminLoggedOutContent" class="admin-bar-content">
@@ -706,6 +726,8 @@ import Layout from "../../components/Layout.astro";
     let currentBooks: Book[] = [];
     let currentViewMode: "grid" | "stack" = "grid";
     let currentSearchMode: "text" | "semantic" | "gemma" = "text";
+    let currentPage = 1;
+    let totalPages = 1;
     const API_BASE_URL = "https://book-api.trnq.eu";
 
     function getCoverUrl(book: any) {
@@ -739,38 +761,66 @@ import Layout from "../../components/Layout.astro";
     }
 
     // Load Initial Random Books
-    async function loadBooks() {
+    async function loadBooks(page?: number) {
         showLoader(true);
         try {
-            // 1. Get total pages first (using the same limit we'll use for fetching)
+            // If no particular page is request, load random page
             const PAGE_SIZE = 24;
-            const firstRes = await fetch(
-                `https://book-api.trnq.eu/api/catalog?limit=${PAGE_SIZE}`,
-            );
-            const firstData = await firstRes.json();
-            const totalPages = firstData.pagination?.totalPages || 1;
+            let pageToLoad = page;
+            if (!pageToLoad) {
+                const firstRes = await fetch(
+                    `https://book-api.trnq.eu/api/catalog?limit=${PAGE_SIZE}`,
+                );
+                const firstData = await firstRes.json();
+                const total = firstData.pagination?.totalPages || 1;
+                pageToLoad = Math.floor(Math.random() * total) + 1;
+            }
 
-            // 2. Pick a random page
-            const randomPage = Math.floor(Math.random() * totalPages) + 1;
-
-            // 3. Fetch that random page
             const res = await fetch(
-                `https://book-api.trnq.eu/api/catalog?page=${randomPage}&limit=${PAGE_SIZE}`,
+                `${API_BASE_URL}/api/catalog?page=${pageToLoad}&limit=${PAGE_SIZE}`,
             );
             if (!res.ok) throw new Error("API Error");
             const data = await res.json();
-
-            // The catalog endpoint returns { data: [...], pagination: {...} }
             const books = data.data || [];
-            allBooks = books.sort(() => 0.5 - Math.random()); // Shuffle the page results too
+            allBooks = books;
             currentBooks = [...allBooks];
+
+            // Update global state of the page
+            currentPage = data.pagination?.page || pageToLoad;
+            totalPages = data.pagination?.totalPages || 1;
+
             renderBooks(currentBooks);
+            updatePaginationUI();
         } catch (e) {
             console.error(e);
             if (container)
                 container.innerHTML = `<p class="text-center text-red-500">Errore nel caricamento dei libri.</p>`;
         } finally {
             showLoader(false);
+        }
+    }
+
+    function updatePaginationUI() {
+        if (pageIndicator) {
+            pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+        }
+
+        if (prevPageBtn) {
+            prevPageBtn.disabled = currentPage <= 1;
+            prevPageBtn.classList.toggle("opacity-50", prevPageBtn.disabled);
+            prevPageBtn.classList.toggle(
+                "cursor-not-allowed",
+                prevPageBtn.disabled,
+            );
+        }
+
+        if (nextPageBtn) {
+            nextPageBtn.disabled = currentPage >= totalPages;
+            nextPageBtn.classList.toggle("opacity-50", nextPageBtn.disabled);
+            nextPageBtn.classList.toggle(
+                "cursor-not-allowed",
+                nextPageBtn.disabled,
+            );
         }
     }
 
@@ -784,6 +834,14 @@ import Layout from "../../components/Layout.astro";
     const logoutBtn = document.getElementById("logoutBtn");
     const showLoginBtn = document.getElementById("showLoginBtn");
     const closeLoginBtn = document.getElementById("closeLoginBtn");
+
+    const prevPageBtn = document.getElementById(
+        "prevPageBtn",
+    ) as HTMLButtonElement;
+    const nextPageBtn = document.getElementById(
+        "nextPageBtn",
+    ) as HTMLButtonElement;
+    const pageIndicator = document.getElementById("pageIndicator");
 
     // Elementi della Modale
     const bookModal = document.getElementById("bookModal");
@@ -896,18 +954,32 @@ import Layout from "../../components/Layout.astro";
             if (data.token) {
                 localStorage.setItem("admin_token", data.token);
                 updateAdminUI();
-                alert("Accesso admin effettuato!");
+                alert("Admin access complete!");
             } else {
-                alert("Password Errata");
+                alert("Wrong password");
             }
         } catch (e) {
-            alert("Server non raggiungibile");
+            alert("Server not reachable");
         }
     });
     logoutBtn?.addEventListener("click", () => {
         localStorage.removeItem("admin_token");
         updateAdminUI();
     });
+
+    prevPageBtn?.addEventListener("click", () => {
+        if (currentPage > 1) {
+            loadBooks(currentPage - 1);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+    nextPageBtn?.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+            loadBooks(currentPage + 1);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+
     // Inizializza UI Admin
     updateAdminUI();
 
