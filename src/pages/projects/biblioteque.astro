@@ -728,6 +728,8 @@ import Layout from "../../components/Layout.astro";
     let currentSearchMode: "text" | "semantic" | "gemma" = "text";
     let currentPage = 1;
     let totalPages = 1;
+    let currentQuery = "";
+
     const API_BASE_URL = "https://book-api.trnq.eu";
 
     function getCoverUrl(book: any) {
@@ -776,9 +778,14 @@ import Layout from "../../components/Layout.astro";
                 pageToLoad = Math.floor(Math.random() * total) + 1;
             }
 
-            const res = await fetch(
-                `${API_BASE_URL}/api/catalog?page=${pageToLoad}&limit=${PAGE_SIZE}`,
-            );
+            // builds url based on the presence of an active search
+            let url = `${API_BASE_URL}/api/catalog?page=${pageToLoad}&limit=${PAGE_SIZE}`;
+            if (currentQuery) {
+                url += `&search=${encodeURIComponent(currentQuery)}`;
+            }
+
+            const res = await fetch(url);
+
             if (!res.ok) throw new Error("API Error");
             const data = await res.json();
             const books = data.data || [];
@@ -801,6 +808,13 @@ import Layout from "../../components/Layout.astro";
     }
 
     function updatePaginationUI() {
+        if (currentSearchMode !== "text") {
+            paginationControls?.classList.add("hidden");
+            return;
+        } else {
+            paginationControls?.classList.remove("hidden");
+        }
+
         if (pageIndicator) {
             pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
         }
@@ -825,6 +839,8 @@ import Layout from "../../components/Layout.astro";
     }
 
     // Login elements
+    const paginationControls = document.getElementById("paginationControls");
+
     const loginSection = document.getElementById("loginSection");
     const adminHeader = document.getElementById("adminHeader");
     const adminPassword = document.getElementById(
@@ -1075,7 +1091,7 @@ import Layout from "../../components/Layout.astro";
             if (res.ok) {
                 alert("Book updated successfully!");
                 bookModal?.classList.add("hidden");
-                loadBooks();
+                loadBooks(currentPage);
             } else {
                 const errorInfo = await res
                     .json()
@@ -1098,34 +1114,16 @@ import Layout from "../../components/Layout.astro";
         const q = searchInput.value.trim();
 
         if (currentSearchMode === "text") {
-            // Client-side filter or standard API if needed.
-            // Since we load all books initially, client-side is faster for "text" mode on the random set.
-            // BUT if we want to search the WHOLE DB, we should use the API.
-            // Let's use API for robustness.
-            showLoader(true);
-            try {
-                // Fallback to local filtering if query is empty to restore random set
-                if (!q) {
-                    // Restore random shuffle of all books
-                    allBooks.sort(() => 0.5 - Math.random());
-                    renderBooks(allBooks);
-                    showLoader(false);
-                    return;
-                }
-
-                const res = await fetch(
-                    `https://book-api.trnq.eu/api/catalog?search=${encodeURIComponent(q)}`,
-                );
-                const data = await res.json();
-                renderBooks(data.data || []);
-            } catch (e) {
-                console.error(e);
-            } finally {
-                showLoader(false);
-            }
+            currentQuery = q;
+            loadBooks(1);
+            paginationControls?.classList.remove("hidden");
         } else {
-            // Semantic Search
+            // Ricerca Semantica
             if (!q) return;
+
+            // NASCONDIAMO la paginazione perché i risultati semantici sono fissi
+            paginationControls?.classList.add("hidden");
+
             showLoader(true);
             try {
                 const model =
@@ -1134,7 +1132,9 @@ import Layout from "../../components/Layout.astro";
                     `https://book-api.trnq.eu/api/search/similar?query=${encodeURIComponent(q)}&limit=10&model=${model}`,
                 );
                 const data = await res.json();
-                // The API returns similar books, render them
+
+                // Aggiorniamo currentBooks così il cambio vista (grid/stack) funziona
+                currentBooks = data;
                 renderBooks(data);
             } catch (e) {
                 console.error(e);
