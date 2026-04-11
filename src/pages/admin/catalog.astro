@@ -530,6 +530,12 @@ import Layout from "../../components/Layout.astro";
             updateUI();
         });
 
+        const handleAuthExpired = () => {
+            localStorage.removeItem("admin_token");
+            updateUI();
+            alert("Sessione scaduta. Effettua di nuovo il login.");
+        };
+
         // --- LOGICA MANUALE ---
         manualBtn?.addEventListener("click", () => {
             // Pulisce i campi
@@ -641,6 +647,8 @@ import Layout from "../../components/Layout.astro";
                     alert("✅ Libro salvato nel DB!");
                     bookFormContainer?.classList.add("hidden");
                     searchQuery.value = "";
+                } else if (response.status === 401) {
+                    handleAuthExpired();
                 } else {
                     const err = await response.json();
                     alert("❌ Errore: " + err.error);
