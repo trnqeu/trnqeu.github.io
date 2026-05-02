@@ -33,6 +33,9 @@
     "@fontsource/work-sans": "^5.2.6",
     "astro": "^6.2.1"
   },
+  "overrides": {
+    "brace-expansion": "^1.1.13"
+  },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@playwright/test": "^1.54.1",
