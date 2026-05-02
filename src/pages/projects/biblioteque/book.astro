@@ -50,6 +50,11 @@ import Layout from "../../../components/Layout.astro";
       <h2 class="similar-heading">Similar Books</h2>
       <div id="similarGrid" class="similar-grid"></div>
     </section>
+
+    <div id="adminBar" class="admin-status-bar hidden">
+      <span class="admin-tag">Admin Mode On</span>
+      <button id="adminLogoutBtn" class="logout-link">Esci</button>
+    </div>
   </main>
 </Layout>
 
@@ -112,21 +117,48 @@ import Layout from "../../../components/Layout.astro";
   .detail-meta {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.25rem 1rem;
+    gap: 0.4rem 1.2rem;
     margin-bottom: 1.5rem;
-    font-size: 0.88rem;
+    align-items: center;
   }
   .detail-meta dt {
     color: var(--color-text-muted);
     text-transform: uppercase;
-    font-size: 0.72rem;
-    font-weight: bold;
-    letter-spacing: 0.04em;
-    align-self: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-family: var(--font-heading-secondary, sans-serif);
+    white-space: nowrap;
   }
   .detail-meta dd {
     color: var(--color-text-primary);
+    font-size: 0.95rem;
     margin: 0;
+  }
+
+  .admin-status-bar {
+    background: var(--color-accent);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .admin-tag {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+  .logout-link {
+    background: none;
+    border: none;
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.8rem;
   }
 
   .detail-description {
@@ -303,8 +335,9 @@ import Layout from "../../../components/Layout.astro";
 
     bookMeta.innerHTML = "";
     const metaFields: [string, string | undefined][] = [
-      ["Publisher", book.publisher],
-      ["Language", book.language],
+      ["Editore", book.publishingHouse ?? book.publisher],
+      ["Lingua", book.language],
+      ["Formato", book.format],
     ];
     metaFields.forEach(([label, value]) => {
       if (!value) return;
@@ -400,4 +433,25 @@ import Layout from "../../../components/Layout.astro";
       alert("Connection error: " + e);
     }
   });
+
+  const adminBar = document.getElementById("adminBar")!;
+  const adminLogoutBtn = document.getElementById("adminLogoutBtn")!;
+
+  function updateAdminBar() {
+    const token = localStorage.getItem("admin_token");
+    if (token) {
+      adminBar.classList.remove("hidden");
+    } else {
+      adminBar.classList.add("hidden");
+    }
+  }
+
+  adminLogoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("admin_token");
+    updateAdminBar();
+    viewMode.classList.remove("hidden");
+    editMode.classList.add("hidden");
+  });
+
+  updateAdminBar();
 </script>
