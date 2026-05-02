@@ -18,6 +18,7 @@ import Layout from "../../../components/Layout.astro";
           <div id="viewMode">
             <h1 id="bookTitle" class="detail-title"></h1>
             <p id="bookAuthor" class="detail-author"></p>
+            <dl id="bookMeta" class="detail-meta"></dl>
             <p id="bookDescription" class="detail-description"></p>
           </div>
           <div id="editMode" class="hidden">
@@ -106,6 +107,26 @@ import Layout from "../../../components/Layout.astro";
     color: var(--color-accent);
     font-weight: bold;
     margin-bottom: 1.5rem;
+  }
+
+  .detail-meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.88rem;
+  }
+  .detail-meta dt {
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    align-self: center;
+  }
+  .detail-meta dd {
+    color: var(--color-text-primary);
+    margin: 0;
   }
 
   .detail-description {
@@ -234,6 +255,7 @@ import Layout from "../../../components/Layout.astro";
   const bookCover = document.getElementById("bookCover") as HTMLImageElement;
   const bookTitle = document.getElementById("bookTitle")!;
   const bookAuthor = document.getElementById("bookAuthor")!;
+  const bookMeta = document.getElementById("bookMeta")!;
   const bookDescription = document.getElementById("bookDescription")!;
 
   const viewMode = document.getElementById("viewMode")!;
@@ -278,6 +300,17 @@ import Layout from "../../../components/Layout.astro";
 
     bookTitle.textContent = book.title;
     bookAuthor.textContent = book.author;
+
+    bookMeta.innerHTML = "";
+    const metaFields: [string, string | undefined][] = [
+      ["Publisher", book.publisher],
+      ["Language", book.language],
+    ];
+    metaFields.forEach(([label, value]) => {
+      if (!value) return;
+      bookMeta.innerHTML += `<dt>${label}</dt><dd>${value}</dd>`;
+    });
+
     bookDescription.textContent =
       book.description || "No description available.";
 
@@ -304,7 +337,7 @@ import Layout from "../../../components/Layout.astro";
   async function loadSimilar(id: string) {
     try {
       const res = await fetch(
-        `${API}/app/books/${id}/similar?limit=6&model=auto`,
+        `${API}/app/books/${id}/similar?limit=10&model=auto`,
       );
       if (!res.ok) return;
       const data = await res.json();
