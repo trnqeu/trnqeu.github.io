@@ -18,7 +18,7 @@ export async function GET() {
     for (const post of posts) {
       searchData.push({
         title: post.data.title || 'Untitled',
-        url: `/${collectionName}/${post.slug}`,
+        url: `/${collectionName}/${post.id}`,
         date: post.data.date || new Date().toISOString(),
         excerpt: post.data.excerpt || post.data.description || '',
         categories: post.data.categories || [],

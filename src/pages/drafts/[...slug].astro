@@ -5,20 +5,18 @@ import {
     extractHeadings,
     filterHeadingsForTOC,
 } from "../../utils/table-of-contents";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
     const allDrafts = await getCollection("drafts");
 
     return allDrafts.map((post) => {
-        // For collections, access raw content through body
         const rawContent = post.body || "";
         const allHeadings = extractHeadings(rawContent);
         const tocHeadings = filterHeadingsForTOC(allHeadings);
-        const slug = post.slug;
 
         return {
-            params: { slug },
+            params: { slug: post.id },
             props: { post, tocHeadings },
         };
     });
@@ -26,7 +24,7 @@ export async function getStaticPaths() {
 
 const { post, tocHeadings } = Astro.props;
 const { data: frontmatter } = post;
-const { Content } = await post.render();
+const { Content } = await render(post);
 
 const pageTitle = frontmatter.title;
 const publishedTime = frontmatter.date

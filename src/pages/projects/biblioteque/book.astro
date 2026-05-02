@@ -1,0 +1,370 @@
+---
+import Layout from "../../../components/Layout.astro";
+---
+
+<Layout title="Book Detail — trnq.eu" description="Book detail page">
+  <main class="book-detail-page">
+    <a href="/projects/biblioteque" class="back-link">← Back to catalogue</a>
+
+    <div id="loadingState" class="status-msg">Loading...</div>
+    <div id="errorState" class="status-msg hidden">Book not found.</div>
+
+    <article id="bookDetail" class="hidden">
+      <div class="detail-grid">
+        <div class="detail-cover-section">
+          <img id="bookCover" src="" alt="" class="detail-cover" />
+        </div>
+        <div class="detail-info-section">
+          <div id="viewMode">
+            <h1 id="bookTitle" class="detail-title"></h1>
+            <p id="bookAuthor" class="detail-author"></p>
+            <p id="bookDescription" class="detail-description"></p>
+          </div>
+          <div id="editMode" class="hidden">
+            <h2 class="edit-heading">Edit Book</h2>
+            <div class="field-group">
+              <label>Title</label>
+              <input id="editTitle" type="text" class="field-input" />
+            </div>
+            <div class="field-group">
+              <label>Author</label>
+              <input id="editAuthor" type="text" class="field-input" />
+            </div>
+            <div class="field-group">
+              <label>Cover URL</label>
+              <input id="editCoverUrl" type="text" class="field-input" />
+            </div>
+            <div class="field-group">
+              <label>Description</label>
+              <textarea id="editDescription" class="field-input" rows="6"
+              ></textarea>
+            </div>
+            <button id="saveBtn" class="save-btn">Save to Database</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <section id="similarSection" class="hidden">
+      <h2 class="similar-heading">Similar Books</h2>
+      <div id="similarGrid" class="similar-grid"></div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .hidden {
+    display: none !important;
+  }
+
+  .book-detail-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .status-msg {
+    text-align: center;
+    padding: 4rem;
+    color: var(--color-text-muted);
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  .detail-cover {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .detail-title {
+    font-family: var(--font-heading-primary);
+    font-size: 2.2rem;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-primary);
+  }
+
+  .detail-author {
+    font-size: 1.1rem;
+    color: var(--color-accent);
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+
+  .detail-description {
+    line-height: 1.7;
+    color: var(--color-text-muted);
+  }
+
+  .edit-heading {
+    font-family: var(--font-heading-primary);
+    font-size: 1.5rem;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+  }
+
+  .field-group {
+    margin-bottom: 1rem;
+  }
+  .field-group label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+    font-weight: bold;
+  }
+  .field-input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-background);
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+  }
+  textarea.field-input {
+    resize: vertical;
+  }
+
+  .save-btn {
+    padding: 0.8rem 1.5rem;
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  .save-btn:hover {
+    opacity: 0.85;
+  }
+
+  .similar-heading {
+    font-family: var(--font-heading-primary);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-primary);
+  }
+
+  .similar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .similar-card {
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+  .similar-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: block;
+    transition: transform 0.2s;
+  }
+  .similar-card:hover img {
+    transform: translateY(-4px);
+  }
+  .similar-card-title {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .similar-card-author {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .detail-grid {
+      grid-template-columns: 1fr;
+    }
+    .detail-cover {
+      max-width: 180px;
+      margin: 0 auto;
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  const API = "https://book-api.trnq.eu";
+
+  function getCoverUrl(coverUrl: string | undefined): string {
+    if (!coverUrl) return "/placeholder-book.png";
+    if (coverUrl.startsWith("http")) return coverUrl;
+    return `${API}${coverUrl.startsWith("/") ? "" : "/"}${coverUrl}`;
+  }
+
+  const loadingState = document.getElementById("loadingState")!;
+  const errorState = document.getElementById("errorState")!;
+  const bookDetail = document.getElementById("bookDetail")!;
+  const similarSection = document.getElementById("similarSection")!;
+
+  const bookCover = document.getElementById("bookCover") as HTMLImageElement;
+  const bookTitle = document.getElementById("bookTitle")!;
+  const bookAuthor = document.getElementById("bookAuthor")!;
+  const bookDescription = document.getElementById("bookDescription")!;
+
+  const viewMode = document.getElementById("viewMode")!;
+  const editMode = document.getElementById("editMode")!;
+  const editTitle = document.getElementById("editTitle") as HTMLInputElement;
+  const editAuthor = document.getElementById("editAuthor") as HTMLInputElement;
+  const editCoverUrl = document.getElementById(
+    "editCoverUrl",
+  ) as HTMLInputElement;
+  const editDescription = document.getElementById(
+    "editDescription",
+  ) as HTMLTextAreaElement;
+  const saveBtn = document.getElementById("saveBtn")!;
+  const similarGrid = document.getElementById("similarGrid")!;
+
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  if (!id) {
+    loadingState.classList.add("hidden");
+    errorState.textContent = "No book ID specified.";
+    errorState.classList.remove("hidden");
+  } else {
+    loadBook(id);
+    loadSimilar(id);
+  }
+
+  async function loadBook(id: string) {
+    try {
+      const res = await fetch(`${API}/app/books/${id}`);
+      if (!res.ok) throw new Error("not found");
+      const book = await res.json();
+      renderBook(book);
+    } catch {
+      loadingState.classList.add("hidden");
+      errorState.classList.remove("hidden");
+    }
+  }
+
+  function renderBook(book: any) {
+    loadingState.classList.add("hidden");
+
+    bookTitle.textContent = book.title;
+    bookAuthor.textContent = book.author;
+    bookDescription.textContent =
+      book.description || "No description available.";
+
+    const cover = getCoverUrl(book.coverUrl);
+    bookCover.src = cover;
+    bookCover.alt = book.title;
+    bookCover.onerror = () => {
+      bookCover.src = "/placeholder-book.png";
+    };
+
+    const token = localStorage.getItem("admin_token");
+    if (token) {
+      editTitle.value = book.title;
+      editAuthor.value = book.author;
+      editCoverUrl.value = book.coverUrl || "";
+      editDescription.value = book.description || "";
+      viewMode.classList.add("hidden");
+      editMode.classList.remove("hidden");
+    }
+
+    bookDetail.classList.remove("hidden");
+  }
+
+  async function loadSimilar(id: string) {
+    try {
+      const res = await fetch(
+        `${API}/app/books/${id}/similar?limit=6&model=auto`,
+      );
+      if (!res.ok) return;
+      const data = await res.json();
+      // Handle both array response and { data: [...] } envelope
+      const books = Array.isArray(data) ? data : (data.data ?? []);
+      renderSimilar(books);
+    } catch {
+      // Similar books are non-critical — fail silently
+    }
+  }
+
+  function renderSimilar(books: any[]) {
+    if (!books.length) return;
+    books.forEach((book: any) => {
+      const a = document.createElement("a");
+      a.href = `/projects/biblioteque/book?id=${book.id}`;
+      a.className = "similar-card";
+      const cover = getCoverUrl(book.coverUrl);
+      a.innerHTML = `
+        <img src="${cover}" alt="${book.title}" loading="lazy" onerror="this.src='/placeholder-book.png'">
+        <p class="similar-card-title">${book.title}</p>
+        <p class="similar-card-author">${book.author}</p>
+      `;
+      similarGrid.appendChild(a);
+    });
+    similarSection.classList.remove("hidden");
+  }
+
+  saveBtn.addEventListener("click", async () => {
+    const token = localStorage.getItem("admin_token");
+    if (!token || !id) return;
+
+    const body = {
+      title: editTitle.value,
+      author: editAuthor.value,
+      coverUrl: editCoverUrl.value,
+      description: editDescription.value,
+    };
+
+    try {
+      const res = await fetch(`${API}/api/books/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        alert("Book updated!");
+        bookTitle.textContent = body.title;
+        bookAuthor.textContent = body.author;
+        bookDescription.textContent = body.description;
+        bookCover.src = getCoverUrl(body.coverUrl);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert("Error: " + (err.error || err.message || "unknown"));
+      }
+    } catch (e) {
+      alert("Connection error: " + e);
+    }
+  });
+</script>
