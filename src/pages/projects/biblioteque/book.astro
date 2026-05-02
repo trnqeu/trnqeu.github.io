@@ -51,9 +51,20 @@ import Layout from "../../../components/Layout.astro";
       <div id="similarGrid" class="similar-grid"></div>
     </section>
 
-    <div id="adminBar" class="admin-status-bar hidden">
-      <span class="admin-tag">Admin Mode On</span>
-      <button id="adminLogoutBtn" class="logout-link">Esci</button>
+    <div id="adminBar" class="admin-status-bar">
+      <div id="adminLoggedOut" class="admin-bar-content">
+        <a href="/projects/biblioteque#admin" class="admin-btn-simple">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Admin Access</span>
+        </a>
+      </div>
+      <div id="adminLoggedIn" class="admin-bar-content hidden">
+        <span class="admin-tag">Admin Mode On</span>
+        <button id="adminLogoutBtn" class="logout-link">Esci</button>
+      </div>
     </div>
   </main>
 </Layout>
@@ -142,9 +153,28 @@ import Layout from "../../../components/Layout.astro";
     padding: 0.5rem 1rem;
     border-radius: 6px;
     margin-top: 3rem;
+  }
+  .admin-bar-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+  }
+  .admin-btn-simple {
+    background: none;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 0;
+    opacity: 0.8;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .admin-btn-simple:hover {
+    opacity: 1;
   }
   .admin-tag {
     font-weight: bold;
@@ -437,15 +467,18 @@ import Layout from "../../../components/Layout.astro";
     }
   });
 
-  const adminBar = document.getElementById("adminBar")!;
+  const adminLoggedOut = document.getElementById("adminLoggedOut")!;
+  const adminLoggedIn = document.getElementById("adminLoggedIn")!;
   const adminLogoutBtn = document.getElementById("adminLogoutBtn")!;
 
   function updateAdminBar() {
     const token = localStorage.getItem("admin_token");
     if (token) {
-      adminBar.classList.remove("hidden");
+      adminLoggedOut.classList.add("hidden");
+      adminLoggedIn.classList.remove("hidden");
     } else {
-      adminBar.classList.add("hidden");
+      adminLoggedOut.classList.remove("hidden");
+      adminLoggedIn.classList.add("hidden");
     }
   }
 
