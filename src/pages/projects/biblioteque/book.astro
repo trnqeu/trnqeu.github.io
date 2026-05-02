@@ -31,6 +31,23 @@ import Layout from "../../../components/Layout.astro";
               <label>Author</label>
               <input id="editAuthor" type="text" class="field-input" />
             </div>
+            <div class="edit-row">
+              <div class="field-group">
+                <label>Editore</label>
+                <input id="editPublisher" type="text" class="field-input" />
+              </div>
+              <div class="field-group field-group--small">
+                <label>Lingua</label>
+                <input id="editLanguage" type="text" class="field-input" />
+              </div>
+              <div class="field-group field-group--small">
+                <label>Formato</label>
+                <select id="editFormat" class="field-input">
+                  <option value="Ebook">Ebook</option>
+                  <option value="Cartaceo">Cartaceo</option>
+                </select>
+              </div>
+            </div>
             <div class="field-group">
               <label>Cover URL</label>
               <input id="editCoverUrl" type="text" class="field-input" />
@@ -250,6 +267,18 @@ import Layout from "../../../components/Layout.astro";
   .field-group {
     margin-bottom: 1rem;
   }
+  .edit-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .edit-row .field-group {
+    flex: 1;
+    min-width: 120px;
+  }
+  .edit-row .field-group--small {
+    flex: 0 0 90px;
+  }
   .field-group label {
     display: block;
     font-size: 0.7rem;
@@ -368,12 +397,11 @@ import Layout from "../../../components/Layout.astro";
   const editMode = document.getElementById("editMode")!;
   const editTitle = document.getElementById("editTitle") as HTMLInputElement;
   const editAuthor = document.getElementById("editAuthor") as HTMLInputElement;
-  const editCoverUrl = document.getElementById(
-    "editCoverUrl",
-  ) as HTMLInputElement;
-  const editDescription = document.getElementById(
-    "editDescription",
-  ) as HTMLTextAreaElement;
+  const editPublisher = document.getElementById("editPublisher") as HTMLInputElement;
+  const editLanguage = document.getElementById("editLanguage") as HTMLInputElement;
+  const editFormat = document.getElementById("editFormat") as HTMLSelectElement;
+  const editCoverUrl = document.getElementById("editCoverUrl") as HTMLInputElement;
+  const editDescription = document.getElementById("editDescription") as HTMLTextAreaElement;
   const saveBtn = document.getElementById("saveBtn")!;
   const similarGrid = document.getElementById("similarGrid")!;
 
@@ -435,6 +463,9 @@ import Layout from "../../../components/Layout.astro";
     if (token) {
       editTitle.value = book.title;
       editAuthor.value = book.author;
+      editPublisher.value = book.publishingHouse ?? book.publisher ?? "";
+      editLanguage.value = book.language ?? "";
+      editFormat.value = book.format ?? "Ebook";
       editCoverUrl.value = book.coverUrl || "";
       editDescription.value = book.description || "";
       viewMode.classList.add("hidden");
@@ -483,6 +514,9 @@ import Layout from "../../../components/Layout.astro";
     const body = {
       title: editTitle.value,
       author: editAuthor.value,
+      publishingHouse: editPublisher.value,
+      language: editLanguage.value,
+      format: editFormat.value,
       coverUrl: editCoverUrl.value,
       description: editDescription.value,
     };
