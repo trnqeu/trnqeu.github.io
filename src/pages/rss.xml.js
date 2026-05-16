@@ -10,12 +10,7 @@ export async function GET(context) {
         const slug = pathParts.pop().replace(/\.(md|mdx)$/, '');
         const collection = pathParts.pop();
 
-        let link;
-        if (collection === 'ideas') {
-            link = `/blog/${slug}/`;
-        } else {
-            link = `/${collection}/${slug}/`;
-        }
+        const link = `/${collection}/${slug}/`;
 
         return {
             title: post.frontmatter.title,

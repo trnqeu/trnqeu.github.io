@@ -26,4 +26,10 @@ pnpm-debug.log*
 # Claude and Agents
 claude-conversations/
 .claude-conversations/
+.claude/
 AGENTS.md
+
+# Test output
+playwright-report/
+test-results/
+screenshots/

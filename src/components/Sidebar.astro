@@ -3,9 +3,21 @@ import { config } from '../config';
 
 const base = import.meta.env.BASE_URL;
 
-const mdPostsGlob = import.meta.glob('../content/blog/*.md', { eager: true });
-const mdxPostsGlob = import.meta.glob('../content/blog/*.mdx', { eager: true });
-const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
+const postsGlob = import.meta.glob([
+  '../content/ideas/**/*.{md,mdx}',
+  '../content/shortstories/**/*.{md,mdx}',
+  '../content/promptsoncanvas/**/*.{md,mdx}',
+  '../content/murderheprompted/**/*.{md,mdx}',
+  '../content/ilcommissariogpt/**/*.{md,mdx}',
+], { eager: true });
+
+const allPosts = Object.entries(postsGlob).map(([path, post]: [string, any]) => {
+  const pathParts = path.split('/');
+  const slug = pathParts.pop()!.replace(/\.(md|mdx)$/, '');
+  const collection = pathParts.pop()!;
+  return { ...post, _url: `/${collection}/${slug}` };
+});
+
 const recentPosts = allPosts
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .slice(0, 5);
@@ -77,7 +89,7 @@ const localeDateOptions: Intl.DateTimeFormatOptions = {
       <ul class="post-list">
         {recentPosts.map(post => (
           <li class="post-item">
-            <a href={`${base}/blog/${post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '')}`} class="post-link">
+            <a href={`${base}${post._url}`} class="post-link">
               {post.frontmatter.title}
             </a>
             <time class="post-date" datetime={post.frontmatter.date}>
