@@ -1,0 +1,132 @@
+---
+export interface Props {
+  lang: 'en' | 'it';
+}
+
+const { lang } = Astro.props;
+
+const featured = [
+  {
+    slug: 'murder-he-prompted',
+    title: 'Murder, he prompted',
+    kicker: { it: 'Serie · in corso', en: 'Series · ongoing' },
+    excerpt: {
+      it: "Il Capo Prompter Jameson Aguardento si sveglia dal suo stato di pensiero ossessivo quando ogni dispositivo della sua vita inizia a notificare all'unisono. Una serie noir-comica su ossessione, macchine e il delitto perfetto.",
+      en: "Chief Prompter Jameson Aguardento wakes from his sleeplike state of obsessive thinking when every device they'd plugged his life into starts bleeping at once. A noir-comic series on obsession, machines, and the perfect crime.",
+    },
+  },
+  {
+    slug: 'promptsoncanvas',
+    title: 'Prompts on canvas',
+    kicker: { it: 'Galleria', en: 'Gallery' },
+    excerpt: {
+      it: "Esperimenti di arte generativa: il prompt come pennellata, l'errore come stile. Una galleria che riscrive i capolavori — dalla GiocondA.I. a Guernica — al confine tra istruzione e caso.",
+      en: "Generative-art experiments: the prompt as brushstroke, error as style. A gallery that rewrites the masters — from the GiocondA.I. to Guernica — on the edge between instruction and chance.",
+    },
+  },
+  {
+    slug: 'short-stories',
+    title: 'Racconti / Short stories',
+    kicker: { it: 'Narrativa', en: 'Fiction' },
+    excerpt: {
+      it: "Una raccolta di racconti brevi scritti negli anni — tra concorsi letterari, notti insonni e idee che non volevano restare appunti. In italiano e in inglese.",
+      en: "A collection of short stories written over the years — between literary contests, sleepless nights, and ideas that refused to stay notes. In Italian and English.",
+    },
+  },
+];
+
+const base = import.meta.env.BASE_URL;
+const featCta = lang === 'it' ? 'Esplora il progetto' : 'Explore the project';
+const featKicker = lang === 'it' ? 'In evidenza' : 'Featured';
+---
+
+<div class="tq-feat tq-feat-outline" role="region" aria-label={featKicker}>
+  {featured.map((item, i) => (
+    <div class="tq-feat-item" data-index={i}>
+      <p class="kick">{featKicker} · {item.kicker[lang]}</p>
+      <h3>{item.title}</h3>
+      <p>{item.excerpt[lang]}</p>
+      <a class="tq-feat-cta" href={`${base}projects/${item.slug}`}>
+        {featCta}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  ))}
+  <div class="tq-dots">
+    {featured.map((_, k) => (
+      <button key={k} class={k === 0 ? "on" : ""} data-dot={k} aria-label={(featKicker) + ' ' + (k + 1)} />
+    ))}
+  </div>
+  <span class="tq-feat-ghostnum">{String(featured.length).padStart(2, "0")}</span>
+</div>
+
+<script>
+  const container = document.querySelector('.tq-feat');
+  const items = container?.querySelectorAll('.tq-feat-item');
+  const dots = container?.querySelectorAll('.tq-dots button');
+  let current = 0;
+  let timer: ReturnType<typeof setInterval>;
+  const total = items?.length || 0;
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function show(idx: number) {
+    if (!items || !dots) return;
+    items.forEach((el, i) => {
+      (el as HTMLElement).style.display = i === idx ? '' : 'none';
+    });
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('on', i === idx);
+    });
+    current = idx;
+  }
+
+  function startRotation() {
+    if (prefersReduced || total < 2) return;
+    timer = setInterval(() => {
+      show((current + 1) % total);
+    }, 5200);
+  }
+
+  function stopRotation() {
+    clearInterval(timer);
+  }
+
+  dots?.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt((dot as HTMLElement).dataset.dot || '0', 10);
+      show(idx);
+      stopRotation();
+      startRotation();
+    });
+  });
+
+  container?.addEventListener('mouseenter', stopRotation);
+  container?.addEventListener('mouseleave', startRotation);
+
+  if (total > 0) show(0);
+  startRotation();
+</script>
+
+<style>
+  .tq-feat{position:relative;background:var(--color-background);padding:40px;border-radius:4px;overflow:hidden;}
+  .tq-feat-outline{border:2px solid var(--color-accent);}
+  .tq-feat-item{display:block;}
+  .tq-feat .kick{font-family:var(--font-mono);font-size:.78rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.16em;color:var(--color-accent);margin:0 0 12px;display:flex;align-items:center;gap:10px;}
+  .tq-feat .kick::before{content:"";width:26px;height:2px;background:var(--color-accent);}
+  .tq-feat h3{font-family:var(--font-heading-secondary);font-weight:700;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--color-text-primary);font-size:2.6rem;line-height:1.05;margin:0 0 16px;}
+  .tq-feat p{color:var(--color-text-secondary);font-size:1.18rem;line-height:1.6;margin:0 0 24px;max-width:62ch;}
+  .tq-feat-cta{font-family:var(--font-heading-secondary);font-weight:700;text-transform:uppercase;
+    letter-spacing:.06em;font-size:.95rem;display:inline-flex;align-items:center;gap:10px;
+    background:var(--color-accent);color:#fff;border:2px solid var(--color-accent);
+    padding:11px 22px;border-radius:4px;cursor:pointer;text-decoration:none;transition:.2s;}
+  .tq-feat-cta:hover{background:transparent;color:var(--color-accent);transform:translateY(-2px);}
+  .tq-feat-ghostnum{position:absolute;right:-10px;bottom:-44px;font-family:var(--font-heading-primary);
+    font-weight:700;font-size:13rem;line-height:1;color:var(--color-accent);opacity:.07;pointer-events:none;}
+  .tq-dots{display:flex;gap:8px;margin-top:24px;}
+  .tq-dots button{width:9px;height:9px;border-radius:999px;border:none;background:var(--color-border);
+    cursor:pointer;padding:0;transition:.2s;}
+  .tq-dots button.on{background:var(--color-accent);width:26px;}
+</style>

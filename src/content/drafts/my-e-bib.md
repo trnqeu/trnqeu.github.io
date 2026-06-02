@@ -12,7 +12,7 @@ lang: "it"
 
 Due cose mi piacciono tantissimo: i libri e i database. E allora com'è possibile che io sia arrivato alla mia età senza avere un catalogo di tutti i miei libri? Passo la vita a fare archivi e cataloghi per gli altri e non ho mai pensato di organizzare la mia biblioteca personale: assurdo, ma forse anche abbastanza tipico. 
 
-Allora mi sono deciso e ho impiegato qualche mattina per realizzare [questo progetto di cui sono moderatamente soddisfatto](https://trnq.eu/projects/biblioteque/). 
+Allora mi sono deciso e ho impiegato qualche mattina per realizzare [questo progetto di cui sono moderatamente soddisfatto](https://trnq.eu/projects/eblioteque/). 
 
 Il mio principale problema è che compro tantissimi ebook, ho pochissimo tempo per leggere e finisco per dimenticarmi dei libri che ho comprato, perdendomi la possibilità di leggere il libro giusto al momento giusto.   
 

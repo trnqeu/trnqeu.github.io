@@ -37,7 +37,7 @@ Standard frontmatter fields: `title`, `description`, `date`, `lang`, `categories
 
 Dynamic routes use `import.meta.glob()` to load posts. The collection name determines the URL route. Language routing is URL-based: `/en/` prefix = English, no prefix = Italian.
 
-The admin panel at `/pages/admin/` manages the book library (`/projects/biblioteque`) via Google Books API.
+The admin panel at `/pages/admin/` manages the book library (`/projects/eblioteque`) via Google Books API.
 
 ### Components & Layout
 
@@ -54,7 +54,7 @@ Pre-built JSON index generated at build time (`pages/search.json.js`). Supports 
 ## Environment Variables
 
 ```env
-PUBLIC_GOOGLE_BOOKS_API_KEY=   # Required for /projects/biblioteque book covers
+PUBLIC_GOOGLE_BOOKS_API_KEY=   # Required for /projects/eblioteque book covers
 SITE=https://trnq.eu           # Deployment URL (used in astro.config.mjs)
 ```
 

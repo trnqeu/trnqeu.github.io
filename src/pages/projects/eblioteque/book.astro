@@ -4,7 +4,7 @@ import Layout from "../../../components/Layout.astro";
 
 <Layout title="Book Detail — trnq.eu" description="Book detail page">
   <main class="book-detail-page">
-    <a href="/projects/biblioteque" class="back-link">← Back to catalogue</a>
+    <a href="/projects/eblioteque" class="back-link">← Back to catalogue</a>
 
     <div id="loadingState" class="status-msg">Loading...</div>
     <div id="errorState" class="status-msg hidden">Book not found.</div>
@@ -494,7 +494,7 @@ import Layout from "../../../components/Layout.astro";
     if (!books.length) return;
     books.forEach((book: any) => {
       const a = document.createElement("a");
-      a.href = `/projects/biblioteque/book?id=${book.id}`;
+      a.href = `/projects/eblioteque/book?id=${book.id}`;
       a.className = "similar-card";
       const cover = getCoverUrl(book.coverUrl);
       a.innerHTML = `

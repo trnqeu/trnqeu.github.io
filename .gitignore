@@ -23,11 +23,12 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# Claude and Agents
+# Agents
 claude-conversations/
 .claude-conversations/
 .claude/
 AGENTS.md
+redesign
 
 # Test output
 playwright-report/

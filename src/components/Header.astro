@@ -1,16 +1,19 @@
 ---
 import { config } from '../config';
 import ThemeToggle from './ThemeToggle.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 
-const { base = '' } = Astro.site ? { base: import.meta.env.BASE_URL } : { base: '' };
+const { lang = 'it' }: { lang?: 'en' | 'it' } = Astro.props;
+const base = import.meta.env.BASE_URL;
 
-// Define translations
+const path = Astro.url.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
+const itHref = path;
+const enHref = getRelativeLocaleUrl('en', path);
 
 const navTranslations = {
   en: {
     home: "Home",
     projects: 'Projects',
-    languages: 'Languages',
     sottolinee: 'Underlines',
     about: 'About',
     search_placeholder: 'Search articles...'
@@ -18,15 +21,12 @@ const navTranslations = {
   it: {
     home: 'Home',
     projects: 'Progetti',
-    languages: 'Lingue',
     sottolinee: 'Sottolinee',
     about: 'Info',
     search_placeholder: 'Cerca articoli...'
   }
 };
 
- // Get the lang prop, default to 'en'
-const { lang = 'en' }: { lang?: 'en' | 'it' } = Astro.props;
 const t = navTranslations[lang] || navTranslations.en;
 
 
@@ -54,7 +54,6 @@ const t = navTranslations[lang] || navTranslations.en;
         <ul class="nav-list">
           <li><a href={base} class="nav-link">Home</a></li>
           <li><a href={base + "projects"} class="nav-link">{t.projects}</a></li>
-          <li><a href={base + "languages"} class="nav-link">{t.languages}</a></li>
           <li><a href={base + "projects/sottolinee"} class="nav-link">{t.sottolinee}</a></li>
           <li><a href={base + "about"} class="nav-link">{t.about}</a></li>
         </ul>
@@ -62,6 +61,10 @@ const t = navTranslations[lang] || navTranslations.en;
       
       <!-- Mobile controls group - RSS and Search on right -->
       <div class="mobile-controls">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <a href={itHref} class:list={["lang-opt", { on: lang === 'it' }]} aria-current={lang === 'it'}>IT</a>
+          <a href={enHref} class:list={["lang-opt", { on: lang === 'en' }]} aria-current={lang === 'en'}>EN</a>
+        </div>
         <ThemeToggle />
         <!-- <a href="https://github.com/jdrhyne2/volks-typo" class="github-star-button" target="_blank" rel="noopener" title="Star on GitHub">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -94,7 +97,6 @@ const t = navTranslations[lang] || navTranslations.en;
   <ul class="mobile-nav-list">
     <li><a href={base} class="mobile-nav-link">{t.home}</a></li>
     <li><a href={base + "projects"} class="mobile-nav-link">{t.projects}</a></li>
-    <li><a href={base + "languages"} class="mobile-nav-link">{t.languages}</a></li>
     <li><a href={base + "projects/sottolinee"} class="mobile-nav-link">{t.sottolinee}</a></li>
     <li><a href={base + "about"} class="mobile-nav-link">{t.about}</a></li>
   </ul>
@@ -301,6 +303,14 @@ const t = navTranslations[lang] || navTranslations.en;
     flex-wrap: wrap;
     gap: calc(var(--grid-unit) * 2);
   }
+
+  .lang-toggle{display:inline-flex;border:1.5px solid var(--color-border);border-radius:999px;
+    overflow:hidden;font-family:var(--font-mono);font-weight:700;font-size:.74rem;letter-spacing:.06em;
+    background:var(--color-background);}
+  .lang-opt{padding:5px 11px;color:var(--color-text-muted);text-transform:uppercase;text-decoration:none;
+    transition:.16s;}
+  .lang-opt.on{background:var(--color-accent);color:#fff;}
+  .lang-opt:not(.on):hover{color:var(--color-text-primary);}
 
   .site-title a {
     display: block;

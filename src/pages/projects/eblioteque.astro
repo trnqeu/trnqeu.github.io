@@ -2,7 +2,7 @@
 import Layout from "../../components/Layout.astro";
 ---
 
-<Layout title="Biblioteca - Trnq.eu" description="My e-biblioteque.">
+<Layout title="Eblioteque - Trnq.eu" description="My e-biblioteque.">
     <main class="catalog-page">
         <header class="catalog-header">
             <h1 class="font-oswald text-4xl mb-4 text-accent">
@@ -1019,7 +1019,7 @@ import Layout from "../../components/Layout.astro";
                 const div = document.createElement("div");
                 div.className = "book-card";
                 div.style.cursor = "pointer";
-                div.onclick = () => { window.location.href = `/projects/biblioteque/book?id=${book.id}`; };
+                div.onclick = () => { window.location.href = `/projects/eblioteque/book?id=${book.id}`; };
                 // Optimization: use a smaller resolution for the grid to avoid 429
                 const baseCoverUrl = getCoverUrl(book);
                 const gridCoverUrl = baseCoverUrl.includes("google.com")
