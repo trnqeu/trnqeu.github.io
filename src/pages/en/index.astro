@@ -21,7 +21,7 @@ const base = import.meta.env.BASE_URL;
 
 const i18n = {
   en: {
-    tagline: '[thoughts, words, deeds or missions]',
+    tagline: '[words, thoughts, snippets]',
     projectsTitle: 'Projects',
     projectsSub: 'Browse through the projects.',
     latestTitle: 'Latest writing',
@@ -37,7 +37,7 @@ const dict = i18n.en;
 const months = dict.months;
 
 const projects = [
-  { id: 'eblioteque', slug: 'eblioteque', title: 'Biblioteque',
+  { id: 'eblioteque', slug: 'eblioteque', title: 'Eblioteque',
     desc: { it: 'La mia biblioteca digitale.', en: 'My e-biblioteque.' } },
   { id: 'ideas', slug: 'ideas', title: 'Ideas',
     desc: { it: 'Appunti e pensieri sparsi.', en: 'Posts, random thoughts.' } },
@@ -82,7 +82,7 @@ function fmtDate(iso: string): string {
       </div>
       <div class="tq-index">
         {projects.map((p, idx) => (
-          <a class="tq-indexrow" href={`${base}projects/${p.slug}`}>
+          <a class="tq-indexrow" href={`/en/projects/${p.slug}`}>
             <span class="n">{String(idx + 1).padStart(2, '0')}</span>
             <span class="t">{p.title}</span>
             <span class="d">{p.desc.en}</span>
@@ -126,7 +126,7 @@ function fmtDate(iso: string): string {
             ? 'promptsoncanvas/'
             : 'ideas/';
           const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
-          const href = `${base}${postPath}${slug}`;
+          const href = `/en/${postPath}${slug}`;
           const fm = post.frontmatter;
           const match = fm.lang === 'en';
           const cats = fm.categories || [];

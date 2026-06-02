@@ -90,27 +90,6 @@ function fmtDate(iso: string): string {
     <section class="tq-sec">
       <div class="tq-sechead">
         <div>
-          <h2>{dict.projectsTitle}</h2>
-          <p class="sub">{dict.projectsSub}</p>
-        </div>
-      </div>
-      <div class="tq-index">
-        {projects.map((p, idx) => (
-          <a class="tq-indexrow" href={`${base}projects/${p.slug}`}>
-            <span class="n">{String(idx + 1).padStart(2, '0')}</span>
-            <span class="t">{p.title}</span>
-            <span class="d">{p.desc[lang]}</span>
-            <span class="ar">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </span>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <section class="tq-sec">
-      <div class="tq-sechead">
-        <div>
           <h2>{dict.latestTitle}</h2>
           <p class="sub">{dict.latestSub}</p>
         </div>
@@ -158,6 +137,27 @@ function fmtDate(iso: string): string {
             </a>
           );
         })}
+      </div>
+    </section>
+
+    <section class="tq-sec">
+      <div class="tq-sechead">
+        <div>
+          <h2>{dict.projectsTitle}</h2>
+          <p class="sub">{dict.projectsSub}</p>
+        </div>
+      </div>
+      <div class="tq-index">
+        {projects.map((p, idx) => (
+          <a class="tq-indexrow" href={`${base}projects/${p.slug}`}>
+            <span class="n">{String(idx + 1).padStart(2, '0')}</span>
+            <span class="t">{p.title}</span>
+            <span class="d">{p.desc[lang]}</span>
+            <span class="ar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </a>
+        ))}
       </div>
     </section>
 

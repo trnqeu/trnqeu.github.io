@@ -1,0 +1,138 @@
+---
+import Layout from '../../../components/Layout.astro';
+import Frame from '../../../components/Frame.astro';
+
+const mdPostsGlob = import.meta.glob('../../../content/promptsoncanvas/*.md', { eager: true });
+const mdxPostsGlob = import.meta.glob('../../../content/promptsoncanvas/*.mdx', { eager: true });
+
+const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
+const sortedPosts = allPosts
+  .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+  .map(post => {
+    const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
+    return {
+      ...post,
+      url: `/en/promptsoncanvas/${slug}`
+    }
+  });
+---
+
+<Layout title="Prompts on Canvas" description="Masterpieces of generative art.">
+  <div class="blog-page">
+    <header class="blog-header">
+      <h1 class="blog-title">Prompts on Canvas</h1>
+      <p class="blog-description">
+        Masterpieces of generative art
+      </p>
+      <hr class="blog-rule" />
+    </header>
+
+    <div class="project-page"> 
+      {sortedPosts.length > 0 ? (
+        <div class="posts-container">
+          {sortedPosts.map((post: any) => {
+            const { Content } = post; 
+            return (
+              <div class="post-item">
+                <a href={post.url} class="frame-link">
+                  <Frame frameStyle={post.frontmatter.frameStyle}>
+                    <Content />
+                  </Frame>
+                </a>
+                <div class="caption">
+                  <p class="caption-title">{post.frontmatter.title}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div class="no-posts">
+          <p>No posts available yet. Start writing by creating files in <code>src/content/promptsoncanvas/</code></p>
+        </div>
+      )}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .blog-page {
+    padding: 0 2rem;
+  }
+
+  .project-page {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .blog-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .blog-title {
+    font-family: var(--font-heading-primary);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--color-accent);
+    text-transform: uppercase;
+  }
+
+  .blog-description {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    margin-top: 1rem;
+  }
+
+  .blog-rule {
+    height: 4px;
+    background-color: var(--color-accent);
+    border: none;
+    width: 120px;
+    margin: 2rem auto 4rem; 
+  }
+
+  .posts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 1.5rem; 
+    justify-content: center;
+  }
+
+  .post-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .frame-link {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease-out;
+    margin-bottom: 1rem;
+  }
+  
+  .frame-link:hover {
+      transform: scale(1.02);
+  }
+
+  .caption {
+    text-align: center;
+  }
+  
+  .caption-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .posts-container {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

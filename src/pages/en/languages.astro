@@ -1,0 +1,117 @@
+---
+import Layout from '../../components/Layout.astro';
+
+const allPostsGlob = import.meta.glob('../../content/**/*.{md,mdx}', { eager: true });
+const allPosts = Object.values(allPostsGlob) as any[];
+
+const allLanguages = new Set<string>();
+allPosts.forEach((post: any) => {
+  if (post.frontmatter.lang) {
+    allLanguages.add(post.frontmatter.lang);
+  }
+});
+
+const sortedLanguages = Array.from(allLanguages).sort((a, b) => a.localeCompare(b));
+---
+
+<Layout title="Languages" description="Browse all languages." lang="en">
+  <div class="languages-page">
+    <header class="page-header">
+      <h1 class="page-title">Languages</h1>
+      <p class="page-description">
+        Browse all available languages.
+      </p>
+      <hr class="page-rule" />
+    </header>
+
+    <div class="languages-grid">
+      {sortedLanguages.map((language) => (
+        <div class="language-card">
+          <a href={`/en/language/${language.toLowerCase()}`} class="language-link">
+            <h2 class="language-title">{language}</h2>
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .languages-page {
+    max-width: 100%;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: calc(var(--grid-unit) * 6);
+  }
+
+  .page-title {
+    font-family: var(--font-heading-primary);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: calc(var(--grid-unit) * 2);
+  }
+
+  .page-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 600px;
+    margin: 0 auto calc(var(--grid-unit) * 3);
+  }
+
+  .page-rule {
+    height: 4px;
+    background-color: var(--color-accent);
+    border: none;
+    width: 120px;
+    margin: 0 auto;
+  }
+
+  .languages-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--grid-unit) * 2);
+    justify-content: center;
+  }
+
+  .language-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+  }
+
+  .language-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-accent);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .language-link {
+    display: block;
+    padding: calc(var(--grid-unit) * 2);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .language-title {
+    font-family: var(--font-heading-secondary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary);
+    transition: color 0.2s ease;
+  }
+
+  .language-link:hover .language-title {
+    color: var(--color-accent);
+  }
+</style>

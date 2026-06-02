@@ -7,12 +7,21 @@ const { lang } = Astro.props;
 
 const featured = [
   {
-    slug: 'murder-he-prompted',
-    title: 'Murder, he prompted',
-    kicker: { it: 'Serie · in corso', en: 'Series · ongoing' },
+    slug: 'eblioteque',
+    title: 'Eblioteque',
+    kicker: { it: 'Archivi - Cataloghi', en: 'Archives - Catalogues' },
     excerpt: {
-      it: "Il Capo Prompter Jameson Aguardento si sveglia dal suo stato di pensiero ossessivo quando ogni dispositivo della sua vita inizia a notificare all'unisono. Una serie noir-comica su ossessione, macchine e il delitto perfetto.",
-      en: "Chief Prompter Jameson Aguardento wakes from his sleeplike state of obsessive thinking when every device they'd plugged his life into starts bleeping at once. A noir-comic series on obsession, machines, and the perfect crime.",
+      it: "La mia biblioteca digitale.",
+      en: "My e-biblioteque.",
+    },
+  },
+  {
+    slug: 'sottolinee',
+    title: 'Sottolinee / Underlines',
+    kicker: { it: 'Archivi - Cataloghi', en: 'Archives - Catalogues' },
+    excerpt: {
+      it: "Una collezione di sottolineature di libri.",
+      en: "A collection of underlines from books.",
     },
   },
   {
@@ -54,7 +63,7 @@ const featKicker = lang === 'it' ? 'In evidenza' : 'Featured';
   ))}
   <div class="tq-dots">
     {featured.map((_, k) => (
-      <button key={k} class={k === 0 ? "on" : ""} data-dot={k} aria-label={(featKicker) + ' ' + (k + 1)} />
+      <button class={k === 0 ? "on" : ""} data-dot={k} aria-label={(featKicker) + ' ' + (k + 1)} />
     ))}
   </div>
   <span class="tq-feat-ghostnum">{String(featured.length).padStart(2, "0")}</span>
