@@ -54,7 +54,6 @@ const t = navTranslations[lang] || navTranslations.en;
         <ul class="nav-list">
           <li><a href={base} class="nav-link">Home</a></li>
           <li><a href={base + "projects"} class="nav-link">{t.projects}</a></li>
-          <li><a href={base + "projects/sottolinee"} class="nav-link">{t.sottolinee}</a></li>
           <li><a href={base + "about"} class="nav-link">{t.about}</a></li>
         </ul>
       </nav>
@@ -270,10 +269,43 @@ const t = navTranslations[lang] || navTranslations.en;
     }
   }
 
+  // Auto-hide header on scroll down, show on scroll up
+  function initAutoHideHeader() {
+    const header = document.querySelector('.site-header') as HTMLElement;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    if (!header) return;
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const mobileMenu = document.getElementById('mobile-menu');
+          const searchOverlay = document.getElementById('search-overlay');
+          const isOverlayOpen = mobileMenu?.classList.contains('active') || searchOverlay?.classList.contains('active');
+
+          if (currentScrollY < 50) {
+            header.classList.remove('header-hidden');
+          } else if (!isOverlayOpen && currentScrollY > lastScrollY) {
+            header.classList.add('header-hidden');
+          } else if (currentScrollY < lastScrollY) {
+            header.classList.remove('header-hidden');
+          }
+
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
   // Initialize when DOM is loaded
   function init() {
     initHamburgerMenu();
     initSearch();
+    initAutoHideHeader();
   }
 
   if (document.readyState === 'loading') {
@@ -291,6 +323,11 @@ const t = navTranslations[lang] || navTranslations.en;
     position: sticky;
     top: 0;
     z-index: 100;
+    transition: transform 0.3s ease;
+  }
+
+  .site-header.header-hidden {
+    transform: translateY(-100%);
   }
 
   .header-content {
