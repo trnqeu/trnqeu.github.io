@@ -413,11 +413,28 @@ import Layout from "../../../components/Layout.astro";
                 font-weight: bold;
             }
             @media (max-width: 700px) {
+                .modal-overlay {
+                    align-items: flex-start;
+                    padding: 0.75rem;
+                    overflow-y: auto;
+                }
+                .modal-card {
+                    max-height: none;
+                    margin: auto 0;
+                }
                 .modal-grid {
                     grid-template-columns: 1fr;
                 }
                 .modal-cover-section {
-                    aspect-ratio: 2/3;
+                    aspect-ratio: 3/2;
+                    max-height: 240px;
+                }
+                .modal-info-section {
+                    padding: 1.25rem;
+                    max-height: none;
+                }
+                .modal-title {
+                    font-size: 1.5rem;
                 }
             }
 
@@ -707,6 +724,33 @@ import Layout from "../../../components/Layout.astro";
                 .controls-container {
                     flex-direction: column;
                     align-items: stretch;
+                    gap: 0.75rem;
+                    padding: 0.75rem;
+                }
+                .search-area {
+                    min-width: 0;
+                }
+                .search-mode-toggles {
+                    flex-wrap: wrap;
+                    gap: 0.4rem;
+                }
+                .mode-btn {
+                    font-size: 0.75rem;
+                }
+                .input-wrapper {
+                    min-width: 0;
+                }
+                .search-input {
+                    min-width: 0;
+                    font-size: 0.95rem;
+                }
+                .view-toggles {
+                    align-self: flex-start;
+                }
+                .results-container.view-grid {
+                    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                    gap: 1rem;
+                    padding: 0.5rem;
                 }
             }
         </style>
