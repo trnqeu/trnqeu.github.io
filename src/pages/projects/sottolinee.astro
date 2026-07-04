@@ -14,228 +14,198 @@ const randomBookIndex = Math.floor(Math.random() * allBooks.length);
 const randomBook = allBooks[randomBookIndex];
 const randomQuoteIndex = Math.floor(Math.random() * randomBook.quotes.length);
 const randomQuote = randomBook.quotes[randomQuoteIndex];
+const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
 ---
 
 <Layout title="Sottolinee" description="Una collezione di sottolineature da libri che ho letto.">
   <div class="project-page">
-    <!-- Page Header -->
     <header class="page-header">
-      <h1 class="page-title">Sottolinee</h1>
-      <p class="page-description">Una collezione di sottolineature.</p>
-      <hr class="page-rule" />
+      <p class="kicker">Sottolinee · {totalQuotes}</p>
+      <h1 class="page-title">Righe tenute</h1>
+      <p class="page-description"># frasi che ho sottolineato leggendo</p>
     </header>
 
-    <!-- Random Quote Block -->
-    <div class="random-quote-block">
-      <h3 class="random-quote-title">Una citazione a caso:</h3>
-      <blockquote class="random-quote">
-        <p>{randomQuote}</p>
-        <footer>
-          <cite>{randomBook.title} - {randomBook.author}</cite>
-        </footer>
-      </blockquote>
-      <button id="refresh-quote">Aggiorna</button>
+    <div class="underline-item random-quote-block">
+      <p class="random-quote">{randomQuote}</p>
+      <div class="source">
+        <span class="author">{randomBook.author}</span><span>·</span><span class="work">{randomBook.title}</span>
+      </div>
+      <button id="refresh-quote">Un'altra</button>
     </div>
 
-    <!-- Quotes List -->
     <div class="quotes-list">
       {Object.values(quotes).map(book => (
         <details class="book-entry">
           <summary class="book-title">
-            {book.title} - <span class="book-author">{book.author}</span>
+            {book.title} <span class="book-author">— {book.author}</span>
           </summary>
           <div class="quotes-content">
-            <ul>
-              {book.quotes.map(quote => (
-                <li>{quote}</li>
-              ))}
-            </ul>
+            {book.quotes.map(quote => (
+              <div class="underline-item">
+                <p class="quote-text">{quote}</p>
+                <div class="source">
+                  <span class="author">{book.author}</span><span>·</span><span class="work">{book.title}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </details>
       ))}
     </div>
 
-    <!-- Page Navigation -->
     <div class="page-navigation">
-      <a href={`${base}projects`} class="back-link">← Back to All Projects</a>
+      <a href={`${base}projects`} class="back-link">← Progetti</a>
     </div>
   </div>
 </Layout>
 
 <style>
-  /* General Page Styles */
   .project-page {
-    max-width: 800px;
+    max-width: 680px;
     margin: 0 auto;
+    padding: 44px 0 60px;
   }
 
   .page-header {
-    text-align: center;
-    margin-bottom: calc(var(--grid-unit) * 8);
+    margin-bottom: 36px;
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 12px;
   }
 
   .page-title {
-    font-family: var(--font-heading-primary);
-    font-size: 3.5rem;
-    font-weight: 900;
-    color: var(--color-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    line-height: 1.1;
-    margin-bottom: calc(var(--grid-unit) * 3);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
   }
 
   .page-description {
-    font-size: 1.125rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    margin-bottom: calc(var(--grid-unit) * 4);
-  }
-
-  .page-rule {
-    height: 4px;
-    background-color: var(--color-accent);
-    border: none;
-    width: 120px;
-    margin: 0 auto;
-  }
-
-  /* Random Quote Styles */
-  .random-quote-block {
-    margin-bottom: calc(var(--grid-unit) * 8);
-    text-align: center;
-    padding: calc(var(--grid-unit) * 4);
-    background-color: var(--color-surface);
-    border-radius: 4px;
-    border: 1px solid var(--color-border);
-  }
-
-  .random-quote-title {
-    font-family: var(--font-heading-secondary);
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--color-text-secondary);
-    margin-bottom: calc(var(--grid-unit) * 2);
-  }
-
-  .random-quote {
-    font-size: 1.5rem;
-    font-style: italic;
-    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
     margin: 0;
   }
 
-  .random-quote footer {
-    margin-top: calc(var(--grid-unit) * 2);
-    font-size: 1rem;
-    font-style: normal;
+  /* the underline: accent pencil rule + big quote + mono source line */
+  .underline-item {
+    border-top: 1px solid var(--color-border);
+    padding: 30px 0 30px 22px;
+    border-left: var(--accent-rule);
+    margin-left: 2px;
+  }
+
+  .underline-item .random-quote,
+  .underline-item .quote-text {
+    font-size: 1.6rem;
+    line-height: 1.4;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    max-width: 56ch;
+    margin: 0 0 14px;
+  }
+
+  .source {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
     color: var(--color-text-muted);
+    display: flex;
+    gap: 10px;
+  }
+
+  .source .author {
+    color: var(--color-accent);
+  }
+
+  .random-quote-block {
+    margin-bottom: 44px;
   }
 
   #refresh-quote {
-    margin-top: calc(var(--grid-unit) * 4);
-    font-family: var(--font-heading-secondary);
-    font-weight: 700;
+    margin-top: 18px;
+    font-family: var(--font-mono);
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-accent);
+    letter-spacing: 0.06em;
+    font-size: 0.68rem;
+    color: var(--color-text-secondary);
     background-color: transparent;
-    padding: calc(var(--grid-unit)) calc(var(--grid-unit) * 2);
-    border: 2px solid var(--color-accent);
-    border-radius: 4px;
+    padding: 8px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-chip);
     transition: all 0.2s ease;
     cursor: pointer;
   }
 
   #refresh-quote:hover,
   #refresh-quote:focus {
-    background-color: var(--color-accent);
-    color: white;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 
-  /* Quotes List Styles */
   .quotes-list {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--grid-unit) * 2);
-    margin-bottom: calc(var(--grid-unit) * 8);
+    margin-bottom: calc(var(--grid-unit) * 6);
+    border-top: 2px solid var(--color-border-strong);
   }
 
   .book-entry {
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    overflow: hidden;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .book-title {
-    font-family: var(--font-heading-secondary);
-    font-size: 1.2rem;
-    font-weight: 700;
-    padding: calc(var(--grid-unit) * 2);
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding: 16px 2px;
     cursor: pointer;
-    background-color: var(--color-surface);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    gap: 8px;
+    align-items: baseline;
   }
 
   .book-author {
-    font-family: var(--font-body);
-    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
     color: var(--color-text-muted);
     font-weight: 400;
   }
 
   .book-title:hover {
-    background-color: var(--color-surface-hover);
+    color: var(--color-accent);
   }
 
   .quotes-content {
-    padding: calc(var(--grid-unit) * 2);
-    background-color: var(--color-background);
+    padding: 0 0 12px;
   }
 
-  .quotes-content ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+  .quotes-content .underline-item {
+    border-top: 1px solid var(--color-border);
   }
 
-  .quotes-content li {
-    padding: calc(var(--grid-unit) * 1.5) 0;
-    border-bottom: 1px solid var(--color-border-light);
-    line-height: 1.6;
+  .quotes-content .underline-item:first-child {
+    border-top: none;
   }
 
-  .quotes-content li:last-child {
-    border-bottom: none;
-  }
-
-  /* Page Navigation Styles */
   .page-navigation {
-    text-align: center;
     padding-top: calc(var(--grid-unit) * 4);
     border-top: 1px solid var(--color-border);
   }
 
   .back-link {
-    font-family: var(--font-heading-secondary);
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-size: 0.72rem;
     color: var(--color-accent);
-    padding: calc(var(--grid-unit)) calc(var(--grid-unit) * 2);
-    border: 2px solid var(--color-accent);
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    display: inline-block;
-  }
-
-  .back-link:hover,
-  .back-link:focus {
-    background-color: var(--color-accent);
-    color: white;
-    text-decoration: none;
   }
 </style>
 
@@ -248,7 +218,8 @@ const randomQuote = randomBook.quotes[randomQuoteIndex];
     const randomQuoteIndex = Math.floor(Math.random() * randomBook.quotes.length);
     const randomQuote = randomBook.quotes[randomQuoteIndex];
 
-    document.querySelector('.random-quote p').innerHTML = randomQuote;
-    document.querySelector('.random-quote cite').innerHTML = `${randomBook.title} - ${randomBook.author}`;
+    document.querySelector('.random-quote-block .random-quote').innerHTML = randomQuote;
+    document.querySelector('.random-quote-block .author').innerHTML = randomBook.author;
+    document.querySelector('.random-quote-block .work').innerHTML = randomBook.title;
   });
 </script>

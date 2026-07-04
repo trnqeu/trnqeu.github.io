@@ -50,20 +50,19 @@ const projects = [
 >
   <div class="projects-page">
     <header class="page-header">
+      <p class="kicker">Index</p>
       <h1 class="page-title">Projects</h1>
       <p class="page-description">Browse through the projects.</p>
-      <hr class="page-rule" />
     </header>
 
-    <div class="projects-grid">
+    <div class="index-list">
       {
-        projects.map((project) => (
-          <div class="project-card">
-            <a href={`${base}projects/${project.slug}`} class="project-link">
-              <h2 class="project-title">{project.title}</h2>
-              <p class="project-description">{project.description}</p>
-            </a>
-          </div>
+        projects.map((project, idx) => (
+          <a href={`${base}projects/${project.slug}`} class="index-row">
+            <span class="n">{String(idx + 1).padStart(2, "0")}</span>
+            <span class="t">{project.title}</span>
+            <span class="d">{project.description}</span>
+          </a>
         ))
       }
     </div>
@@ -80,90 +79,82 @@ const projects = [
 
 <style>
   .projects-page {
-    max-width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 44px 0 60px;
   }
 
   .page-header {
-    text-align: center;
-    margin-bottom: calc(var(--grid-unit) * 6);
+    margin-bottom: 32px;
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 14px;
   }
 
   .page-title {
-    font-family: var(--font-heading-primary);
-    font-size: 3rem;
-    font-weight: 700;
-    color: var(--color-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: calc(var(--grid-unit) * 2);
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin-bottom: 10px;
   }
 
   .page-description {
-    font-size: 1.125rem;
+    font-size: 1.05rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
-    max-width: 600px;
-    margin: 0 auto calc(var(--grid-unit) * 3);
+    max-width: 560px;
+    margin: 0;
   }
 
-  .page-rule {
-    height: 4px;
-    background-color: var(--color-accent);
-    border: none;
-    width: 120px;
-    margin: 0 auto;
+  .index-list {
+    border-top: 2px solid var(--color-border-strong);
   }
 
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: calc(var(--grid-unit) * 2);
-  }
-
-  .project-card {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    transition:
-      transform 0.2s ease,
-      border-color 0.2s ease,
-      box-shadow 0.2s ease;
-    overflow: hidden;
-  }
-
-  .project-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--color-accent);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  .project-link {
-    display: block;
-    padding: calc(var(--grid-unit) * 2);
+  .index-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 2px;
+    border-bottom: 1px solid var(--color-border);
     text-decoration: none;
-    color: inherit;
+    transition: 0.2s;
   }
 
-  .project-title {
-    font-family: var(--font-heading-secondary);
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: calc(var(--grid-unit) / 2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .index-row:hover {
+    padding-left: 16px;
+    background: var(--color-surface);
+  }
+
+  .index-row .n {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    width: 28px;
+    flex: none;
+  }
+
+  .index-row .t {
+    font-weight: 600;
+    font-size: 1.3rem;
     color: var(--color-text-primary);
-    transition: color 0.2s ease;
+    flex: none;
   }
 
-  .project-link:hover .project-title {
+  .index-row:hover .t {
     color: var(--color-accent);
   }
 
-  .project-description {
-    font-family: var(--font-body);
-    font-size: 0.9rem;
+  .index-row .d {
     color: var(--color-text-muted);
-    margin: 0;
+    font-size: 0.95rem;
+    flex: 1;
+    text-align: right;
   }
 
   .no-projects {
@@ -174,12 +165,12 @@ const projects = [
   }
 
   @media (max-width: 768px) {
-    .page-title {
-      font-size: 2.5rem;
+    .index-row {
+      flex-wrap: wrap;
     }
 
-    .projects-grid {
-      grid-template-columns: 1fr;
+    .index-row .d {
+      display: none;
     }
   }
 </style>

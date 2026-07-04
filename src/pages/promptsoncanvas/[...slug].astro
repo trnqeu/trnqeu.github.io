@@ -97,13 +97,10 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
   }
 
   .post-title {
-    font-family: var(--font-heading-primary);
-    font-size: 3rem;
-    font-weight: 900;
-    color: var(--color-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    line-height: 1.1;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
     margin-bottom: calc(var(--grid-unit) * 3);
   }
 
@@ -145,23 +142,19 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
   }
 
   .back-to-blog {
-    font-family: var(--font-heading-secondary);
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-size: 0.72rem;
     color: var(--color-accent);
-    padding: calc(var(--grid-unit)) calc(var(--grid-unit) * 2);
-    border: 2px solid var(--color-accent);
-    border-radius: 4px;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease;
     display: inline-block;
   }
 
   .back-to-blog:hover,
   .back-to-blog:focus {
-    background-color: var(--color-accent);
-    color: white;
-    text-decoration: none;
+    color: var(--color-text-primary);
   }
 
   @media (max-width: 768px) {
@@ -176,34 +169,22 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
   }
 
   .category-tag {
-    background-color: var(--color-text-primary);
-    color: white;
-    padding: calc(var(--grid-unit) / 2) calc(var(--grid-unit));
-    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-secondary);
+    padding: 2px 6px;
+    font-size: 0.62rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-radius: 3px;
-    transition: background-color 0.2s ease;
+    border-radius: var(--radius-badge);
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   .category-tag:hover,
   .category-tag:focus {
     background-color: var(--color-accent);
+    color: var(--color-accent-contrast);
     text-decoration: none;
-  }
-
-  /* Dark mode category tag styles */
-  :global([data-theme="dark"]) .category-tag {
-    background-color: var(--color-surface);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border);
-  }
-
-  :global([data-theme="dark"]) .category-tag:hover,
-  :global([data-theme="dark"]) .category-tag:focus {
-    background-color: var(--color-accent);
-    color: white;
-    border-color: var(--color-accent);
   }
 </style>

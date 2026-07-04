@@ -4,288 +4,164 @@ import { config } from '../../config';
 
 const { title, author, social } = config;
 const pageDescription = `Learn more about ${author.name} and the ${title} blog`;
+const currentYear = new Date().getFullYear();
 ---
 
 <Layout title={`About | ${title}`} description={pageDescription} lang="en">
   <div class="about-page">
-    <header class="page-header">
-      <h2 class="page-title">About</h2>
-      <!-- <hr class="page-rule" /> -->
+    <header class="intro">
+      <p class="kicker">Info · about</p>
+      <h1>Stefano<br />Trinchero</h1>
+      <p class="lead">{author.bio.en}</p>
+      <p class="body">
+        Hi. Stefano Trinchero here.
+        <br /><br />
+        I created this website because I needed a place to dump projects and ideas and short stories and other stuff I've been working on.
+        <br /><br />
+        It's about whatever goes through my mind, really, and usually my mind gets stuck on literary fiction, or programming, or AI, archives, time, memory, even buddhism sometimes.
+        I like having a laugh from time to time, so I do my best to write funny stuff.
+        <br /><br />
+        Don't expect consistency, or updates regularity, or any kind of meaning or <i>file rouge</i>. Just feel free to browse around, see if something catches your attention.
+        <br /><br />
+        You will find content in two different languages, Italian and English. I apologize for the confusion.
+        <br /><br />
+        Thanks for sticking around.
+      </p>
     </header>
 
-    <div class="author-section">
-      <div class="author-avatar">
-        {author.avatar ? (
-          <img src={author.avatar} alt={author.name} />
-        ) : (
-          <div class="avatar-placeholder">
-            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Circular mask to contain the silhouette -->
-              <defs>
-                <clipPath id="circleClip">
-                  <circle cx="40" cy="40" r="39" />
-                </clipPath>
-              </defs>
-              <g clip-path="url(#circleClip)">
-                <!-- Head (oval shape) -->
-                <ellipse cx="40" cy="28" rx="13" ry="15" fill="currentColor"/>
-                <!-- Neck -->
-                <path d="M33 40 Q33 44 35 46 L45 46 Q47 44 47 40 Z" fill="currentColor"/>
-                <!-- Shoulders -->
-                <path d="M35 46 Q28 48 22 54 Q16 60 14 70 L14 80 L66 80 L66 70 Q64 60 58 54 Q52 48 45 46 Z" fill="currentColor"/>
-              </g>
-            </svg>
-          </div>
-        )}
+    <div class="info-grid">
+      <div class="info-index">
+        <h2 class="index-label">Contact</h2>
+        <div class="index-list">
+          {social.github && (
+            <a class="index-row" href={social.github} target="_blank" rel="noopener">
+              <span class="k">github</span><span class="v">@trnqeu</span>
+            </a>
+          )}
+          {social.linkedin && (
+            <a class="index-row" href={social.linkedin} target="_blank" rel="noopener">
+              <span class="k">linkedin</span><span class="v">stefano-trinchero</span>
+            </a>
+          )}
+          {social.bluesky && (
+            <a class="index-row" href={social.bluesky} target="_blank" rel="noopener">
+              <span class="k">bluesky</span><span class="v">@trnqeu.bsky.social</span>
+            </a>
+          )}
+          {social.email && (
+            <a class="index-row" href={`mailto:${social.email}`}>
+              <span class="k">email</span><span class="v">{social.email}</span>
+            </a>
+          )}
+        </div>
       </div>
-      <h2 class="author-name">{author.name}</h2>
-      <p class="author-bio">{author.bio}</p>
-      
-      <div class="social-links">
-        {social.github && (
-          <a href={social.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-            </svg>
-          </a>
-        )}
-        {social.twitter && (
-          <a href={social.twitter} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
-            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-        )}
-        {social.linkedin && (
-          <a href={social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-          </a>
-        )}
-        {social.email && (
-          <a href={`mailto:${social.email}`} aria-label="Email">
-            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"/>
-              <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"/>
-            </svg>
-          </a>
-        )}
-      </div>
-    </div>
 
-    <div class="content-section">
-      <h2>About This Website</h2>
-      <p>
-        Hi. Stefano Trinchero here. 
-<br>
-<br>
-        I created this website because I needed a place to dump projects and ideas and short stories and other stuff I've been working on.
-<br>
-<br>
-        It's about whatever goes through my mind, really, and usually my mind get stuck on literary fiction, or programming, or AI, archives, time, memory, even buddhism sometimes. 
-<br>
-        I like having a laugh from time to time, so I do my best to write funny stuff. 
-<br><br>
-        Don't expect consistency, or updates regularity, or any kind of meaning or <i>file rouge</i>. 
-<br>      
-        Just feel free to browse around, see if something catches your attention.
-<br><br>
-        You will find content in two different languages, Italian and English. I apologize for the confusion. 
-<br><br>
-        Thanks for sticking around.
-<br>
-      </p>
+      <div class="info-index">
+        <h2 class="index-label">Colophon</h2>
+        <div class="index-list">
+          <div class="index-row static"><span class="k">display</span><span class="v">Archivo</span></div>
+          <div class="index-row static"><span class="k">mono</span><span class="v">JetBrains Mono</span></div>
+          <div class="index-row static"><span class="k">stack</span><span class="v">Astro 5 · static</span></div>
+          <div class="index-row static"><span class="k">©</span><span class="v">{currentYear} · MIT</span></div>
+        </div>
+      </div>
     </div>
   </div>
-  
 </Layout>
 
 <style>
   .about-page {
-    max-width: 800px;
+    max-width: 760px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 70vh;
+    padding: 44px 0 60px;
   }
 
-  .page-header {
-    text-align: center;
-    margin-bottom: calc(var(--grid-unit) * 6);
+  .intro {
+    margin-bottom: 48px;
   }
 
-  .page-title {
-    font-family: var(--font-heading-primary);
-    font-size: 3.5rem;
-    font-weight: 700;
-    color: var(--color-accent);
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    line-height: 1.1;
-    margin-bottom: calc(var(--grid-unit) * 4);
-  }
-
-  .page-rule {
-    height: 4px;
-    background-color: var(--color-accent);
-    border: none;
-    width: 120px;
-    margin: 0 auto;
-  }
-
-  .author-section {
-    text-align: center;
-    margin-bottom: calc(var(--grid-unit) * 10);
-    padding: calc(var(--grid-unit) * 6) calc(var(--grid-unit) * 4);
-    background-color: var(--color-surface);
-    border-radius: calc(var(--grid-unit));
-  }
-
-  .author-avatar {
-    margin-bottom: calc(var(--grid-unit) * 3);
-  }
-
-  .author-avatar img {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid var(--color-accent);
-  }
-
-  .avatar-placeholder {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    border: 4px solid var(--color-accent);
-    background-color: var(--color-surface);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-medium-gray);
-    margin: 0 auto;
-  }
-
-  .author-name {
-    font-family: var(--font-heading-secondary);
-    font-size: 2.5rem;
-    font-weight: 700;
     color: var(--color-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: calc(var(--grid-unit) * 2);
+    margin: 0 0 18px;
   }
 
-  .author-bio {
-    font-size: 1.25rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    max-width: 600px;
-    margin: 0 auto calc(var(--grid-unit) * 4);
+  .intro h1 {
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    margin: 0 0 24px;
   }
 
-  .social-links {
-    display: flex;
-    gap: calc(var(--grid-unit) * 3);
-    justify-content: center;
-    align-items: center;
-  }
-
-  .social-links a {
-    color: var(--color-text-secondary);
-    transition: color 0.2s ease, transform 0.2s ease;
-  }
-
-  .social-links a:hover {
-    color: var(--color-accent);
-    transform: translateY(-2px);
-  }
-
-  .social-icon {
-    width: 28px;
-    height: 28px;
-  }
-
-  #paragraphLang {
-    color: rgb(54, 54, 54)  }
-
-  .content-section {
-    line-height: 1.7;
-  }
-
-  .content-section h2 {
-    font-family: var(--font-heading-secondary);
-    font-size: 1.875rem;
-    font-weight: 700;
-    color: var(--color-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-top: calc(var(--grid-unit) * 6);
-    margin-bottom: calc(var(--grid-unit) * 3);
-  }
-
-  .content-section p {
-    font-size: 1.125rem;
+  .lead {
+    font-size: 1.3rem;
     line-height: 1.6;
     color: var(--color-text-primary);
-    margin-bottom: calc(var(--grid-unit) * 3);
-  }
-
-  .content-section ul {
-    margin: calc(var(--grid-unit) * 2) 0;
-    padding-left: calc(var(--grid-unit) * 3);
-  }
-
-  .content-section li {
     margin-bottom: calc(var(--grid-unit) * 2);
-    font-size: 1.125rem;
-    line-height: 1.6;
   }
 
-  .content-section strong {
+  .body {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .index-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 14px;
+  }
+
+  .index-list {
+    border-top: 2px solid var(--color-border-strong);
+    font-family: var(--font-mono);
+  }
+
+  .index-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 13px 2px;
+    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a.index-row:hover .v {
+    color: var(--color-text-primary);
+  }
+
+  .index-row .k {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+  }
+
+  .index-row .v {
+    color: var(--color-accent);
+    font-size: 0.85rem;
+  }
+
+  .index-row.static .v {
     color: var(--color-text-primary);
   }
 
   @media (max-width: 768px) {
-    .page-title {
-      font-size: 2.5rem;
-    }
-
-    .author-section {
-      padding: calc(var(--grid-unit) * 4) calc(var(--grid-unit) * 3);
-    }
-
-    .author-name {
-      font-size: 2rem;
-    }
-
-    .author-bio {
-      font-size: 1.125rem;
-    }
-
-    .author-avatar img {
-      width: 120px;
-      height: 120px;
-    }
-
-    .avatar-placeholder {
-      width: 120px;
-      height: 120px;
-    }
-
-    .social-links {
-      gap: calc(var(--grid-unit) * 2);
-    }
-
-    .content-section h2 {
-      font-size: 1.5rem;
-    }
-
-    .content-section p,
-    .content-section li {
-      font-size: 1rem;
+    .info-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
     }
   }
 </style>

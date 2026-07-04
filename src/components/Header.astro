@@ -44,9 +44,7 @@ const t = navTranslations[lang] || navTranslations.en;
     </button>
     
     <div class="site-title">
-      <!-- <a href={base}>
-        <img src={base + "red_circle.svg"} alt={config.title} class="title-svg" />
-      </a> -->
+      <a href={base} class="wordmark">trnq<span class="wordmark-dot">.</span>eu</a>
     </div>
     
     <div class="header-controls">
@@ -341,12 +339,12 @@ const t = navTranslations[lang] || navTranslations.en;
     gap: calc(var(--grid-unit) * 2);
   }
 
-  .lang-toggle{display:inline-flex;border:1.5px solid var(--color-border);border-radius:999px;
-    overflow:hidden;font-family:var(--font-mono);font-weight:700;font-size:.74rem;letter-spacing:.06em;
+  .lang-toggle{display:inline-flex;border:1px solid var(--color-border);border-radius:var(--radius-chip);
+    overflow:hidden;font-family:var(--font-mono);font-weight:600;font-size:.7rem;letter-spacing:.06em;
     background:var(--color-background);}
-  .lang-opt{padding:5px 11px;color:var(--color-text-muted);text-transform:uppercase;text-decoration:none;
+  .lang-opt{padding:5px 9px;color:var(--color-text-muted);text-transform:uppercase;text-decoration:none;
     transition:.16s;}
-  .lang-opt.on{background:var(--color-accent);color:#fff;}
+  .lang-opt.on{background:var(--color-accent);color:var(--color-accent-contrast);}
   .lang-opt:not(.on):hover{color:var(--color-text-primary);}
 
   .site-title a {
@@ -354,12 +352,22 @@ const t = navTranslations[lang] || navTranslations.en;
     line-height: 0;
   }
 
-  .title-svg {
-    height: 48px;
-    width: auto;
-    max-width: 280px;
-    border: none !important; /* Override global img styles */
-    margin: 0 !important; /* Override global img styles */
+  .wordmark {
+    font-family: var(--font-heading-primary);
+    font-weight: 600;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    line-height: 1;
+  }
+
+  .wordmark:hover,
+  .wordmark:focus {
+    color: var(--color-text-primary);
+  }
+
+  .wordmark-dot {
+    color: var(--color-accent);
   }
 
   .header-controls {
@@ -601,11 +609,12 @@ const t = navTranslations[lang] || navTranslations.en;
   }
 
   .nav-link {
-    font-family: var(--font-heading-secondary);
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-primary);
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
     padding: calc(var(--grid-unit) / 2) calc(var(--grid-unit));
     border-bottom: 2px solid transparent;
     transition: all 0.2s ease;

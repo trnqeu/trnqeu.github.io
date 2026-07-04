@@ -30,6 +30,7 @@ claude-conversations/
 AGENTS.md
 CLAUDE.md
 redesign
+public/instructions
 
 # Test output
 playwright-report/

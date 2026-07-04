@@ -8,47 +8,44 @@ const posts = Object.values(collectionGlob) as any[];
 posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date(b.frontmatter.date).getTime());
 ---
 
-<Layout title="Murder, he prompted" description="A collection of all the cases from the 'Murder, he prompted' series.">
+<Layout title="Murder, he prompted" description="A collection of all the cases from the 'Murder, he prompted' series." lang="en">
   <div class="project-page">
-    <header class="page-header">
-      <h1 class="page-title">Murder, he prompted</h1>
-      <p class="page-description">Chief Prompter Jameson Aguardento reporting for duty.</p>
-      <hr class="page-rule" />
+    <p class="breadcrumb"><a href="/en/projects">projects</a> / murder-he-prompted</p>
+
+    <header class="page-head">
+      <div>
+        <p class="kicker">Series · ongoing</p>
+        <h1 class="page-title">Murder,<br />he prompted</h1>
+        <p class="page-description">Chief Prompter Jameson Aguardento reporting for duty.</p>
+      </div>
+      <span class="ghost-num">{String(posts.length).padStart(2, '0')}</span>
     </header>
 
     <div class="sort-controls">
       <button id="sort-toggle">Sort by Date (Newest First)</button>
     </div>
-    <div class="posts-list">
-      {posts.map((post: any) => (
-        <article class="post-item">
-          <h2 class="post-title">
-            <a href={`/en/${collectionName}/${post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '')}`}>
-              {post.frontmatter.title}
-            </a>
-          </h2>
-          <div class="post-meta">
-            <time class="post-date" datetime={post.frontmatter.date}>
+
+    <section class="cases">
+      <h2 class="cases-label">Cases</h2>
+      <div class="cases-list posts-list">
+        {posts.map((post: any, idx: number) => (
+          <a class="case-row post-item" href={`/en/${collectionName}/${post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '')}`}>
+            <span class="num">#{idx + 1}</span>
+            <div class="case-body">
+              <div class="case-title">{post.frontmatter.title}</div>
+              {post.frontmatter.excerpt && <div class="case-desc">{post.frontmatter.excerpt}</div>}
+            </div>
+            <time class="case-date post-date" datetime={post.frontmatter.date}>
               {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
               })}
             </time>
-          </div>
-          {post.frontmatter.excerpt && (
-            <p class="post-excerpt">{post.frontmatter.excerpt}</p>
-          )}
-          <a href={`/en/${collectionName}/${post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '')}`} class="read-more">
-            Read More →
           </a>
-        </article>
-      ))}
-    </div>
-
-    <div class="page-navigation">
-      <a href="/en/projects" class="back-link">← Back to All Projects</a>
-    </div>
+        ))}
+      </div>
+    </section>
   </div>
 </Layout>
 
@@ -67,14 +64,14 @@ posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date
       posts.sort((a, b) => {
         const dateA = new Date(a.querySelector('.post-date').getAttribute('datetime'));
         const dateB = new Date(b.querySelector('.post-date').getAttribute('datetime'));
-        
+
         if (isAscending) {
           return dateA.getTime() - dateB.getTime();
         } else {
           return dateB.getTime() - dateA.getTime();
         }
       });
-      
+
       posts.forEach(post => postsList.appendChild(post));
     });
   }
@@ -84,170 +81,163 @@ posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date
   .project-page {
     max-width: 800px;
     margin: 0 auto;
+    padding: 44px 0 60px;
   }
 
-  .page-header {
-    text-align: center;
-    margin-bottom: calc(var(--grid-unit) * 8);
+  .breadcrumb {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    margin-bottom: 26px;
+  }
+
+  .breadcrumb a {
+    color: var(--color-accent);
+  }
+
+  .page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 14px;
   }
 
   .page-title {
-    font-family: var(--font-heading-primary);
-    font-size: 3.5rem;
-    font-weight: 900;
-    color: var(--color-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    line-height: 1.1;
-    margin-bottom: calc(var(--grid-unit) * 3);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    margin: 0 0 14px;
   }
 
   .page-description {
-    font-size: 1.125rem;
+    font-size: 1.05rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
-    margin-bottom: calc(var(--grid-unit) * 4);
+    margin: 0;
   }
 
-  .page-rule {
-    height: 4px;
-    background-color: var(--color-accent);
-    border: none;
-    width: 120px;
-    margin: 0 auto;
-  }
-
-  .posts-list {
-    display: flex;
-    flex-direction: column;
-    gap: calc(var(--grid-unit) * 6);
-    margin-bottom: calc(var(--grid-unit) * 8);
-  }
-
-  .post-item {
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: calc(var(--grid-unit) * 4);
-  }
-
-  .post-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
-  .post-title {
-    font-family: var(--font-heading-secondary);
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: calc(var(--grid-unit) * 2);
-  }
-
-  .post-title a {
-    color: var(--color-text-primary);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .post-title a:hover,
-  .post-title a:focus {
-    color: var(--color-accent);
-  }
-
-  .post-meta {
-    margin-bottom: calc(var(--grid-unit) * 2);
-  }
-
-  .post-date {
+  .ghost-num {
     font-family: var(--font-mono);
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .post-excerpt {
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin-bottom: calc(var(--grid-unit) * 2);
-    font-size: 1.1rem;
-  }
-
-  .read-more {
-    font-family: var(--font-heading-secondary);
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-accent);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s ease;
-  }
-
-  .read-more:hover,
-  .read-more:focus {
-    color: var(--color-text-primary);
-  }
-
-  .page-navigation {
-    text-align: center;
-    padding-top: calc(var(--grid-unit) * 4);
-    border-top: 1px solid var(--color-border);
-  }
-
-  .back-link {
-    font-family: var(--font-heading-secondary);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-accent);
-    padding: calc(var(--grid-unit)) calc(var(--grid-unit) * 2);
-    border: 2px solid var(--color-accent);
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    display: inline-block;
-  }
-
-  .back-link:hover,
-  .back-link:focus {
-    background-color: var(--color-accent);
-    color: white;
-    text-decoration: none;
-  }
-  
-  .project-content {
-    padding: var(--grid-unit) * 4;
+    font-size: clamp(3rem, 9vw, 6rem);
+    line-height: 1;
+    color: var(--color-surface-alt);
+    flex: none;
   }
 
   .sort-controls {
-    margin-bottom: calc(var(--grid-unit) * 4);
+    margin-bottom: calc(var(--grid-unit) * 3);
     text-align: right;
   }
 
   #sort-toggle {
-    font-family: var(--font-heading-secondary);
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--color-accent);
+    font-size: 0.68rem;
+    color: var(--color-text-secondary);
     background: none;
-    border: 2px solid var(--color-accent);
-    padding: calc(var(--grid-unit) / 2) var(--grid-unit);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-chip);
+    padding: 7px 12px;
     cursor: pointer;
     transition: all 0.2s ease;
   }
 
   #sort-toggle:hover,
   #sort-toggle:focus {
-    background-color: var(--color-accent);
-    color: white;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .cases-label {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin: 0 0 14px;
+  }
+
+  .cases-list {
+    border-top: 2px solid var(--color-border-strong);
+  }
+
+  .case-row {
+    display: grid;
+    grid-template-columns: 50px 1fr auto;
+    gap: 24px;
+    align-items: baseline;
+    padding: 22px 2px;
+    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .case-row:hover {
+    background: var(--color-surface);
+  }
+
+  .case-row .num {
+    font-family: var(--font-mono);
+    font-size: 1.15rem;
+    color: var(--color-accent);
+  }
+
+  .case-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+  }
+
+  .case-row:hover .case-title {
+    color: var(--color-accent);
+  }
+
+  .case-desc {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+  }
+
+  .case-date {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
   }
 
   @media (max-width: 768px) {
-    .page-title {
-      font-size: 2.5rem;
+    .page-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
     }
 
-    .post-title {
-      font-size: 1.75rem;
+    .ghost-num {
+      display: none;
+    }
+
+    .case-row {
+      grid-template-columns: 32px 1fr;
+    }
+
+    .case-date {
+      grid-column: 2;
     }
   }
 </style>
