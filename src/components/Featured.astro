@@ -1,9 +1,10 @@
 ---
 export interface Props {
   lang: 'en' | 'it';
+  compact?: boolean;
 }
 
-const { lang } = Astro.props;
+const { lang, compact = false } = Astro.props;
 
 const featured = [
   {
@@ -49,7 +50,7 @@ const featCta = lang === 'it' ? 'Esplora il progetto' : 'Explore the project';
 const featKicker = lang === 'it' ? 'In evidenza' : 'Featured';
 ---
 
-<div class="tq-feat" role="region" aria-label={featKicker}>
+<div class:list={["tq-feat", { compact }]} role="region" aria-label={featKicker}>
   <div class="tq-feat-copy">
     {featured.map((item, i) => (
       <div class="tq-feat-item" data-index={i}>
@@ -68,15 +69,20 @@ const featKicker = lang === 'it' ? 'In evidenza' : 'Featured';
       ))}
     </div>
   </div>
-  <div class="tq-feat-cover">
-    <span class="tq-feat-ghostnum">{String(featured.length).padStart(2, "0")}</span>
-  </div>
+  {compact ? (
+    <span class="tq-feat-num" aria-hidden="true">01</span>
+  ) : (
+    <div class="tq-feat-cover">
+      <span class="tq-feat-ghostnum">{String(featured.length).padStart(2, "0")}</span>
+    </div>
+  )}
 </div>
 
 <script>
   const container = document.querySelector('.tq-feat');
   const items = container?.querySelectorAll('.tq-feat-item');
   const dots = container?.querySelectorAll('.tq-dots button');
+  const numEl = container?.querySelector('.tq-feat-num');
   let current = 0;
   let timer: ReturnType<typeof setInterval>;
   const total = items?.length || 0;
@@ -91,6 +97,7 @@ const featKicker = lang === 'it' ? 'In evidenza' : 'Featured';
     dots.forEach((dot, i) => {
       dot.classList.toggle('on', i === idx);
     });
+    if (numEl) numEl.textContent = String(idx + 1).padStart(2, '0');
     current = idx;
   }
 
@@ -150,4 +157,14 @@ const featKicker = lang === 'it' ? 'In evidenza' : 'Featured';
     .tq-feat{grid-template-columns:1fr;}
     .tq-feat-cover{display:none;}
   }
+
+  /* variante compatta per la fascia densa della home */
+  .tq-feat.compact{grid-template-columns:1fr;}
+  .tq-feat.compact .tq-feat-copy{position:relative;padding:30px 34px;min-height:300px;
+    display:flex;flex-direction:column;}
+  .tq-feat.compact .tq-feat-item{flex:1;}
+  .tq-feat.compact .tq-dots{margin-top:auto;}
+  .tq-feat.compact .tq-feat-num{position:absolute;top:24px;right:28px;
+    font-family:var(--font-mono);font-weight:700;font-size:3.4rem;line-height:.8;
+    color:var(--color-border);pointer-events:none;}
 </style>

@@ -17,14 +17,13 @@ const sortedPosts = allPosts
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .slice(0, 10);
 
-const base = import.meta.env.BASE_URL;
-
 const i18n = {
   en: {
-    kicker: 'Index · 2019—2026',
     tagline: '[words, thoughts, snippets]',
     projectsTitle: 'Projects',
     latestTitle: 'Latest writing',
+    archiveTitle: 'Explore the archive',
+    allLink: 'all →',
     searchPlaceholder: 'Search the writing…',
     filterAll: 'All',
     inThisLang: 'In English',
@@ -57,25 +56,79 @@ function fmtDate(iso: string): string {
   const m = months[d.getMonth()];
   return `${m} ${d.getDate()}, ${d.getFullYear()}`;
 }
+
+// helper: post URL from source file
+function postHref(post: any): string {
+  const postPath = post.file.includes('/murderheprompted/')
+    ? 'murderheprompted/'
+    : post.file.includes('/shortstories/')
+    ? 'shortstories/'
+    : post.file.includes('/promptsoncanvas/')
+    ? 'promptsoncanvas/'
+    : 'ideas/';
+  const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
+  return `/en/${postPath}${slug}`;
+}
 ---
 
 <Layout title="Trnq.eu: Stefano Trinchero's Personal Website" description="Ideas, short stories, digital projects, and some code snippets." showSidebar={false} lang="en">
   <div class="tq-home">
 
-    <section class="tq-hero-monumental">
-      <p class="tq-kicker">{dict.kicker}</p>
-      <div class="tq-hero-inner">
-        <h1>trnq<span class="accent-dot">.</span>eu</h1>
-        <p class="tq-tagline">{dict.tagline}</p>
+    <!-- thin masthead: replaces the monumental hero -->
+    <div class="tq-masthead">
+      <span class="tq-mast-tag">{dict.tagline}</span>
+      <span class="tq-mast-idx">Index · 2019—2026</span>
+    </div>
+
+    <!-- dense band: featured (slider) + latest writing -->
+    <section class="tq-top">
+      <div class="tq-top-main">
+        <Featured lang={lang} compact={true} />
       </div>
-      <div class="tq-hero-rule"><span class="tq-hero-rule-accent" /></div>
+      <aside class="tq-top-side">
+        <div class="tq-sechead">
+          <h2>{dict.latestTitle}</h2>
+          <a class="tq-seclink" href="#tq-archive">{dict.allLink}</a>
+        </div>
+        <div class="tq-minlist">
+          {sortedPosts.slice(0, 5).map(post => {
+            const fm = post.frontmatter;
+            const cats = fm.categories || [];
+            return (
+              <a class="tq-minrow" href={postHref(post)}>
+                <span class="tq-minmeta">{fmtDate(fm.date)} · {fm.lang.toUpperCase()}{cats.length ? ' · ' + cats[0] : ''}</span>
+                <span class="tq-mintitle">{fm.title}</span>
+              </a>
+            );
+          })}
+        </div>
+      </aside>
     </section>
 
-    <Featured lang={lang} />
-
+    <!-- full-width projects index -->
     <section class="tq-sec">
       <div class="tq-sechead">
-        <h2>{dict.latestTitle}</h2>
+        <h2>{dict.projectsTitle}</h2>
+        <span class="tq-sechead-count">{String(projects.length).padStart(2, '0')}</span>
+      </div>
+      <div class="tq-index">
+        {projects.map((p, idx) => (
+          <a class="tq-indexrow" href={`/en/projects/${p.slug}`}>
+            <span class="n">{String(idx + 1).padStart(2, '0')}</span>
+            <span class="t">{p.title}</span>
+            <span class="d">{p.desc.en}</span>
+            <span class="ar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- full archive with search -->
+    <section class="tq-sec" id="tq-archive">
+      <div class="tq-sechead">
+        <h2>{dict.archiveTitle}</h2>
       </div>
 
       <div class="tq-explore">
@@ -94,20 +147,11 @@ function fmtDate(iso: string): string {
 
       <div class="tq-rowlist" id="tq-rowlist">
         {sortedPosts.map(post => {
-          const postPath = post.file.includes('/murderheprompted/')
-            ? 'murderheprompted/'
-            : post.file.includes('/shortstories/')
-            ? 'shortstories/'
-            : post.file.includes('/promptsoncanvas/')
-            ? 'promptsoncanvas/'
-            : 'ideas/';
-          const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
-          const href = `/en/${postPath}${slug}`;
           const fm = post.frontmatter;
           const match = fm.lang === 'en';
           const cats = fm.categories || [];
           return (
-            <a class={"tq-row" + (match ? " match" : "")} href={href}
+            <a class={"tq-row" + (match ? " match" : "")} href={postHref(post)}
               data-title={fm.title.toLowerCase()}
               data-cats={(cats as string[]).join(' ').toLowerCase()}
               data-lang={fm.lang}>
@@ -120,25 +164,6 @@ function fmtDate(iso: string): string {
             </a>
           );
         })}
-      </div>
-    </section>
-
-    <section class="tq-sec">
-      <div class="tq-sechead">
-        <h2>{dict.projectsTitle}</h2>
-        <span class="tq-sechead-count">{String(projects.length).padStart(2, '0')}</span>
-      </div>
-      <div class="tq-index">
-        {projects.map((p, idx) => (
-          <a class="tq-indexrow" href={`/en/projects/${p.slug}`}>
-            <span class="n">{String(idx + 1).padStart(2, '0')}</span>
-            <span class="t">{p.title}</span>
-            <span class="d">{p.desc.en}</span>
-            <span class="ar">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </span>
-          </a>
-        ))}
       </div>
     </section>
 
@@ -178,17 +203,26 @@ function fmtDate(iso: string): string {
 <style>
   .tq-home{width:100%;}
 
-  .tq-hero-monumental{padding:72px 0 40px;}
-  .tq-kicker{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--color-text-muted);margin:0 0 18px;}
-  .tq-hero-inner{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--grid-unit);flex-wrap:wrap;}
-  .tq-hero-inner h1{font-family:var(--font-heading-primary);font-weight:600;color:var(--color-text-primary);
-    letter-spacing:-.03em;font-size:clamp(3rem,9vw,6rem);line-height:.86;margin:0;}
-  .accent-dot{color:var(--color-accent);}
-  .tq-tagline{font-family:var(--font-body);font-style:normal;color:var(--color-text-muted);
-    font-size:1.05rem;margin:0 0 12px;text-align:right;}
-  .tq-hero-rule{height:2px;background:var(--color-text-primary);margin-top:30px;position:relative;}
-  .tq-hero-rule-accent{display:block;width:120px;height:2px;background:var(--color-accent);margin-top:-2px;}
+  /* thin masthead (replaces .tq-hero-monumental) */
+  .tq-masthead{display:flex;align-items:baseline;justify-content:space-between;gap:var(--grid-unit);
+    padding:18px 0;border-bottom:1px solid var(--color-border);
+    font-family:var(--font-mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;}
+  .tq-mast-tag{color:var(--color-text-secondary);}
+  .tq-mast-idx{color:var(--color-text-muted);}
+
+  /* dense two-column band */
+  .tq-top{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:start;padding:36px 0 8px;}
+  .tq-top-side{padding-top:2px;}
+  .tq-seclink{font-family:var(--font-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-muted);}
+  .tq-seclink:hover{color:var(--color-accent);}
+  .tq-minlist{border-top:2px solid var(--color-border-strong);}
+  .tq-minrow{display:flex;flex-direction:column;gap:4px;padding:14px 2px;
+    border-bottom:1px solid var(--color-border);text-decoration:none;transition:.18s;}
+  .tq-minrow:last-child{border-bottom:none;}
+  .tq-minrow:hover{padding-left:10px;background:var(--color-surface);}
+  .tq-minmeta{font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-muted);}
+  .tq-mintitle{font-weight:600;font-size:1.05rem;color:var(--color-text-primary);}
+  .tq-minrow:hover .tq-mintitle{color:var(--color-accent);}
 
   .tq-sec{padding:44px 0;}
   .tq-sechead{display:flex;align-items:baseline;justify-content:space-between;gap:var(--grid-unit);
@@ -241,7 +275,11 @@ function fmtDate(iso: string): string {
   .tq-cat{background:var(--color-surface-alt);color:var(--color-text-secondary);font-family:var(--font-mono);
     font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:var(--radius-badge);}
 
+  @media (max-width:900px){
+    .tq-top{grid-template-columns:1fr;gap:32px;}
+  }
   @media (max-width:768px){
+    .tq-masthead{flex-direction:column;gap:6px;align-items:flex-start;}
     .tq-indexrow .d{display:none;}
     .tq-indexrow .t{font-size:1.1rem;}
     .tq-row{grid-template-columns:1fr;gap:8px;}
