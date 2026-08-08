@@ -4,7 +4,7 @@ author: Stefano Trinchero
 date: "2026-08-01"
 description: "Qualche giorno fa ho lanciato il progetto multivrss.com, un aggregatore di feed rss e gestore di segnalibri."
 excerpt: "Adoro internet, anche perché modestamente lo conosco dai tempi in cui dovevi prenderti un giorno di ferie per scaricare una fotografia, ma ho la nettissima sensazione che il mio amore non venga ricambiato."
-projects: ["Ideas"]
+projects: ["Multivrss"]
 categories: ["Knowledge"]
 tags: ["RSS", "Knowledge management", "Internet"]
 lang: "it"

@@ -4,7 +4,7 @@ author: Stefano Trinchero
 date: "2026-08-01"
 description: "A few days ago I launched multivrss.com, an RSS feed aggregator and bookmark manager."
 excerpt: "I love the internet, if only because I've known it, modestly speaking, since the days when you had to take a day off work to download a photograph, but I have the distinct feeling my love isn't returned."
-projects: ["Ideas"]
+projects: ["Multivrss"]
 categories: ["Knowledge"]
 tags: ["RSS", "Knowledge management", "Internet"]
 lang: "en"
