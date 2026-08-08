@@ -1,0 +1,320 @@
+---
+import Layout from '../../components/Layout.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const features = [
+  {
+    title: 'Front page curata',
+    text: 'Una prima pagina che raccoglie il meglio dei tuoi feed, organizzata per categoria.',
+  },
+  {
+    title: 'Vista River',
+    text: 'Lo stream cronologico di tutti gli articoli, filtrabile per fonte o categoria.',
+  },
+  {
+    title: 'Lettura senza distrazioni',
+    text: 'Un reader pulito, con copia testo ed esportazione in Markdown.',
+  },
+];
+
+const gallery = [
+  { src: '/multivrss/hero.png', alt: 'Home page di multivrss.com con il claim "Feeds & Bookmarks"' },
+  { src: '/multivrss/dashboard.png', alt: 'Front Page curata di multivrss.com, organizzata per categorie' },
+  { src: '/multivrss/river.png', alt: 'Vista River di multivrss.com: stream cronologico degli articoli' },
+  { src: '/multivrss/reader.png', alt: 'Lettura di un articolo su multivrss.com in modalità senza distrazioni' },
+];
+---
+
+<Layout
+  title="Multivrss — Trnq.eu"
+  description="Multivrss.com: una stanza di lettura digitale. MultivRRS è un aggregatore di feed RSS e un gestore di segnalibri, tranquillo ed essenziale."
+  type="website"
+  lang="it"
+>
+  <div class="multivrss-page">
+    <header class="page-header">
+      <p class="kicker">Progetti · Web app</p>
+      <h1 class="page-title">Multivrss</h1>
+      <p class="lead">Una stanza di lettura digitale composta da un aggregatore di feed RSS e un gestore di segnalibri, in un unico ambiente tranquillo e minimale.</p>
+      <div class="cta-row">
+        <a class="cta-primary" href="https://multivrss.com/" target="_blank" rel="noopener">
+          Visita multivrss.com
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="cta-secondary" href={`${base}ideas/multivrssdotcom-it`}>
+          Leggi l'articolo di lancio →
+        </a>
+      </div>
+    </header>
+
+    <div class="body">
+      <p>Multivrss nasce con l'idea di rimettere ordine nel modo in cui usiamo internet: serve per tracciare tutti gli aggiornamenti dei siti che segui e i segnalibri degli articoli che vuoi conservare. Solo questo.</p>
+      <p>I miei strumenti preferiti per la gestione dei contenuti digitali erano Google Reader e Pocket. Entrambi sono stati chiusi e ho quindi deciso di costruire un mio prodotto per sostituirli. Così è nato MultivRSS, un posto libero, essenziale, senza algoritmi che scelgono al posto tuo cosa dovresti leggere.</p>
+    </div>
+
+    <div class="feature-grid">
+      {features.map((f) => (
+        <div class="feature-card">
+          <h3>{f.title}</h3>
+          <p>{f.text}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="gallery">
+      {gallery.map((g) => (
+        <button class="gallery-item" type="button" aria-label={`Ingrandisci: ${g.alt}`}>
+          <img src={g.src} alt={g.alt} loading="lazy" />
+        </button>
+      ))}
+    </div>
+
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox-close" type="button" aria-label="Chiudi">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+  const closeBtn = lightbox?.querySelector<HTMLButtonElement>('.lightbox-close');
+  const triggers = document.querySelectorAll<HTMLButtonElement>('.gallery-item');
+  let lastFocused: HTMLElement | null = null;
+
+  function openLightbox(trigger: HTMLButtonElement) {
+    const img = trigger.querySelector('img');
+    if (!lightbox || !lightboxImg || !img) return;
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lastFocused = trigger;
+    closeBtn?.focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox || !lightboxImg) return;
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    lightboxImg.src = '';
+    lastFocused?.focus();
+  }
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => openLightbox(trigger));
+  });
+
+  closeBtn?.addEventListener('click', closeLightbox);
+
+  lightbox?.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox?.classList.contains('open')) closeLightbox();
+  });
+</script>
+
+<style>
+  .multivrss-page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 44px 0 60px;
+  }
+
+  .page-header {
+    margin-bottom: 40px;
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 18px;
+  }
+
+  .page-title {
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    margin: 0 0 20px;
+  }
+
+  .lead {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 56ch;
+    margin: 0 0 28px;
+  }
+
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .cta-primary {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--color-text-primary);
+    color: var(--color-background);
+    border: 1.5px solid var(--color-text-primary);
+    padding: 12px 20px;
+    border-radius: var(--radius-chip);
+    text-decoration: none;
+    transition: 0.2s;
+  }
+
+  .cta-primary:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .cta-secondary {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+
+  .cta-secondary:hover {
+    color: var(--color-accent);
+  }
+
+  .body {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+    max-width: 66ch;
+    margin-bottom: 48px;
+  }
+
+  .body p + p {
+    margin-top: 18px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    border-top: 2px solid var(--color-border-strong);
+    padding-top: 32px;
+    margin-bottom: 48px;
+  }
+
+  .feature-card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 8px;
+  }
+
+  .feature-card p {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .gallery img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+  }
+
+  .gallery-item {
+    all: unset;
+    cursor: pointer;
+    display: block;
+    border-radius: var(--radius-card);
+  }
+
+  .gallery-item:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  .gallery-item img {
+    transition: opacity 0.2s ease;
+  }
+
+  .gallery-item:hover img {
+    opacity: 0.85;
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 2000;
+  }
+
+  .lightbox.open {
+    display: flex;
+  }
+
+  .lightbox-img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: var(--radius-card);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
