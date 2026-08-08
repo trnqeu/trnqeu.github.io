@@ -11,6 +11,8 @@ lang: "it"
 ---
 Qualche giorno fa ho lanciato [multivrss.com](https://multivrss.com/), un aggregatore di feed RSS e gestore di segnalibri costruito con il proposito di aiutarmi a *usare* internet al meglio delle sue potenzialità. Dentro [multivrss.com](https://multivrss.com/) è possibile seguire tutti gli aggiornamenti dei propri siti preferiti e si possono salvare gli articoli più interessanti: solo questo e nient'altro. Spero che ci sia in giro qualcun altro a cui questo servizio possa essere utile.
 
+Se vi interessa approfondire potete visitare la [pagina del progetto](/projects/multivrss) su trnq.eu.
+
 Qui di seguito trovate l'articolo che ho scritto per lanciare il progetto:
 
 ***
@@ -33,3 +35,10 @@ Non mi interessa al punto che il mondo può andare nella direzione che vuole e c
 Qui dentro potrete interagire con internet nella maniera secondo me più corretta. La maniera in cui internet può esprimersi al meglio, e quella in cui può manifestare la sua natura originaria. Lo so, suona arrogante e pretenzioso, ma l'arroganza e la pretenziosità, o l'essere "opinionato", come va di moda dire adesso, sono parte del prodotto. Multivrss nasce per affermare un'opinione su quello che internet è e su quello che secondo me dovrebbe essere. E basta.
 
 Poi, se preferite dilapidare il vostro patrimonio di attenzione e l'integrità della vostra mente scrollando all'infinito dei micrometraggi selezionati da un algoritmo prometto di non giudicarvi. O forse vi sto già giudicando, ma voi non ve ne state accorgendo perché avete perso la concentrazione molte righe fa.
+
+<p class="cta-button-wrap">
+  <a class="cta-button" href="https://multivrss.com/" target="_blank" rel="noopener">
+    Visita multivrss.com
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+</p>

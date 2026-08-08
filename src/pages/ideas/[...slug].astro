@@ -340,6 +340,34 @@ const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString(
     margin: calc(var(--grid-unit) * 4) 0;
   }
 
+  .post-content :global(.cta-button-wrap) {
+    margin: calc(var(--grid-unit) * 5) 0 calc(var(--grid-unit) * 2);
+  }
+
+  .post-content :global(.cta-button) {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--color-text-primary);
+    color: var(--color-background);
+    border: 1.5px solid var(--color-text-primary);
+    padding: 12px 20px;
+    border-radius: var(--radius-chip);
+    text-decoration: none;
+    transition: 0.2s;
+  }
+
+  .post-content :global(.cta-button:hover) {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-background);
+  }
+
   .post-footer {
     border-top: 1px solid var(--color-border);
     padding-top: calc(var(--grid-unit) * 3);

@@ -14,6 +14,8 @@ lang: "en"
 
 A few days ago I launched [multivrss.com](https://multivrss.com/), an RSS feed aggregator and bookmark manager built with the goal of helping me *use* the internet to its full potential. Inside [multivrss.com](https://multivrss.com/) you can follow all the updates from your favorite sites and save the articles you find most interesting: just that, and nothing more. I hope there's someone else out there who might find this service useful.
 
+If you'd like to learn more, you can visit the [project page](/en/projects/multivrss) on trnq.eu.
+
 Below you'll find the article I wrote to launch the project:
 
 ***
@@ -36,3 +38,10 @@ I don't care so much that the rest of the world can go wherever it wants and kee
 In here, you'll get to interact with the internet the way I believe is right. The way the internet expresses itself best, the way it shows its original nature. I know that sounds arrogant and pretentious, but arrogance and pretentiousness, or being "opinionated," as people like to say now, are part of the product. Multivrss exists to state an opinion about what the internet is and what I think it should be. That's it.
 
 And if you'd rather burn through your attention span and the integrity of your mind scrolling endless short-form clips picked out by an algorithm, I promise not to judge you. Or maybe I'm already judging you, and you just haven't noticed, because you lost your concentration several lines ago.
+
+<p class="cta-button-wrap">
+  <a class="cta-button" href="https://multivrss.com/" target="_blank" rel="noopener">
+    Visit multivrss.com
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+</p>
