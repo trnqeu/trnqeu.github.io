@@ -12,6 +12,9 @@ const baseSchema = z.object({
     author: z.string().default('Anonymous'),
     image: z.string().optional(),
     lang: z.string(),
+    // Links this entry to its translation(s): entries sharing the same
+    // translationKey are treated as the same post in different languages.
+    translationKey: z.string().optional(),
 });
 
 const ideas = defineCollection({

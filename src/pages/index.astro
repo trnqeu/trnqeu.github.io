@@ -1,6 +1,7 @@
 ---
 import Layout from '../components/Layout.astro';
 import Featured from '../components/Featured.astro';
+import { localize } from '../utils/i18n';
 
 const lang: 'en' | 'it' = Astro.url.pathname.startsWith('/en/') ? 'en' : 'it';
 
@@ -13,7 +14,8 @@ const shortStoriesMdxPostsGlob = import.meta.glob('../content/shortstories/*.mdx
 const promptsOnCanvasPostsGlob = import.meta.glob('../content/promptsoncanvas/*.md', { eager: true });
 const promptsOnCanvasMdxPostsGlob = import.meta.glob('../content/promptsoncanvas/*.mdx', { eager: true });
 const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob), ...Object.values(shortStoriesPostsGlob), ...Object.values(shortStoriesMdxPostsGlob), ...Object.values(promptsOnCanvasPostsGlob), ...Object.values(promptsOnCanvasMdxPostsGlob)] as any[];
-const sortedPosts = allPosts
+const sortedPosts = localize(allPosts, lang)
+  .map(({ post, isFallback }) => ({ ...post, isFallback }))
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .slice(0, 10);
 
@@ -28,7 +30,7 @@ const i18n = {
     allLink: 'tutti →',
     searchPlaceholder: 'Cerca tra gli scritti…',
     filterAll: 'Tutti',
-    inThisLang: 'In italiano',
+    notTranslatedNote: 'non ancora tradotti',
     months: ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'],
   },
   en: {
@@ -39,7 +41,7 @@ const i18n = {
     allLink: 'all →',
     searchPlaceholder: 'Search the writing…',
     filterAll: 'All',
-    inThisLang: 'In English',
+    notTranslatedNote: 'not yet translated',
     months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
   },
 };
@@ -112,7 +114,7 @@ function postHref(post: any): string {
             const cats = fm.categories || [];
             return (
               <a class="tq-minrow" href={postHref(post)}>
-                <span class="tq-minmeta">{fmtDate(fm.date)} · {fm.lang.toUpperCase()}{cats.length ? ' · ' + cats[0] : ''}</span>
+                <span class="tq-minmeta">{fmtDate(fm.date)}{post.isFallback ? ` · ${fm.lang.toUpperCase()}` : ''}{cats.length ? ' · ' + cats[0] : ''}</span>
                 <span class="tq-mintitle">{fm.title}</span>
               </a>
             );
@@ -158,23 +160,22 @@ function postHref(post: any): string {
             <button class="tq-chip" data-cat={c.toLowerCase()}>{c}</button>
           ))}
         </div>
-        <span class="tq-langnote">▸ <b>{dict.inThisLang}</b> {lang === 'it' ? 'in evidenza' : 'highlighted'}</span>
+        <span class="tq-langnote">▸ <b>{dict.notTranslatedNote}</b></span>
       </div>
 
       <div class="tq-rowlist" id="tq-rowlist">
         {sortedPosts.map(post => {
           const fm = post.frontmatter;
-          const match = fm.lang === lang;
           const cats = fm.categories || [];
           return (
-            <a class={"tq-row" + (match ? " match" : "")} href={postHref(post)}
+            <a class={"tq-row" + (post.isFallback ? " fallback" : "")} href={postHref(post)}
               data-title={fm.title.toLowerCase()}
               data-cats={(cats as string[]).join(' ').toLowerCase()}
               data-lang={fm.lang}>
               <span class="rdate">{fmtDate(fm.date)}</span>
               <span class="rtitle">{fm.title}</span>
               <span class="rtags">
-                <span class={"tq-langbadge" + (match ? " filled" : "")}>{fm.lang}</span>
+                {post.isFallback && <span class="tq-langbadge filled">{fm.lang}</span>}
                 {cats.length > 0 && <span class="tq-cat">{cats[0]}</span>}
               </span>
             </a>
@@ -283,7 +284,7 @@ function postHref(post: any): string {
   .tq-row .rdate{font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);}
   .tq-row .rtitle{font-weight:600;font-size:1.1rem;color:var(--color-text-primary);}
   .tq-row:hover .rtitle{color:var(--color-accent);}
-  .tq-row.match .rtitle{border-left:3px solid var(--color-accent);padding-left:12px;}
+  .tq-row.fallback .rtitle{border-left:3px dashed var(--color-text-muted);padding-left:12px;}
   .tq-row .rtags{display:flex;gap:7px;align-items:center;}
   .tq-langbadge{font-family:var(--font-mono);font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
     color:var(--color-accent);border:1px solid var(--color-border);border-radius:var(--radius-badge);padding:2px 6px;}

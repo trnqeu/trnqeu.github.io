@@ -6,7 +6,9 @@ export interface Props {
   type?: 'website' | 'article';
   publishedTime?: string;
   canonical?: string;
-  addHreflangLinks?: boolean;
+  /** hreflang alternates for this exact page — only pass entries for
+   *  languages that have a real (non-fallback) translation. */
+  alternateUrls?: { lang: string; url: string }[];
 }
 
 import { config, SITE_TITLE, SITE_DESCRIPTION } from '../config';
@@ -18,7 +20,7 @@ const {
   type = 'website',
   publishedTime,
   canonical,
-  addHreflangLinks = false,
+  alternateUrls,
 } = Astro.props;
 
 const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`;
@@ -41,11 +43,11 @@ const personSchema = {
 
 <link rel="canonical" href={canonicalURL} />
 
-{addHreflangLinks && (
+{alternateUrls && alternateUrls.length > 0 && (
   <>
-    <link rel="alternate" hreflang="it" href={new URL('/language/it', Astro.site)} />
-    <link rel="alternate" hreflang="en" href={new URL('/language/en', Astro.site)} />
-    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+    {alternateUrls.map(alt => (
+      <link rel="alternate" hreflang={alt.lang} href={new URL(alt.url, Astro.site)} />
+    ))}
   </>
 )}
 

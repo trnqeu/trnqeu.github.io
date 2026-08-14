@@ -8,6 +8,7 @@ projects: ["Multivrss"]
 categories: ["Knowledge"]
 tags: ["RSS", "Knowledge management", "Internet"]
 lang: "en"
+translationKey: "multivrssdotcom"
 ---
 
 *This article was originally written in Italian and translated into English with the help of artificial intelligence.*

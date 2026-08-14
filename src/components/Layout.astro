@@ -22,9 +22,15 @@ export interface Props {
   publishedTime?: string;
   canonical?: string;
   lang?: 'en' | 'it';
+  /** URL of the real translation of the current page in the other
+   *  language, if one exists. Overrides Header's naive path-swap toggle. */
+  translatedUrl?: string;
+  /** hreflang alternates, only set when a real (non-fallback) translation
+   *  exists for the current page. */
+  alternateUrls?: { lang: string; url: string }[];
 }
 
-const { title, description, showSidebar = false, image, type, publishedTime, canonical } = Astro.props;
+const { title, description, showSidebar = false, image, type, publishedTime, canonical, translatedUrl, alternateUrls } = Astro.props;
 
  // Determine language from URL, fallback to prop or 'en'
 const lang: 'en' | 'it' = (Astro.props.lang === 'en' || Astro.props.lang === 'it') 
@@ -59,11 +65,12 @@ const lang: 'en' | 'it' = (Astro.props.lang === 'en' || Astro.props.lang === 'it
       type={type}
       publishedTime={publishedTime}
       canonical={canonical}
+      alternateUrls={alternateUrls}
     />
   </head>
   <body>
     <div class="site-wrapper">
-      <Header lang={lang} />
+      <Header lang={lang} translatedUrl={translatedUrl} />
       
       <main class="main-content" class:list={{ 'with-sidebar': showSidebar }}>
         {showSidebar && (

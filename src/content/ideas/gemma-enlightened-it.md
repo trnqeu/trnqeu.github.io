@@ -8,6 +8,7 @@ projects: ["Ideas"]
 categories: ["AI", "NLP", "History"]
 tags: ["Gemma", "Fine-tuning", "Enlightenment", "Italian History"]
 lang: "it"
+translationKey: "gemma-enlightened"
 ---
 
 *Questo testo è stato originariamente [pubblicato su Kaggle](https://www.kaggle.com/code/stefanotrinchero/gemma-enlightened) come candidatura per il contest [Google - Unlock Global Communication with Gemma](https://www.kaggle.com/competitions/gemma-language-tuning). 

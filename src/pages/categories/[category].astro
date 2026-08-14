@@ -1,12 +1,15 @@
 ---
 import Layout from '../../components/Layout.astro';
+import { localize } from '../../utils/i18n';
 
 export async function getStaticPaths() {
   const allPostsGlob = import.meta.glob('../../content/**/*.{md,mdx}', { eager: true });
   const allPosts = Object.values(allPostsGlob) as any[];
-  
+
+  const posts = localize(allPosts, 'it').map(({ post, isFallback }) => ({ ...post, isFallback }));
+
   const allCategories = new Set<string>();
-  allPosts.forEach((post: any) => {
+  posts.forEach((post: any) => {
     if (post.frontmatter.categories) {
       post.frontmatter.categories.forEach((category: string) => {
         allCategories.add(category.toLowerCase());
@@ -15,7 +18,7 @@ export async function getStaticPaths() {
   });
 
   return Array.from(allCategories).map((category: string) => {
-    const postsWithCategory = allPosts.filter((post: any) => 
+    const postsWithCategory = posts.filter((post: any) =>
       post.frontmatter.categories && post.frontmatter.categories.map(c => c.toLowerCase()).includes(category)
     ).sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
 
@@ -64,6 +67,7 @@ const base = import.meta.env.BASE_URL;
                 <a href={finalHref}>
                   {post.frontmatter.title}
                 </a>
+                {post.isFallback && <span class="fallback-badge">{post.frontmatter.lang.toUpperCase()}</span>}
               </h2>
               
               <div class="post-meta">
@@ -193,6 +197,20 @@ const base = import.meta.env.BASE_URL;
 
   .post-lang:hover {
     color: var(--color-accent);
+  }
+
+  .fallback-badge {
+    display: inline-block;
+    margin-left: calc(var(--grid-unit));
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-badge);
+    padding: 1px 5px;
+    vertical-align: middle;
   }
 
   .post-excerpt {
