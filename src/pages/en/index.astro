@@ -1,10 +1,13 @@
 ---
 import Layout from '../../components/Layout.astro';
-import Featured from '../../components/Featured.astro';
-import { localize } from '../../utils/i18n';
+import { localize, slugFromFile } from '../../utils/i18n';
 
-const lang: 'en' = 'en';
+const lang: 'en' | 'it' = 'en';
+const base = import.meta.env.BASE_URL;
+const prefix = 'en/';
 
+// ——— scritti: stessi glob della home precedente, con il sistema di
+// traduzione reale (fallback alla lingua originale se manca l'EN) ———
 const mdPostsGlob = import.meta.glob('../../content/ideas/*.md', { eager: true });
 const mdxPostsGlob = import.meta.glob('../../content/ideas/*.mdx', { eager: true });
 const murderHePromptedPostsGlob = import.meta.glob('../../content/murderheprompted/*.md', { eager: true });
@@ -13,280 +16,224 @@ const shortStoriesPostsGlob = import.meta.glob('../../content/shortstories/*.md'
 const shortStoriesMdxPostsGlob = import.meta.glob('../../content/shortstories/*.mdx', { eager: true });
 const promptsOnCanvasPostsGlob = import.meta.glob('../../content/promptsoncanvas/*.md', { eager: true });
 const promptsOnCanvasMdxPostsGlob = import.meta.glob('../../content/promptsoncanvas/*.mdx', { eager: true });
-const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob), ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob), ...Object.values(shortStoriesPostsGlob), ...Object.values(shortStoriesMdxPostsGlob), ...Object.values(promptsOnCanvasPostsGlob), ...Object.values(promptsOnCanvasMdxPostsGlob)] as any[];
-const sortedPosts = localize(allPosts, lang)
+const allPosts = [
+  ...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob),
+  ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob),
+  ...Object.values(shortStoriesPostsGlob), ...Object.values(shortStoriesMdxPostsGlob),
+  ...Object.values(promptsOnCanvasPostsGlob), ...Object.values(promptsOnCanvasMdxPostsGlob),
+] as any[];
+
+const localizedPosts = localize(allPosts, lang)
   .map(({ post, isFallback }) => ({ ...post, isFallback }))
-  .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
-  .slice(0, 10);
+  .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
+
+const latest = localizedPosts.slice(0, 6);       // 6 rows: as many as fit without scrolling
 
 const i18n = {
+  it: {
+    projects: 'progetti', writings: 'scritti',
+    allProjects: 'tutti i progetti →', allWritings: "tutto l'archivio →",
+    tagline: '[pensieri, parole, opere o missioni]', info: 'info',
+    months: ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'],
+  },
   en: {
-    tagline: '[words, thoughts, snippets]',
-    projectsTitle: 'Projects',
-    latestTitle: 'Latest writing',
-    archiveTitle: 'Explore the archive',
-    allLink: 'all →',
-    searchPlaceholder: 'Search the writing…',
-    filterAll: 'All',
-    notTranslatedNote: 'not yet translated',
-    months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+    projects: 'projects', writings: 'writing',
+    allProjects: 'all projects →', allWritings: 'the whole archive →',
+    tagline: '[thoughts, words, snippets]', info: 'info',
+    months: ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'],
   },
 };
-
-const dict = i18n.en;
-const months = dict.months;
+const dict = i18n[lang];
 
 const projects = [
-  { id: 'multivrss', slug: 'multivrss', title: 'Multivrss',
-    desc: { it: 'Il mio aggregatore di feed RSS e segnalibri.', en: 'My RSS feed aggregator and bookmark manager.' } },
-  { id: 'eblioteque', slug: 'eblioteque', title: 'Eblioteque',
-    desc: { it: 'La mia biblioteca digitale.', en: 'My e-biblioteque.' } },
-  { id: 'ideas', slug: 'ideas', title: 'Ideas',
-    desc: { it: 'Appunti e pensieri sparsi.', en: 'Posts, random thoughts.' } },
-  { id: 'prompts', slug: 'promptsoncanvas', title: 'Prompts on canvas',
-    desc: { it: 'Piccoli capolavori di arte generativa.', en: 'Masterpieces of generative art.' } },
-  { id: 'murder', slug: 'murder-he-prompted', title: 'Murder, he prompted',
-    desc: { it: 'Il Capo Prompter Jameson Aguardento, in servizio.', en: 'Chief Prompter Jameson Aguardento reporting for duty.' } },
-  { id: 'sottolinee', slug: 'sottolinee', title: 'Sottolinee',
-    desc: { it: 'Una collezione di sottolineature.', en: 'A collection of underlines.' } },
-  { id: 'racconti', slug: 'short-stories', title: 'Racconti / Short stories',
-    desc: { it: 'Racconti brevi scritti nel tempo.', en: 'A collection of short stories I have written in the past.' } },
+  { slug: 'multivrss',           title: 'Multivrss',              meta: { it: 'aggregatore di feed RSS', en: 'RSS feed aggregator' } },
+  { slug: 'eblioteque',          title: 'Eblioteque',              meta: { it: 'la mia biblioteca digitale', en: 'my e-biblioteque' } },
+  { slug: 'ideas',               title: 'Ideas',                  meta: { it: 'appunti e pensieri sparsi', en: 'posts, random thoughts' } },
+  { slug: 'promptsoncanvas',     title: 'Prompts on canvas',      meta: { it: 'arte generativa', en: 'generative art' } },
+  { slug: 'murder-he-prompted',  title: 'Murder, he prompted',    meta: { it: 'serie · in corso', en: 'series · ongoing' } },
+  { slug: 'sottolinee',          title: 'Sottolinee',             meta: { it: 'righe tenute', en: 'kept lines' } },
+  { slug: 'short-stories',       title: 'Racconti / Short stories', meta: { it: 'racconti brevi', en: 'short stories' } },
 ];
 
-const allCategories = ['Fiction', 'Comedy', 'AI', 'Art'];
-
-function fmtDate(iso: string): string {
-  const d = new Date(iso + 'T00:00:00');
-  const m = months[d.getMonth()];
-  return `${m} ${d.getDate()}, ${d.getFullYear()}`;
+// frontmatter `date` is a bare "YYYY-MM-DD" string when quoted in the
+// source, but an unquoted `date: 2025-10-29` gets YAML-parsed to a Date and
+// then serialized as a full ISO string ("…T00:00:00.000Z") — appending
+// 'T00:00:00' to that (as if it were still a bare date) breaks parsing and
+// yields "Invalid Date". Only append it when there's no time part yet.
+function fmtDate(input: string | Date): string {
+  const iso = input instanceof Date ? input.toISOString() : input;
+  const d = new Date(iso.includes('T') ? iso : `${iso}T00:00:00`);
+  const m = dict.months[d.getMonth()];
+  return lang === 'it' ? `${d.getDate()} ${m} ${d.getFullYear()}` : `${m} ${d.getDate()}, ${d.getFullYear()}`;
 }
 
-// helper: post URL from source file
 function postHref(post: any): string {
-  const postPath = post.file.includes('/murderheprompted/')
-    ? 'murderheprompted/'
-    : post.file.includes('/shortstories/')
-    ? 'shortstories/'
-    : post.file.includes('/promptsoncanvas/')
-    ? 'promptsoncanvas/'
+  const dir = post.file.includes('/murderheprompted/') ? 'murderheprompted/'
+    : post.file.includes('/shortstories/') ? 'shortstories/'
+    : post.file.includes('/promptsoncanvas/') ? 'promptsoncanvas/'
     : 'ideas/';
-  const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
-  return `/en/${postPath}${slug}`;
+  return `${base}${prefix}${dir}${slugFromFile(post.file)}`;
 }
 ---
 
-<Layout title="Trnq.eu: Stefano Trinchero's Personal Website" description="Ideas, short stories, digital projects, and some code snippets." showSidebar={false} lang="en">
-  <div class="tq-home">
+<Layout
+  title="Trnq.eu: Stefano Trinchero's Personal Website"
+  description="Ideas, short stories, digital projects, and some code snippets."
+  showSidebar={false}
+  fullHeight={true}
+  lang={lang}
+>
+  <div class="tq-bivio">
 
-    <!-- thin masthead: replaces the monumental hero -->
-    <div class="tq-masthead">
-      <span class="tq-mast-tag">{dict.tagline}</span>
-      <span class="tq-mast-idx">Index · 2019—2026</span>
-    </div>
-
-    <!-- dense band: featured (slider) + latest writing -->
-    <section class="tq-top">
-      <div class="tq-top-main">
-        <Featured lang={lang} compact={true} />
-      </div>
-      <aside class="tq-top-side">
-        <div class="tq-sechead">
-          <h2>{dict.latestTitle}</h2>
-          <a class="tq-seclink" href="#tq-archive">{dict.allLink}</a>
-        </div>
-        <div class="tq-minlist">
-          {sortedPosts.slice(0, 5).map(post => {
-            const fm = post.frontmatter;
-            const cats = fm.categories || [];
-            return (
-              <a class="tq-minrow" href={postHref(post)}>
-                <span class="tq-minmeta">{fmtDate(fm.date)}{post.isFallback ? ` · ${fm.lang.toUpperCase()}` : ''}{cats.length ? ' · ' + cats[0] : ''}</span>
-                <span class="tq-mintitle">{fm.title}</span>
-              </a>
-            );
-          })}
-        </div>
-      </aside>
-    </section>
-
-    <!-- full-width projects index -->
-    <section class="tq-sec">
-      <div class="tq-sechead">
-        <h2>{dict.projectsTitle}</h2>
-        <span class="tq-sechead-count">{String(projects.length).padStart(2, '0')}</span>
-      </div>
-      <div class="tq-index">
-        {projects.map((p, idx) => (
-          <a class="tq-indexrow" href={`/en/projects/${p.slug}`}>
-            <span class="n">{String(idx + 1).padStart(2, '0')}</span>
+    <!-- LEFT HALF — PROJECTS -->
+    <section class="tq-pane" aria-labelledby="tq-h-projects">
+      <header class="tq-pane-head">
+        <h2 id="tq-h-projects">{dict.projects}</h2>
+      </header>
+      <nav class="tq-pane-list">
+        {projects.map((p, i) => (
+          <a class="tq-pane-row" href={`${base}${prefix}projects/${p.slug}`}>
+            <span class="c">{String(i + 1).padStart(2, '0')}</span>
             <span class="t">{p.title}</span>
-            <span class="d">{p.desc.en}</span>
-            <span class="ar">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </span>
+            <span class="m">{p.meta[lang]}</span>
           </a>
         ))}
-      </div>
+      </nav>
+      <a class="tq-pane-more" href={`${base}${prefix}projects`}>{dict.allProjects}</a>
     </section>
 
-    <!-- full archive with search -->
-    <section class="tq-sec" id="tq-archive">
-      <div class="tq-sechead">
-        <h2>{dict.archiveTitle}</h2>
-      </div>
-
-      <div class="tq-explore">
-        <div class="tq-searchbox">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" class="tq-search-input" id="tq-search-input" placeholder={dict.searchPlaceholder} autocomplete="off" />
-        </div>
-        <div class="tq-chips" id="tq-chips">
-          <button class="tq-chip on" data-cat="">{dict.filterAll}</button>
-          {allCategories.map(c => (
-            <button class="tq-chip" data-cat={c.toLowerCase()}>{c}</button>
-          ))}
-        </div>
-        <span class="tq-langnote">▸ <b>{dict.notTranslatedNote}</b></span>
-      </div>
-
-      <div class="tq-rowlist" id="tq-rowlist">
-        {sortedPosts.map(post => {
+    <!-- RIGHT HALF — WRITING -->
+    <section class="tq-pane" aria-labelledby="tq-h-writings">
+      <header class="tq-pane-head">
+        <h2 id="tq-h-writings">{dict.writings}</h2>
+      </header>
+      <nav class="tq-pane-list">
+        {latest.map(post => {
           const fm = post.frontmatter;
-          const cats = fm.categories || [];
+          const cat = (fm.categories || [])[0];
           return (
-            <a class={"tq-row" + (post.isFallback ? " fallback" : "")} href={postHref(post)}
-              data-title={fm.title.toLowerCase()}
-              data-cats={(cats as string[]).join(' ').toLowerCase()}
-              data-lang={fm.lang}>
-              <span class="rdate">{fmtDate(fm.date)}</span>
-              <span class="rtitle">{fm.title}</span>
-              <span class="rtags">
-                {post.isFallback && <span class="tq-langbadge filled">{fm.lang}</span>}
-                {cats.length > 0 && <span class="tq-cat">{cats[0]}</span>}
-              </span>
+            <a class="tq-pane-row" href={postHref(post)}>
+              <span class="c wide">{fmtDate(fm.date)}</span>
+              <span class="t">{fm.title}</span>
+              <span class="m">{fm.lang}{cat ? ' · ' + cat.toLowerCase() : ''}</span>
             </a>
           );
         })}
-      </div>
+      </nav>
+      <a class="tq-pane-more" href={`${base}${prefix}writing`}>{dict.allWritings}</a>
     </section>
 
   </div>
+
+  <div class="tq-bivio-foot">
+    <span>{dict.tagline}</span>
+    <span>2019—2026 · <a href={`${base}${prefix}about`}>{dict.info}</a></span>
+  </div>
 </Layout>
 
-<script>
-  const input = document.getElementById('tq-search-input') as HTMLInputElement | null;
-  const chips = document.querySelectorAll('#tq-chips .tq-chip');
-  const rows = document.querySelectorAll('#tq-rowlist .tq-row');
-
-  let activeCat = '';
-
-  function filterRows() {
-    const q = input?.value.toLowerCase().trim() || '';
-    rows.forEach((row) => {
-      const title = (row as HTMLElement).dataset.title || '';
-      const cats = (row as HTMLElement).dataset.cats || '';
-      const matchesSearch = !q || title.includes(q) || cats.includes(q);
-      const matchesCat = !activeCat || cats.includes(activeCat);
-      (row as HTMLElement).hidden = !(matchesSearch && matchesCat);
-    });
-  }
-
-  input?.addEventListener('input', filterRows);
-
-  chips.forEach((chip) => {
-    chip.addEventListener('click', () => {
-      chips.forEach((c) => c.classList.remove('on'));
-      chip.classList.add('on');
-      activeCat = (chip as HTMLElement).dataset.cat || '';
-      filterRows();
-    });
-  });
-</script>
-
 <style>
-  .tq-home{width:100%;}
-
-  /* thin masthead (replaces .tq-hero-monumental) */
-  .tq-masthead{display:flex;align-items:baseline;justify-content:space-between;gap:var(--grid-unit);
-    padding:18px 0;border-bottom:1px solid var(--color-border);
-    font-family:var(--font-mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;}
-  .tq-mast-tag{color:var(--color-text-secondary);}
-  .tq-mast-idx{color:var(--color-text-muted);}
-
-  /* dense two-column band */
-  .tq-top{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:start;padding:36px 0 8px;}
-  .tq-top-side{padding-top:2px;}
-  .tq-seclink{font-family:var(--font-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-muted);}
-  .tq-seclink:hover{color:var(--color-accent);}
-  .tq-minlist{border-top:2px solid var(--color-border-strong);}
-  .tq-minrow{display:flex;flex-direction:column;gap:4px;padding:14px 2px;
-    border-bottom:1px solid var(--color-border);text-decoration:none;transition:.18s;}
-  .tq-minrow:last-child{border-bottom:none;}
-  .tq-minrow:hover{padding-left:10px;background:var(--color-surface);}
-  .tq-minmeta{font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-muted);}
-  .tq-mintitle{font-weight:600;font-size:1.05rem;color:var(--color-text-primary);}
-  .tq-minrow:hover .tq-mintitle{color:var(--color-accent);}
-
-  .tq-sec{padding:44px 0;}
-  .tq-sechead{display:flex;align-items:baseline;justify-content:space-between;gap:var(--grid-unit);
-    margin-bottom:22px;flex-wrap:wrap;}
-  .tq-sechead h2{font-family:var(--font-mono);font-weight:600;text-transform:uppercase;
-    letter-spacing:.14em;color:var(--color-text-muted);font-size:.8rem;margin:0;}
-  .tq-sechead-count{font-family:var(--font-mono);font-size:.75rem;color:var(--color-text-muted);}
-
-  .tq-index{border-top:2px solid var(--color-border-strong);}
-  .tq-indexrow{display:flex;align-items:center;gap:24px;padding:16px 2px;
-    border-bottom:1px solid var(--color-border);text-decoration:none;cursor:pointer;transition:.2s;}
-  .tq-indexrow:hover{padding-left:16px;background:var(--color-surface);}
-  .tq-indexrow .n{font-family:var(--font-mono);font-size:.78rem;color:var(--color-accent);width:26px;flex:none;}
-  .tq-indexrow .t{font-weight:600;color:var(--color-text-primary);font-size:1.25rem;flex:none;}
-  .tq-indexrow .d{color:var(--color-text-muted);font-size:.88rem;flex:1;text-align:right;}
-  .tq-indexrow .ar{color:var(--color-accent);opacity:0;transform:translateX(-6px);transition:.2s;}
-  .tq-indexrow:hover .ar{opacity:1;transform:translateX(0);}
-
-  .tq-explore{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
-  .tq-searchbox{position:relative;flex:1;min-width:220px;}
-  .tq-searchbox input{width:100%;font-family:var(--font-body);font-size:1rem;color:var(--color-text-primary);
-    background:var(--color-surface);border:1px solid var(--color-border);border-radius:6px;
-    padding:10px 14px 10px 40px;outline:none;transition:.18s;}
-  .tq-searchbox input:focus{border-color:var(--color-accent);}
-  .tq-searchbox input::placeholder{color:var(--color-text-muted);}
-  .tq-searchbox svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--color-text-muted);}
-  .tq-chips{display:flex;gap:7px;flex-wrap:wrap;}
-  .tq-chip{font-family:var(--font-mono);font-size:.68rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
-    border:1px solid var(--color-border);background:var(--color-background);color:var(--color-text-secondary);
-    border-radius:var(--radius-chip);padding:6px 12px;cursor:pointer;transition:.16s;}
-  .tq-chip:hover{border-color:var(--color-accent);color:var(--color-accent);}
-  .tq-chip.on{background:var(--color-accent);color:var(--color-accent-contrast);border-color:var(--color-accent);}
-  .tq-langnote{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.04em;color:var(--color-text-muted);
-    display:inline-flex;align-items:center;gap:7px;}
-  .tq-langnote b{color:var(--color-accent);}
-
-  .tq-rowlist{display:flex;flex-direction:column;border-top:1px solid var(--color-border);}
-  .tq-row{display:grid;grid-template-columns:130px 1fr auto;gap:20px;align-items:center;
-    padding:16px 6px;border-bottom:1px solid var(--color-border);text-decoration:none;
-    cursor:pointer;transition:.18s;}
-  .tq-row:hover{background:var(--color-surface);padding-left:12px;}
-  .tq-row .rdate{font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-muted);}
-  .tq-row .rtitle{font-weight:600;font-size:1.1rem;color:var(--color-text-primary);}
-  .tq-row:hover .rtitle{color:var(--color-accent);}
-  .tq-row.fallback .rtitle{border-left:3px dashed var(--color-text-muted);padding-left:12px;}
-  .tq-row .rtags{display:flex;gap:7px;align-items:center;}
-  .tq-langbadge{font-family:var(--font-mono);font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
-    color:var(--color-accent);border:1px solid var(--color-border);border-radius:var(--radius-badge);padding:2px 6px;}
-  .tq-langbadge.filled{background:var(--color-accent);color:var(--color-accent-contrast);border-color:var(--color-accent);}
-  .tq-cat{background:var(--color-surface-alt);color:var(--color-text-secondary);font-family:var(--font-mono);
-    font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:var(--radius-badge);}
-
-  @media (max-width:900px){
-    .tq-top{grid-template-columns:1fr;gap:32px;}
+  /* ————— the fork ————— */
+  .tq-bivio{
+    display:flex;
+    flex:1;
+    min-height:0;
+    margin: 0 calc(var(--content-padding) * -1);   /* breaks out of the container: the halves run edge to edge */
   }
-  @media (max-width:768px){
-    .tq-masthead{flex-direction:column;gap:6px;align-items:flex-start;}
-    .tq-indexrow .d{display:none;}
-    .tq-indexrow .t{font-size:1.1rem;}
-    .tq-row{grid-template-columns:1fr;gap:8px;}
-    .tq-row .rdate{font-size:.7rem;}
-    .tq-row .rtitle{font-size:1.05rem;}
+
+  .tq-pane{
+    flex:1; min-width:0;
+    display:flex; flex-direction:column; gap:calc(var(--grid-unit)*3);
+    padding: calc(var(--grid-unit)*6) calc(var(--grid-unit)*5.5);
+    transition: flex .5s cubic-bezier(.2,.8,.2,1), background .35s ease;
+  }
+  .tq-pane + .tq-pane{ border-left:1px solid var(--color-border); }
+
+  /* opening: only on pointers with real hover */
+  @media (hover:hover) and (min-width:901px){
+    .tq-bivio:hover .tq-pane{ flex:.75; }
+    .tq-bivio:hover .tq-pane:hover,
+    .tq-pane:focus-within{ flex:1.45; background:var(--color-surface); }
+  }
+
+  .tq-pane-head h2{
+    margin:0; font-size:clamp(2.6rem, 4.4vw, 4rem); font-weight:600;
+    letter-spacing:-.03em; line-height:1; color:var(--color-text-primary);
+    text-transform:none;
+  }
+
+  /* the index is present but "off" until you look at that half */
+  .tq-pane-list{
+    display:flex; flex-direction:column;
+    border-top:2px solid var(--color-border-strong);
+    opacity:.28; transition:opacity .35s ease;
+  }
+  @media (hover:hover) and (min-width:901px){
+    .tq-pane:hover .tq-pane-list,
+    .tq-pane:focus-within .tq-pane-list{ opacity:1; }
+  }
+
+  .tq-pane-row{
+    display:flex; align-items:baseline; gap:18px;
+    padding:9px 0; border-bottom:1px solid var(--color-border);
+    text-decoration:none; color:var(--color-text-primary);
+    transition:color .18s ease, padding-left .18s ease;
+  }
+  .tq-pane-row:hover{ color:var(--color-accent); padding-left:8px; }
+  .tq-pane-row .c{
+    font-family:var(--font-mono); font-size:.7rem; color:var(--color-text-muted);
+    width:24px; flex:none;
+  }
+  .tq-pane-row .c.wide{ width:104px; }
+  .tq-pane-row .t{ min-width:0; font-size:1.18rem; font-weight:600; letter-spacing:-.01em;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tq-pane-row .m{
+    margin-left:auto; padding-left:12px; flex:none;
+    font-family:var(--font-mono); font-size:.7rem; color:var(--color-text-muted);
+    text-transform:lowercase;
+  }
+
+  .tq-pane-more{
+    margin-top:auto;
+    font-family:var(--font-mono); font-size:.7rem; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--color-text-muted); text-decoration:none;
+    opacity:0; transition:opacity .3s ease, color .18s ease;
+  }
+  .tq-pane-more:hover{ color:var(--color-accent); }
+  @media (hover:hover) and (min-width:901px){
+    .tq-pane:hover .tq-pane-more,
+    .tq-pane:focus-within .tq-pane-more{ opacity:1; }
+  }
+
+  /* ————— foot ————— */
+  .tq-bivio-foot{
+    display:flex; justify-content:space-between; gap:var(--grid-unit);
+    margin: 0 calc(var(--content-padding) * -1);
+    padding: calc(var(--grid-unit)*2) calc(var(--grid-unit)*5.5);
+    border-top:1px solid var(--color-border);
+    font-family:var(--font-mono); font-size:.7rem; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--color-text-muted);
+  }
+  .tq-bivio-foot a{ color:var(--color-text-muted); text-decoration:none; }
+  .tq-bivio-foot a:hover{ color:var(--color-accent); }
+
+  /* ————— responsive ————— */
+  @media (max-width:900px){
+    .tq-bivio{ flex-direction:column; flex:none; }
+    .tq-pane{ padding: calc(var(--grid-unit)*5) calc(var(--grid-unit)*3); gap:calc(var(--grid-unit)*3); }
+    .tq-pane + .tq-pane{ border-left:none; border-top:1px solid var(--color-border); }
+    .tq-pane-list{ opacity:1; }          /* on touch the indexes are always on */
+    .tq-pane-more{ opacity:1; }
+    .tq-pane-head h2{ font-size:2.4rem; }
+  }
+  @media (max-width:480px){
+    .tq-pane-row{ flex-wrap:wrap; gap:8px 12px; }
+    .tq-pane-row .t{ white-space:normal; font-size:1.05rem; }
+    .tq-pane-row .m{ margin-left:0; padding-left:0; width:100%; }
+    .tq-pane-row .c.wide{ width:auto; }
+  }
+
+  /* ————— accessibility ————— */
+  @media (prefers-reduced-motion:reduce){
+    .tq-pane, .tq-pane-list, .tq-pane-more, .tq-pane-row{ transition:none; }
   }
 </style>
