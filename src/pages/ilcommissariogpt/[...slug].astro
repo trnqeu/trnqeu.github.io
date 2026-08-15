@@ -1,47 +1,57 @@
 ---
 import Layout from '../../components/Layout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
+import TranslationNotice from '../../components/TranslationNotice.astro';
 import { extractHeadings, filterHeadingsForTOC } from '../../utils/table-of-contents';
 import { calculateReadingTime, extractTextFromMarkdown } from '../../utils/reading-time';
+import { localize, translationSibling, slugFromFile } from '../../utils/i18n';
 
 export async function getStaticPaths() {
   // Support both .md and .mdx files
   const mdPostsGlob = import.meta.glob('../../content/ilcommissariogpt/*.md', { eager: true });
   const mdxPostsGlob = import.meta.glob('../../content/ilcommissariogpt/*.mdx', { eager: true });
-  
+
   const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
-  
-  return allPosts.map((post: any) => {
+
+  return localize(allPosts, 'it').map(({ post, isFallback }) => {
     // For import.meta.glob, access raw content through compiledContent or body
     const rawContent = post.body || post.rawContent?.() || '';
     const plainText = extractTextFromMarkdown(rawContent);
     const readingTime = calculateReadingTime(plainText);
     const allHeadings = extractHeadings(rawContent);
     const tocHeadings = filterHeadingsForTOC(allHeadings);
-    const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
-    
+    const slug = slugFromFile(post.file);
+    const sibling = translationSibling(post, allPosts, 'en');
+
     return {
       params: { slug },
-      props: { post, readingTime, tocHeadings, url: `/ilcommissariogpt/${slug}` }
+      props: {
+        post, readingTime, tocHeadings, isFallback, url: `/ilcommissariogpt/${slug}`,
+        translatedUrl: sibling ? `/en/ilcommissariogpt/${slugFromFile(sibling.file)}` : undefined,
+      }
     };
   });
 }
 
-const { post, readingTime, tocHeadings } = Astro.props;
+const { post, readingTime, tocHeadings, isFallback, translatedUrl, url } = Astro.props;
 const { frontmatter, Content } = post as any;
 
 const pageTitle = frontmatter.title;
 const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined;
+const alternateUrls = translatedUrl ? [{ lang: 'it', url }, { lang: 'en', url: translatedUrl }] : undefined;
 ---
 
-<Layout 
-  title={pageTitle} 
+<Layout
+  title={pageTitle}
   description={frontmatter.description || frontmatter.excerpt}
   type="article"
   publishedTime={publishedTime}
-  lang={frontmatter.lang}
+  lang="it"
+  translatedUrl={translatedUrl}
+  alternateUrls={alternateUrls}
 >
   <article class="blog-post">
+    {isFallback && <TranslationNotice sourceLang={frontmatter.lang} currentLang="it" />}
     <header class="post-header">
       <h1 class="post-title">{frontmatter.title}</h1>
       

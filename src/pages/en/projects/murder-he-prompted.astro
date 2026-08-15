@@ -1,11 +1,13 @@
 ---
 import Layout from '../../../components/Layout.astro';
+import { localize, slugFromFile } from '../../../utils/i18n';
 
 const collectionName = 'murderheprompted';
 const collectionGlob = import.meta.glob('../../../content/murderheprompted/**/*.{md,mdx}', { eager: true });
-const posts = Object.values(collectionGlob) as any[];
+const allPosts = Object.values(collectionGlob) as any[];
 
-posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date(b.frontmatter.date).getTime());
+const posts = localize(allPosts, 'en')
+  .sort((a, b) => new Date(a.post.frontmatter.date).getTime() - new Date(b.post.frontmatter.date).getTime());
 ---
 
 <Layout title="Murder, he prompted" description="A collection of all the cases from the 'Murder, he prompted' series." lang="en">
@@ -28,11 +30,14 @@ posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date
     <section class="cases">
       <h2 class="cases-label">Cases</h2>
       <div class="cases-list posts-list">
-        {posts.map((post: any, idx: number) => (
-          <a class="case-row post-item" href={`/en/${collectionName}/${post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '')}`}>
+        {posts.map(({ post, isFallback }, idx: number) => (
+          <a class="case-row post-item" href={`/en/${collectionName}/${slugFromFile(post.file)}`}>
             <span class="num">#{idx + 1}</span>
             <div class="case-body">
-              <div class="case-title">{post.frontmatter.title}</div>
+              <div class="case-title">
+                {post.frontmatter.title}
+                {isFallback && <span class="fallback-badge">{post.frontmatter.lang.toUpperCase()}</span>}
+              </div>
               {post.frontmatter.excerpt && <div class="case-desc">{post.frontmatter.excerpt}</div>}
             </div>
             <time class="case-date post-date" datetime={post.frontmatter.date}>
@@ -212,6 +217,20 @@ posts.sort((a: any, b: any) => new Date(a.frontmatter.date).getTime() - new Date
   .case-desc {
     color: var(--color-text-muted);
     font-size: 0.85rem;
+  }
+
+  .fallback-badge {
+    display: inline-block;
+    margin-left: calc(var(--grid-unit));
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-badge);
+    padding: 1px 5px;
+    vertical-align: middle;
   }
 
   .case-date {

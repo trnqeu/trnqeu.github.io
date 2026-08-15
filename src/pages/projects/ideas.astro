@@ -1,17 +1,19 @@
 ---
 import Layout from '../../components/Layout.astro';
+import { localize, slugFromFile } from '../../utils/i18n';
 const base = import.meta.env.BASE_URL;
 
 const mdPostsGlob = import.meta.glob('../../content/ideas/*.md', { eager: true });
 const mdxPostsGlob = import.meta.glob('../../content/ideas/*.mdx', { eager: true });
 
 const allPosts = [...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob)] as any[];
-const sortedPosts = allPosts
-  .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
-  .map(post => {
-    const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
+const sortedPosts = localize(allPosts, 'it')
+  .sort((a, b) => new Date(b.post.frontmatter.date).getTime() - new Date(a.post.frontmatter.date).getTime())
+  .map(({ post, isFallback }) => {
+    const slug = slugFromFile(post.file);
     return {
       ...post,
+      isFallback,
       url: `/ideas/${slug}`
     }
   });
@@ -33,8 +35,9 @@ const sortedPosts = allPosts
           <article class="post-item">
             <h2 class="post-title">
               <a href={post.url}>{post.frontmatter.title}</a>
+              {post.isFallback && <span class="fallback-badge">{post.frontmatter.lang.toUpperCase()}</span>}
             </h2>
-            
+
             <div class="post-meta">
               <time class="post-date" datetime={post.frontmatter.date}>
                 {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
@@ -169,6 +172,20 @@ const sortedPosts = allPosts
     text-transform: uppercase;
     letter-spacing: 0.05em;
     border-radius: var(--radius-badge);
+  }
+
+  .fallback-badge {
+    display: inline-block;
+    margin-left: calc(var(--grid-unit));
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-badge);
+    padding: 1px 5px;
+    vertical-align: middle;
   }
 
   .post-excerpt {

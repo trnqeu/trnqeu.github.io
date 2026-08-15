@@ -17,14 +17,24 @@ export interface Props {
   title: string;
   description?: string;
   showSidebar?: boolean;
+  /** Drops the container's vertical padding and skips the long Footer —
+   *  for pages (like the home "bivio") that draw their own edge-to-edge
+   *  layout and footer strip. */
+  fullHeight?: boolean;
   image?: string;
   type?: 'website' | 'article';
   publishedTime?: string;
   canonical?: string;
   lang?: 'en' | 'it';
+  /** URL of the real translation of the current page in the other
+   *  language, if one exists. Overrides Header's naive path-swap toggle. */
+  translatedUrl?: string;
+  /** hreflang alternates, only set when a real (non-fallback) translation
+   *  exists for the current page. */
+  alternateUrls?: { lang: string; url: string }[];
 }
 
-const { title, description, showSidebar = false, image, type, publishedTime, canonical } = Astro.props;
+const { title, description, showSidebar = false, fullHeight = false, image, type, publishedTime, canonical, translatedUrl, alternateUrls } = Astro.props;
 
  // Determine language from URL, fallback to prop or 'en'
 const lang: 'en' | 'it' = (Astro.props.lang === 'en' || Astro.props.lang === 'it') 
@@ -59,25 +69,26 @@ const lang: 'en' | 'it' = (Astro.props.lang === 'en' || Astro.props.lang === 'it
       type={type}
       publishedTime={publishedTime}
       canonical={canonical}
+      alternateUrls={alternateUrls}
     />
   </head>
   <body>
     <div class="site-wrapper">
-      <Header lang={lang} />
+      <Header lang={lang} translatedUrl={translatedUrl} />
       
-      <main class="main-content" class:list={{ 'with-sidebar': showSidebar }}>
+      <main class="main-content" class:list={{ 'with-sidebar': showSidebar, 'is-full': fullHeight }}>
         {showSidebar && (
           <aside class="sidebar">
             <Sidebar lang={lang} />
           </aside>
         )}
-        
+
         <div class="content">
           <slot />
         </div>
       </main>
-      
-      <Footer />
+
+      {!fullHeight && <Footer />}
     </div>
     <script is:inline src="/cookie-banner/silktide-consent-manager.js"></script>
 <script>
@@ -219,6 +230,23 @@ const lang: 'en' | 'it' = (Astro.props.lang === 'en' || Astro.props.lang === 'it
     display: grid;
     grid-template-columns: 1fr;
     gap: calc(var(--grid-unit) * 4);
+  }
+
+  /* fullHeight pages (the home "bivio") fill the space left by the header
+     with no scroll: main-content is already a flex:1 item, so stretching
+     it and its content wrapper into a column lets the slotted layout
+     claim the exact remaining viewport height without hardcoding the
+     header's pixel height anywhere. */
+  .main-content.is-full {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-content.is-full .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
   }
 
   .content {

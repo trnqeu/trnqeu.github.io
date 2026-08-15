@@ -29,7 +29,7 @@
     "@astrojs/sitemap": "^3.7.3",
     "@fontsource/archivo": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.0.0",
-    "astro": "^7.1.6"
+    "astro": "^7.2.2"
   },
   "overrides": {
     "brace-expansion": "^1.1.13"

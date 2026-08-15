@@ -1,0 +1,33 @@
+---
+// Shown on a post page when it's being displayed as a fallback: the
+// content exists only in `sourceLang`, not in the language the visitor is
+// currently browsing.
+export interface Props {
+  sourceLang: string;
+  currentLang: 'en' | 'it';
+}
+
+const { sourceLang, currentLang } = Astro.props;
+
+const messages = {
+  it: `Questo articolo non è ancora disponibile in italiano. Ecco la versione originale (${sourceLang.toUpperCase()}).`,
+  en: `This article isn't translated into English yet — showing the original version (${sourceLang.toUpperCase()}).`,
+};
+
+const message = messages[currentLang] ?? messages.en;
+---
+
+<p class="translation-notice">{message}</p>
+
+<style>
+  .translation-notice {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-badge);
+    padding: calc(var(--grid-unit) * 1.5) calc(var(--grid-unit) * 2);
+    margin-bottom: calc(var(--grid-unit) * 3);
+  }
+</style>

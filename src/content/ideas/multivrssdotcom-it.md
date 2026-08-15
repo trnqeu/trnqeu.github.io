@@ -8,6 +8,7 @@ projects: ["Multivrss"]
 categories: ["Knowledge"]
 tags: ["RSS", "Knowledge management", "Internet"]
 lang: "it"
+translationKey: "multivrssdotcom"
 ---
 Qualche giorno fa ho lanciato [multivrss.com](https://multivrss.com/), un aggregatore di feed RSS e gestore di segnalibri costruito con il proposito di aiutarmi a *usare* internet al meglio delle sue potenzialità. Dentro [multivrss.com](https://multivrss.com/) è possibile seguire tutti gli aggiornamenti dei propri siti preferiti e si possono salvare gli articoli più interessanti: solo questo e nient'altro. Spero che ci sia in giro qualcun altro a cui questo servizio possa essere utile.
 
