@@ -120,7 +120,23 @@ const t = navTranslations[lang] || navTranslations.en;
 
 <script>
   const base = `${import.meta.env.BASE_URL || ''}`;
-  
+
+  // Escape the user-typed search query before interpolating it into
+  // innerHTML, as defense in depth (hardening, not exploitable via URL).
+  function escapeHtml(value: unknown): string {
+    return String(value ?? '').replace(
+      /[&<>"']/g,
+      (char) =>
+        ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        })[char] as string,
+    );
+  }
+
   // Hamburger menu functionality
   function initHamburgerMenu() {
     const hamburgerToggle = document.getElementById('hamburger-toggle');
@@ -236,7 +252,7 @@ const t = navTranslations[lang] || navTranslations.en;
       if (searchResults) {
         searchResults.innerHTML = `
           <div class="search-no-results">
-            <p>No articles found for "${query}"</p>
+            <p>No articles found for "${escapeHtml(query)}"</p>
           </div>
         `;
       }
@@ -265,7 +281,7 @@ const t = navTranslations[lang] || navTranslations.en;
     if (searchResults) {
       searchResults.innerHTML = `
         <div class="search-results-header">
-          <p>Found ${results.length} article${results.length === 1 ? '' : 's'} for "${query}"</p>
+          <p>Found ${results.length} article${results.length === 1 ? '' : 's'} for "${escapeHtml(query)}"</p>
         </div>
         ${resultsHTML}
       `;

@@ -490,7 +490,28 @@ import Layout from "../../components/Layout.astro";
         const saveBtn = document.getElementById("saveBtn");
 
         // --- GESTIONE ACCESSO ---
+        // Client-side session expiry: mitigation while a real server-side
+        // expiry (httpOnly cookie) is out of reach — book-api.trnq.eu is an
+        // external backend outside this repo. The token itself may remain
+        // valid server-side past this point; this only forces a local
+        // re-login, shrinking the window an XSS-stolen token stays useful.
+        const SESSION_MAX_MS = 8 * 60 * 60 * 1000; // 8 hours
+
+        const isSessionExpired = () => {
+            const ts = localStorage.getItem("admin_token_ts");
+            // No timestamp (e.g. a token set before this check existed) is
+            // treated as expired, so it can't linger unbounded.
+            if (!ts) return true;
+            return Date.now() - Number(ts) > SESSION_MAX_MS;
+        };
+
+        const clearSession = () => {
+            localStorage.removeItem("admin_token");
+            localStorage.removeItem("admin_token_ts");
+        };
+
         const updateUI = () => {
+            if (isSessionExpired()) clearSession();
             const token = localStorage.getItem("admin_token");
             if (token) {
                 loginSection?.classList.add("hidden");
@@ -516,6 +537,7 @@ import Layout from "../../components/Layout.astro";
                 const data = await res.json();
                 if (data.token) {
                     localStorage.setItem("admin_token", data.token);
+                    localStorage.setItem("admin_token_ts", String(Date.now()));
                     updateUI();
                 } else {
                     alert("Password Errata");
@@ -526,12 +548,12 @@ import Layout from "../../components/Layout.astro";
         });
 
         logoutBtn?.addEventListener("click", () => {
-            localStorage.removeItem("admin_token");
+            clearSession();
             updateUI();
         });
 
         const handleAuthExpired = () => {
-            localStorage.removeItem("admin_token");
+            clearSession();
             updateUI();
             alert("Sessione scaduta. Effettua di nuovo il login.");
         };
@@ -614,6 +636,10 @@ import Layout from "../../components/Layout.astro";
 
         // --- LOGICA SALVATAGGIO ---
         saveBtn?.addEventListener("click", async () => {
+            if (isSessionExpired()) {
+                handleAuthExpired();
+                return;
+            }
             const token = localStorage.getItem("admin_token");
             if (!token) return;
 
