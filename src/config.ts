@@ -26,8 +26,8 @@ export const config: SiteConfig = {
   author: {
     name: "Stefano Trinchero",
     bio: {
-      it: "Nessuno in particolare",
-      en: "Self-proclaimed data scientist, Self-taught Grind Coder, Occasional Writer.",
+      it: "",
+      en: "",
     },
     // avatar: "/images/avatar.jpg" // Uncomment and add your avatar image to public/images/
   },
