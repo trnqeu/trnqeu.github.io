@@ -20,11 +20,8 @@ import Layout from "../../../components/Layout.astro";
                         <button id="modeText" class="mode-btn active"
                             >Text search</button
                         >
-                        <button id="modeSemantic" class="mode-btn"
-                            >Semantic search (MiniLM-L12)</button
-                        >
                         <button id="modeGemma" class="mode-btn"
-                            >Semantic search (Gemma)</button
+                            >Semantic Search</button
                         >
                     </div>
                     <div class="input-wrapper">
@@ -421,7 +418,7 @@ import Layout from "../../../components/Layout.astro";
     let allBooks: Book[] = [];
     let currentBooks: Book[] = [];
     let currentViewMode: "grid" | "stack" = "grid";
-    let currentSearchMode: "text" | "semantic" | "gemma" = "text";
+    let currentSearchMode: "text" | "gemma" = "text";
     let currentPage = 1;
     let totalPages = 1;
     let currentQuery = "";
@@ -630,10 +627,8 @@ import Layout from "../../../components/Layout.astro";
 
             showLoader(true);
             try {
-                const model =
-                    currentSearchMode === "gemma" ? "gemma" : "xenova";
                 const res = await fetch(
-                    `https://book-api.trnq.eu/api/search/similar?query=${encodeURIComponent(q)}&limit=10&model=${model}`,
+                    `https://book-api.trnq.eu/api/search/similar?query=${encodeURIComponent(q)}&limit=10&model=gemma`,
                 );
                 const data = await res.json();
                 currentBooks = data;
@@ -661,13 +656,6 @@ import Layout from "../../../components/Layout.astro";
         currentSearchMode = "text";
         updateToggleUI("mode", e.target as HTMLElement);
         searchInput.placeholder = "Search by title or author...";
-    });
-
-    document.getElementById("modeSemantic")?.addEventListener("click", (e) => {
-        currentSearchMode = "semantic";
-        updateToggleUI("mode", e.target as HTMLElement);
-        searchInput.placeholder =
-            "Describe a book, like 'crime story with an antihero'...";
     });
 
     document.getElementById("modeGemma")?.addEventListener("click", (e) => {
