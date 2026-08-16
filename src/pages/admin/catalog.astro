@@ -38,7 +38,16 @@ import Layout from "../../components/Layout.astro";
                 <button id="logoutBtn" class="btn btn-secondary">Esci</button>
             </header>
 
-            <div class="search-section">
+            <div class="mode-tabs">
+                <button id="modeAddBtn" class="btn btn-secondary mode-tab active"
+                    >Aggiungi Libro</button
+                >
+                <button id="modeEditBtn" class="btn btn-secondary mode-tab"
+                    >Modifica Libro</button
+                >
+            </div>
+
+            <div id="addSection" class="search-section">
                 <div class="search-box">
                     <select
                         id="searchType"
@@ -65,6 +74,24 @@ import Layout from "../../components/Layout.astro";
                 <p class="search-hint">
                     Cerca su Google Books oppure inserisci i dati manualmente
                 </p>
+            </div>
+
+            <div id="editSection" class="search-section hidden">
+                <div class="search-box">
+                    <input
+                        type="text"
+                        id="editSearchQuery"
+                        class="search-input"
+                        placeholder="Cerca nel catalogo per titolo o autore..."
+                    />
+                    <button id="editSearchBtn" class="btn btn-primary"
+                        >Cerca</button
+                    >
+                </div>
+                <p class="search-hint">
+                    Cerca un libro già presente nel catalogo per modificarlo
+                </p>
+                <div id="editResults" class="edit-results"></div>
             </div>
 
             <div id="bookFormContainer" class="hidden">
@@ -253,9 +280,84 @@ import Layout from "../../components/Layout.astro";
             margin-bottom: 0;
         }
 
+        /* Mode Tabs */
+        .mode-tabs {
+            display: flex;
+            gap: calc(var(--grid-unit));
+            margin-bottom: calc(var(--grid-unit) * 4);
+        }
+
+        .mode-tab {
+            opacity: 0.5;
+        }
+
+        .mode-tab.active {
+            opacity: 1;
+            background-color: var(--color-text-primary);
+            color: var(--color-background);
+        }
+
         /* Search Section */
         .search-section {
             margin-bottom: calc(var(--grid-unit) * 6);
+        }
+
+        /* Edit results */
+        /* :global() because these elements are injected at runtime via
+           innerHTML (see loadBookForEdit / editSearchBtn below) — Astro's
+           compile-time CSS scoping never sees them, so unscoped rules here
+           would silently not apply. Same pattern as eblioteque.astro. */
+        :global(.edit-results) {
+            margin-top: calc(var(--grid-unit) * 3);
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--grid-unit));
+        }
+
+        :global(.edit-result-item) {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--grid-unit) * 2);
+            padding: calc(var(--grid-unit) * 1.5);
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            background-color: var(--color-surface);
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+            font-family: var(--font-body);
+            color: var(--color-text-primary);
+        }
+
+        :global(.edit-result-item:hover) {
+            border-color: var(--color-accent);
+        }
+
+        :global(.edit-result-cover) {
+            width: 36px;
+            height: 54px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background-color: var(--color-background);
+        }
+
+        :global(.edit-result-info) {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        :global(.edit-result-title) {
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        :global(.edit-result-author) {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
         }
 
         .search-box {
@@ -463,6 +565,20 @@ import Layout from "../../components/Layout.astro";
             "searchQuery",
         ) as HTMLInputElement;
         const bookFormContainer = document.getElementById("bookFormContainer");
+        const formHeaderTitle = document.getElementById("formHeaderTitle");
+
+        const modeAddBtn = document.getElementById("modeAddBtn");
+        const modeEditBtn = document.getElementById("modeEditBtn");
+        const addSection = document.getElementById("addSection");
+        const editSection = document.getElementById("editSection");
+        const editSearchBtn = document.getElementById("editSearchBtn");
+        const editSearchQuery = document.getElementById(
+            "editSearchQuery",
+        ) as HTMLInputElement;
+        const editResults = document.getElementById("editResults");
+
+        // id of the book currently being edited; null while adding a new one
+        let editingBookId: string | null = null;
 
         const fTitle = document.getElementById("formTitle") as HTMLInputElement;
         const fAuthor = document.getElementById(
@@ -487,7 +603,129 @@ import Layout from "../../components/Layout.astro";
             "formCoverPreview",
         ) as HTMLImageElement;
         const noCover = document.getElementById("noCover");
-        const saveBtn = document.getElementById("saveBtn");
+        const saveBtn = document.getElementById("saveBtn") as HTMLButtonElement;
+
+        const API_BASE_URL = "https://book-api.trnq.eu";
+
+        // Escape untrusted book data (sourced from the external
+        // book-api.trnq.eu) before interpolating it into innerHTML, to
+        // prevent stored XSS — same pattern used on the public catalogue.
+        function escapeHtml(value: unknown): string {
+            return String(value ?? "").replace(
+                /[&<>"']/g,
+                (char) =>
+                    ({
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        '"': "&quot;",
+                        "'": "&#39;",
+                    })[char] as string,
+            );
+        }
+
+        // --- MODALITÀ: AGGIUNGI / MODIFICA ---
+        const switchToAddMode = () => {
+            editingBookId = null;
+            modeAddBtn?.classList.add("active");
+            modeEditBtn?.classList.remove("active");
+            addSection?.classList.remove("hidden");
+            editSection?.classList.add("hidden");
+            bookFormContainer?.classList.add("hidden");
+            if (formHeaderTitle) formHeaderTitle.textContent = "Dettagli Libro";
+            if (saveBtn) saveBtn.textContent = "Salva nel Database";
+        };
+
+        const switchToEditMode = () => {
+            editingBookId = null;
+            modeAddBtn?.classList.remove("active");
+            modeEditBtn?.classList.add("active");
+            addSection?.classList.add("hidden");
+            editSection?.classList.remove("hidden");
+            bookFormContainer?.classList.add("hidden");
+        };
+
+        modeAddBtn?.addEventListener("click", switchToAddMode);
+        modeEditBtn?.addEventListener("click", switchToEditMode);
+
+        // --- LOGICA RICERCA LIBRO DA MODIFICARE ---
+        editSearchBtn?.addEventListener("click", async () => {
+            const q = editSearchQuery.value.trim();
+            if (!q || !editResults) return;
+
+            editResults.innerHTML = "<p>Ricerca...</p>";
+
+            try {
+                const url = `${API_BASE_URL}/api/catalog?limit=15&search=${encodeURIComponent(q)}`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error("API Error");
+                const data = await res.json();
+                const books = data.data || [];
+
+                if (!books.length) {
+                    editResults.innerHTML = "<p>Nessun libro trovato.</p>";
+                    return;
+                }
+
+                editResults.innerHTML = "";
+                books.forEach((book: any) => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "edit-result-item";
+                    btn.innerHTML = `
+                        <img class="edit-result-cover" src="${escapeHtml(book.coverUrl || "/placeholder-book.png")}" alt="" onerror="this.src='/placeholder-book.png';">
+                        <span class="edit-result-info">
+                            <span class="edit-result-title">${escapeHtml(book.title)}</span>
+                            <span class="edit-result-author">${escapeHtml(book.author)}</span>
+                        </span>
+                    `;
+                    btn.addEventListener("click", () => loadBookForEdit(book.id));
+                    editResults.appendChild(btn);
+                });
+            } catch (err) {
+                console.error("Errore ricerca catalogo:", err);
+                editResults.innerHTML =
+                    "<p>Errore durante la ricerca nel catalogo.</p>";
+            }
+        });
+
+        async function loadBookForEdit(id: string) {
+            try {
+                const res = await fetch(`${API_BASE_URL}/app/books/${id}`);
+                if (!res.ok) throw new Error("not found");
+                const book = await res.json();
+
+                editingBookId = id;
+
+                fTitle.value = book.title || "";
+                fAuthor.value = book.author || "";
+                fPublisher.value = book.publishingHouse ?? book.publisher ?? "";
+                fLanguage.value = book.language || "";
+                fFormat.value = book.format || "Ebook";
+                fDescription.value = book.description || "";
+                fCoverUrl.value = book.coverUrl || "";
+
+                if (book.coverUrl) {
+                    fCoverPreview.src = book.coverUrl;
+                    fCoverPreview.classList.remove("hidden");
+                    if (noCover) noCover.classList.add("hidden");
+                } else {
+                    fCoverPreview.classList.add("hidden");
+                    fCoverPreview.removeAttribute("src");
+                    if (noCover) noCover.classList.remove("hidden");
+                }
+
+                if (formHeaderTitle)
+                    formHeaderTitle.textContent = "Modifica Libro";
+                if (saveBtn) saveBtn.textContent = "Salva Modifiche";
+
+                bookFormContainer?.classList.remove("hidden");
+                bookFormContainer?.scrollIntoView({ behavior: "smooth" });
+            } catch (err) {
+                console.error("Errore caricamento libro:", err);
+                alert("Impossibile caricare il libro selezionato.");
+            }
+        }
 
         // --- GESTIONE ACCESSO ---
         // Client-side session expiry: mitigation while a real server-side
@@ -560,6 +798,10 @@ import Layout from "../../components/Layout.astro";
 
         // --- LOGICA MANUALE ---
         manualBtn?.addEventListener("click", () => {
+            editingBookId = null;
+            if (formHeaderTitle) formHeaderTitle.textContent = "Dettagli Libro";
+            if (saveBtn) saveBtn.textContent = "Salva nel Database";
+
             // Pulisce i campi
             fTitle.value = "";
             fAuthor.value = "";
@@ -589,6 +831,10 @@ import Layout from "../../components/Layout.astro";
                 finalQuery = `${type}:${q}`;
             }
             if (!q) return;
+
+            editingBookId = null;
+            if (formHeaderTitle) formHeaderTitle.textContent = "Dettagli Libro";
+            if (saveBtn) saveBtn.textContent = "Salva nel Database";
 
             searchBtn.textContent = "Ricerca...";
             searchBtn.classList.add("opacity-50");
@@ -653,14 +899,17 @@ import Layout from "../../components/Layout.astro";
                 format: fFormat.value,
             };
 
+            const isEditing = Boolean(editingBookId);
             saveBtn.textContent = "Salvataggio...";
             (saveBtn as HTMLButtonElement).disabled = true;
 
             try {
                 const response = await fetch(
-                    "https://book-api.trnq.eu/api/books",
+                    isEditing
+                        ? `${API_BASE_URL}/api/books/${editingBookId}`
+                        : `${API_BASE_URL}/api/books`,
                     {
-                        method: "POST",
+                        method: isEditing ? "PATCH" : "POST",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${token}`,
@@ -670,9 +919,18 @@ import Layout from "../../components/Layout.astro";
                 );
 
                 if (response.ok) {
-                    alert("✅ Libro salvato nel DB!");
+                    alert(
+                        isEditing
+                            ? "✅ Modifiche salvate!"
+                            : "✅ Libro salvato nel DB!",
+                    );
                     bookFormContainer?.classList.add("hidden");
                     searchQuery.value = "";
+                    if (isEditing) {
+                        editSearchQuery.value = "";
+                        if (editResults) editResults.innerHTML = "";
+                        editingBookId = null;
+                    }
                 } else if (response.status === 401) {
                     handleAuthExpired();
                 } else {
@@ -682,7 +940,9 @@ import Layout from "../../components/Layout.astro";
             } catch (err) {
                 alert("Connessione fallita.");
             } finally {
-                saveBtn.textContent = "Salva nel Database";
+                saveBtn.textContent = editingBookId
+                    ? "Salva Modifiche"
+                    : "Salva nel Database";
                 (saveBtn as HTMLButtonElement).disabled = false;
             }
         });
