@@ -3,7 +3,7 @@ import Layout from '../../components/Layout.astro';
 import { localize } from '../../utils/i18n';
 
 export async function getStaticPaths() {
-  const allPostsGlob = import.meta.glob('../../content/**/*.{md,mdx}', { eager: true });
+  const allPostsGlob = import.meta.glob(['../../content/**/*.{md,mdx}', '!../../content/drafts/**'], { eager: true });
   const allPosts = Object.values(allPostsGlob) as any[];
 
   const posts = localize(allPosts, 'it').map(({ post, isFallback }) => ({ ...post, isFallback }));

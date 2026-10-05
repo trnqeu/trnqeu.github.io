@@ -8,6 +8,10 @@ import {
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
+    // Drafts live in the repo for safekeeping but are previewable only in
+    // dev: production builds generate no pages (and so no sitemap entries).
+    if (!import.meta.env.DEV) return [];
+
     const allDrafts = await getCollection("drafts");
 
     return allDrafts.map((post) => {
