@@ -2,7 +2,7 @@
 import Layout from '../../../components/Layout.astro';
 
 export async function getStaticPaths() {
-  const allPostsGlob = import.meta.glob('../../../content/**/*.{md,mdx}', { eager: true });
+  const allPostsGlob = import.meta.glob(['../../../content/**/*.{md,mdx}', '!../../../content/drafts/**'], { eager: true });
   const allPosts = Object.values(allPostsGlob) as any[];
   
   const allLanguages = new Set<string>();
