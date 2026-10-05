@@ -125,6 +125,16 @@ function postHref(post: any): string {
 
   </div>
 
+  <!-- random order of the two halves: swapped in the DOM before first paint,
+       so tab order follows the visual order too -->
+  <script is:inline>
+    (() => {
+      if (Math.random() < 0.5) return;
+      const bivio = document.querySelector('.tq-bivio');
+      if (bivio && bivio.lastElementChild) bivio.prepend(bivio.lastElementChild);
+    })();
+  </script>
+
   <div class="tq-bivio-foot">
     <span>{dict.tagline}</span>
     <span>2019—2026 · <a href={`${base}${prefix}about`}>{dict.info}</a></span>

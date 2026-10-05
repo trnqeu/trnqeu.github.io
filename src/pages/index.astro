@@ -124,6 +124,16 @@ function postHref(post: any): string {
 
   </div>
 
+  <!-- ordine casuale delle due metà: scambio nel DOM prima del primo paint,
+       così anche l'ordine di tabulazione segue quello visivo -->
+  <script is:inline>
+    (() => {
+      if (Math.random() < 0.5) return;
+      const bivio = document.querySelector('.tq-bivio');
+      if (bivio && bivio.lastElementChild) bivio.prepend(bivio.lastElementChild);
+    })();
+  </script>
+
   <div class="tq-bivio-foot">
     <span>{dict.tagline}</span>
     <span>2019—2026 · <a href={`${base}about`}>{dict.info}</a></span>
