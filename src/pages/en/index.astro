@@ -114,8 +114,10 @@ function postHref(post: any): string {
           return (
             <a class="tq-pane-row" href={postHref(post)}>
               <span class="c wide">{fmtDate(fm.date)}</span>
-              <span class="t">{fm.title}</span>
-              <span class="m">{fm.lang}{cat ? ' · ' + cat.toLowerCase() : ''}</span>
+              <span class="tm">
+                <span class="t">{fm.title}</span>
+                <span class="m">{fm.lang}{cat ? ' · ' + cat.toLowerCase() : ''}</span>
+              </span>
             </a>
           );
         })}
@@ -193,14 +195,17 @@ function postHref(post: any): string {
     font-family:var(--font-mono); font-size:.7rem; color:var(--color-text-muted);
     width:24px; flex:none;
   }
-  .tq-pane-row .c.wide{ width:104px; }
+  .tq-pane-row .c.wide{ width:88px; }
   .tq-pane-row .t{ min-width:0; font-size:1.18rem; font-weight:600; letter-spacing:-.01em;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    line-height:1.25; overflow-wrap:break-word; text-wrap:pretty; }
   .tq-pane-row .m{
     margin-left:auto; padding-left:12px; flex:none;
     font-family:var(--font-mono); font-size:.7rem; color:var(--color-text-muted);
     text-transform:lowercase;
   }
+  /* writings: language and category below the title, so the title gets the full width */
+  .tq-pane-row .tm{ flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+  .tq-pane-row .tm .m{ margin-left:0; padding-left:0; }
 
   .tq-pane-more{
     margin-top:auto;
@@ -237,9 +242,10 @@ function postHref(post: any): string {
   }
   @media (max-width:480px){
     .tq-pane-row{ flex-wrap:wrap; gap:8px 12px; }
-    .tq-pane-row .t{ white-space:normal; font-size:1.05rem; }
+    .tq-pane-row .t{ font-size:1.05rem; }
     .tq-pane-row .m{ margin-left:0; padding-left:0; width:100%; }
     .tq-pane-row .c.wide{ width:auto; }
+    .tq-pane-row .tm{ flex-basis:100%; }
   }
 
   /* ————— accessibility ————— */
