@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../components/Layout.astro';
-import { localize, slugFromFile } from '../../../utils/i18n';
+import { localize, slugFromFile, mirroredAlternates } from '../../../utils/i18n';
 
 const mdPostsGlob = import.meta.glob('../../../content/ideas/*.md', { eager: true });
 const mdxPostsGlob = import.meta.glob('../../../content/ideas/*.mdx', { eager: true });
@@ -13,12 +13,12 @@ const sortedPosts = localize(allPosts, 'en')
     return {
       ...post,
       isFallback,
-      url: `/en/ideas/${slug}`
+      url: `/en/ideas/${slug}/`
     }
   });
 ---
 
-<Layout title="Ideas" description="Random thoughts on AI, tech, time, archives.">
+<Layout title="Ideas" description="Random thoughts on AI, tech, time, archives." alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="blog-page">
     <header class="blog-header">
       <h1 class="blog-title">Ideas</h1>

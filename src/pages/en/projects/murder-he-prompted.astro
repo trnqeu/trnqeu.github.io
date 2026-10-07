@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../components/Layout.astro';
-import { localize, slugFromFile } from '../../../utils/i18n';
+import { localize, slugFromFile, mirroredAlternates } from '../../../utils/i18n';
 
 const collectionName = 'murderheprompted';
 const collectionGlob = import.meta.glob('../../../content/murderheprompted/**/*.{md,mdx}', { eager: true });
@@ -10,9 +10,9 @@ const posts = localize(allPosts, 'en')
   .sort((a, b) => new Date(a.post.frontmatter.date).getTime() - new Date(b.post.frontmatter.date).getTime());
 ---
 
-<Layout title="Murder, he prompted" description="A collection of all the cases from the 'Murder, he prompted' series." lang="en">
+<Layout title="Murder, he prompted" description="A collection of all the cases from the 'Murder, he prompted' series." lang="en" alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="project-page">
-    <p class="breadcrumb"><a href="/en/projects">projects</a> / murder-he-prompted</p>
+    <p class="breadcrumb"><a href="/en/projects/">projects</a> / murder-he-prompted</p>
 
     <header class="page-head">
       <div>
@@ -31,7 +31,7 @@ const posts = localize(allPosts, 'en')
       <h2 class="cases-label">Cases</h2>
       <div class="cases-list posts-list">
         {posts.map(({ post, isFallback }, idx: number) => (
-          <a class="case-row post-item" href={`/en/${collectionName}/${slugFromFile(post.file)}`}>
+          <a class="case-row post-item" href={`/en/${collectionName}/${slugFromFile(post.file)}/`}>
             <span class="num">#{idx + 1}</span>
             <div class="case-body">
               <div class="case-title">

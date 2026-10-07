@@ -1,4 +1,5 @@
 ---
+import { termSlug } from '../../utils/i18n';
 import Layout from '../../components/Layout.astro';
 
 const allPostsGlob = import.meta.glob(['../../content/**/*.{md,mdx}', '!../../content/drafts/**'], { eager: true });
@@ -16,7 +17,7 @@ allPosts.forEach((post: any) => {
 const sortedTags = Array.from(allTags).sort((a, b) => a.localeCompare(b));
 ---
 
-<Layout title="Tags" description="Browse all tags." lang="en">
+<Layout title="Tags" description="Browse all tags." lang="en" noindex>
   <div class="tags-page">
     <header class="page-header">
       <h1 class="page-title">Tags</h1>
@@ -29,7 +30,7 @@ const sortedTags = Array.from(allTags).sort((a, b) => a.localeCompare(b));
     <div class="tags-grid">
       {sortedTags.map((tag) => (
         <div class="tag-card">
-          <a href={`/en/tags/${tag.toLowerCase()}`} class="tag-link">
+          <a href={`/en/tags/${termSlug(tag)}/`} class="tag-link">
             <h2 class="tag-title">{tag}</h2>
           </a>
         </div>

@@ -5,7 +5,7 @@ original_date: "2019-10-01"
 author: Stefano Trinchero
 description: "Un racconto in quattro parti scritto nel 2019 e pubblicato nel 2020 all'interno della rubrica 'Feuilleton' della rivista Film TV. Editing a cura di Carolina Crespi."
 excerpt: "Un racconto in quattro parti scritto nel 2019 e pubblicato nel 2020 all'interno della rubrica 'Feuilleton' della rivista Film TV. Editing a cura di Carolina Crespi."
-projects: ["Collected short stories"]
+projects: ["Short stories"]
 categories: ["Fiction"]
 lang: "it"
 ---

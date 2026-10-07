@@ -9,47 +9,97 @@ export interface Props {
   /** hreflang alternates for this exact page — only pass entries for
    *  languages that have a real (non-fallback) translation. */
   alternateUrls?: { lang: string; url: string }[];
+  /** Keeps the page out of search results (its links are still followed).
+   *  Pages marked this way are also dropped from the sitemap. */
+  noindex?: boolean;
+  lang?: 'it' | 'en';
+  /** Language of the main content when it differs from the page chrome
+   *  (an untranslated post shown under the other language's route). */
+  contentLang?: string;
 }
 
-import { config, SITE_TITLE, SITE_DESCRIPTION } from '../config';
+import { config, SITE_TITLE } from '../config';
 
 const {
   title = SITE_TITLE,
-  description = SITE_DESCRIPTION,
   image = '/og-image.png',
   type = 'website',
   publishedTime,
   canonical,
   alternateUrls,
+  noindex = false,
+  lang = 'it',
+  contentLang = lang,
 } = Astro.props;
+const description = Astro.props.description || config.description[lang];
 
-const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`;
-const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site);
+// Every page URL on the site ends with a slash; GitHub Pages 301-redirects
+// the slashless form, and canonical/hreflang targets must not redirect.
+function absoluteUrl(path: string | URL): URL {
+  const url = new URL(path, Astro.site);
+  if (!url.pathname.endsWith('/') && !/\.[a-z0-9]+$/i.test(url.pathname)) {
+    url.pathname += '/';
+  }
+  return url;
+}
+
+const pageTitle = /trnq\.eu/i.test(title) ? title : `${title} | trnq.eu`;
+const canonicalURL = absoluteUrl(canonical || Astro.url.pathname);
 const imageURL = new URL(image, Astro.site);
+const alternates = (alternateUrls ?? []).map(alt => ({ lang: alt.lang, href: absoluteUrl(alt.url) }));
+const xDefault = alternates.find(alt => alt.lang === 'it');
 
-const personSchema = {
-  '@context': 'https://schema.org',
+const pagePath = Astro.url.pathname.replace(/^\/en(\/|$)/, '/');
+const isHome = pagePath === '/';
+const isAbout = pagePath === '/about/' || pagePath === '/about';
+
+const person = {
   '@type': 'Person',
   name: config.author.name,
   url: config.siteUrl,
-  sameAs: Object.values(config.social).filter(link => link),
-  email: config.social.email,
+  sameAs: Object.values(config.social).filter(link => link && link.startsWith('http')),
 };
+
+const schemas: Record<string, unknown>[] = [];
+if (type === 'article') {
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description,
+    ...(publishedTime && { datePublished: publishedTime }),
+    author: person,
+    inLanguage: contentLang,
+    mainEntityOfPage: canonicalURL.href,
+    image: imageURL.href,
+  });
+}
+if (isHome) {
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'trnq.eu',
+    url: config.siteUrl,
+    inLanguage: lang,
+    author: person,
+  });
+}
+if (isHome || isAbout) {
+  schemas.push({ '@context': 'https://schema.org', ...person });
+}
 ---
 
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
 <meta name="author" content={config.author.name} />
+<meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
 
 <link rel="canonical" href={canonicalURL} />
 
-{alternateUrls && alternateUrls.length > 0 && (
-  <>
-    {alternateUrls.map(alt => (
-      <link rel="alternate" hreflang={alt.lang} href={new URL(alt.url, Astro.site)} />
-    ))}
-  </>
-)}
+{alternates.map(alt => (
+  <link rel="alternate" hreflang={alt.lang} href={alt.href} />
+))}
+{xDefault && <link rel="alternate" hreflang="x-default" href={xDefault.href} />}
 
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
@@ -57,6 +107,7 @@ const personSchema = {
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:image" content={imageURL} />
 <meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:locale" content={lang === 'en' ? 'en_US' : 'it_IT'} />
 {publishedTime && <meta property="article:published_time" content={publishedTime} />}
 
 <meta name="twitter:card" content="summary_large_image" />
@@ -64,10 +115,9 @@ const personSchema = {
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={imageURL} />
 
-<meta name="robots" content="index, follow" />
-<meta name="googlebot" content="index, follow" />
-
 <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
 <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
-<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+{schemas.map(schema => (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+))}

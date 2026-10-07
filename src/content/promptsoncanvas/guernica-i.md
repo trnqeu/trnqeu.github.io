@@ -1,5 +1,6 @@
 ---
 title: 'GuernicA.I.'
+description: "Picasso's Guernica rewritten as a text-to-image prompt, and framed as if the prompt itself were the painting."
 date: 2025-10-29
 frameStyle: 'simple'
 projects: ["Prompts on canvas"]

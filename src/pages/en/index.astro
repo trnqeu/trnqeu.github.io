@@ -1,6 +1,6 @@
 ---
 import Layout from '../../components/Layout.astro';
-import { localize, slugFromFile } from '../../utils/i18n';
+import { localize, postUrl, mirroredAlternates } from '../../utils/i18n';
 
 const lang: 'en' | 'it' = 'en';
 const base = import.meta.env.BASE_URL;
@@ -67,13 +67,6 @@ function fmtDate(input: string | Date): string {
   return lang === 'it' ? `${d.getDate()} ${m} ${d.getFullYear()}` : `${m} ${d.getDate()}, ${d.getFullYear()}`;
 }
 
-function postHref(post: any): string {
-  const dir = post.file.includes('/murderheprompted/') ? 'murderheprompted/'
-    : post.file.includes('/shortstories/') ? 'shortstories/'
-    : post.file.includes('/promptsoncanvas/') ? 'promptsoncanvas/'
-    : 'ideas/';
-  return `${base}${prefix}${dir}${slugFromFile(post.file)}`;
-}
 ---
 
 <Layout
@@ -82,7 +75,9 @@ function postHref(post: any): string {
   showSidebar={false}
   fullHeight={true}
   lang={lang}
+  alternateUrls={mirroredAlternates(Astro.url.pathname)}
 >
+  <h1 class="sr-only">Stefano Trinchero: ideas, short stories and digital projects</h1>
   <div class="tq-bivio">
 
     <!-- LEFT HALF — PROJECTS -->
@@ -92,14 +87,14 @@ function postHref(post: any): string {
       </header>
       <nav class="tq-pane-list">
         {projects.map((p, i) => (
-          <a class="tq-pane-row" href={`${base}${prefix}projects/${p.slug}`}>
+          <a class="tq-pane-row" href={`${base}${prefix}projects/${p.slug}/`}>
             <span class="c">{String(i + 1).padStart(2, '0')}</span>
             <span class="t">{p.title}</span>
             <span class="m">{p.meta[lang]}</span>
           </a>
         ))}
       </nav>
-      <a class="tq-pane-more" href={`${base}${prefix}projects`}>{dict.allProjects}</a>
+      <a class="tq-pane-more" href={`${base}${prefix}projects/`}>{dict.allProjects}</a>
     </section>
 
     <!-- RIGHT HALF — WRITING -->
@@ -112,7 +107,7 @@ function postHref(post: any): string {
           const fm = post.frontmatter;
           const cat = (fm.categories || [])[0];
           return (
-            <a class="tq-pane-row" href={postHref(post)}>
+            <a class="tq-pane-row" href={postUrl(post, lang)}>
               <span class="c wide">{fmtDate(fm.date)}</span>
               <span class="tm">
                 <span class="t">{fm.title}</span>
@@ -122,7 +117,7 @@ function postHref(post: any): string {
           );
         })}
       </nav>
-      <a class="tq-pane-more" href={`${base}${prefix}writing`}>{dict.allWritings}</a>
+      <a class="tq-pane-more" href={`${base}${prefix}writing/`}>{dict.allWritings}</a>
     </section>
 
   </div>
@@ -139,7 +134,7 @@ function postHref(post: any): string {
 
   <div class="tq-bivio-foot">
     <span>{dict.tagline}</span>
-    <span>2019—2026 · <a href={`${base}${prefix}about`}>{dict.info}</a></span>
+    <span>2019—2026 · <a href={`${base}${prefix}about/`}>{dict.info}</a></span>
   </div>
 </Layout>
 

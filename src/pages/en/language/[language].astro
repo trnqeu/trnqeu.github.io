@@ -1,5 +1,6 @@
 ---
 import Layout from '../../../components/Layout.astro';
+import { canonicalPostUrl } from '../../../utils/i18n';
 
 export async function getStaticPaths() {
   const allPostsGlob = import.meta.glob(['../../../content/**/*.{md,mdx}', '!../../../content/drafts/**'], { eager: true });
@@ -29,12 +30,9 @@ export async function getStaticPaths() {
 
 const { language, posts } = Astro.props;
 
-function getUrlFromFile(file) {
-  return '/en' + file.replace('../../../content', '').replace(/\.(md|mdx)$/, '');
-}
 ---
 
-<Layout title={`Language: ${language}`} description={`All posts in ${language}`}>
+<Layout title={`Language: ${language}`} description={`All posts in ${language}`} noindex>
   <div class="language-page">
     <header class="page-header">
       <h1 class="page-title">Language: {language}</h1>
@@ -48,7 +46,7 @@ function getUrlFromFile(file) {
       {posts.map((post: any) => (
         <article class="post-item">
           <h2 class="post-title">
-            <a href={getUrlFromFile(post.file)}>
+            <a href={canonicalPostUrl(post)}>
               {post.frontmatter.title}
             </a>
           </h2>
@@ -67,7 +65,7 @@ function getUrlFromFile(file) {
             <p class="post-excerpt">{post.frontmatter.excerpt}</p>
           )}
           
-          <a href={getUrlFromFile(post.file)} class="read-more">
+          <a href={canonicalPostUrl(post)} class="read-more">
             Read More →
           </a>
         </article>
@@ -75,7 +73,7 @@ function getUrlFromFile(file) {
     </div>
 
     <div class="page-navigation">
-      <a href="/en/languages" class="back-link">← All Languages</a>
+      <a href="/en/languages/" class="back-link">← All Languages</a>
     </div>
   </div>
 </Layout>

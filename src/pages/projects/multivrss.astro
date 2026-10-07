@@ -1,4 +1,5 @@
 ---
+import { mirroredAlternates } from '../../utils/i18n';
 import Layout from '../../components/Layout.astro';
 
 const base = import.meta.env.BASE_URL;
@@ -31,6 +32,7 @@ const gallery = [
   description="Multivrss.com: una stanza di lettura digitale. MultivRRS è un aggregatore di feed RSS e un gestore di segnalibri, tranquillo ed essenziale."
   type="website"
   lang="it"
+  alternateUrls={mirroredAlternates(Astro.url.pathname)}
 >
   <div class="multivrss-page">
     <header class="page-header">
@@ -42,7 +44,7 @@ const gallery = [
           Visita multivrss.com
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <a class="cta-secondary" href={`${base}ideas/multivrssdotcom-it`}>
+        <a class="cta-secondary" href={`${base}ideas/2026-08-01-multivrssdotcom-it/`}>
           Leggi l'articolo di lancio →
         </a>
       </div>

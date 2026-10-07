@@ -4,7 +4,7 @@ import TableOfContents from '../../../components/TableOfContents.astro';
 import TranslationNotice from '../../../components/TranslationNotice.astro';
 import { extractHeadings, filterHeadingsForTOC } from '../../../utils/table-of-contents';
 import { calculateReadingTime, extractTextFromMarkdown } from '../../../utils/reading-time';
-import { localize, translationSibling, slugFromFile } from '../../../utils/i18n';
+import { localize, translationSibling, slugFromFile, termSlug, canonicalPostUrl } from '../../../utils/i18n';
 
 export async function getStaticPaths() {
   const mdPostsGlob = import.meta.glob('../../../content/shortstories/*.md', { eager: true });
@@ -24,7 +24,7 @@ export async function getStaticPaths() {
     return {
       params: { slug },
       props: {
-        post, readingTime, tocHeadings, isFallback, url: `/en/shortstories/${slug}`,
+        post, readingTime, tocHeadings, isFallback, url: `/en/shortstories/${slug}/`,
         translatedUrl: sibling ? `/shortstories/${slugFromFile(sibling.file)}` : undefined,
       }
     };
@@ -37,6 +37,9 @@ const { frontmatter, Content } = post as any;
 const pageTitle = frontmatter.title;
 const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined;
 const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: translatedUrl }] : undefined;
+// Untranslated posts are also served under the other language's route;
+// point search engines at the original instead of a duplicate.
+const canonical = isFallback ? canonicalPostUrl(post) : undefined;
 ---
 
 <Layout
@@ -45,13 +48,16 @@ const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: t
   type="article"
   publishedTime={publishedTime}
   lang="en"
+  canonical={canonical}
+  contentLang={frontmatter.lang}
+  image={frontmatter.image}
   translatedUrl={translatedUrl}
   alternateUrls={alternateUrls}
 >
-  <article class="blog-post">
+  <article class="blog-post" lang={frontmatter.lang}>
     {isFallback && <TranslationNotice sourceLang={frontmatter.lang} currentLang="en" />}
     <header class="post-header">
-      <h2 class="post-title">{frontmatter.title}</h2>
+      <h1 class="post-title">{frontmatter.title}</h1>
       
       <div class="post-meta">
         <time class="post-date" datetime={frontmatter.date}>
@@ -78,13 +84,13 @@ const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: t
         )}
 
         {frontmatter.lang && (
-            <a href={`/en/language/${frontmatter.lang.toLowerCase()}`} class="post-lang">{frontmatter.lang}</a>
+            <a href={`/en/language/${frontmatter.lang.toLowerCase()}/`} class="post-lang">{frontmatter.lang}</a>
         )}
         
 
         {frontmatter.projects && frontmatter.projects.length > 0 && (
           <div class="post-projects">
-            <a href={`/en/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '-')}`} class="project-tag">
+            <a href={`/en/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '-')}/`} class="project-tag">
               {frontmatter.projects[0]}
             </a>
           </div>
@@ -93,7 +99,7 @@ const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: t
         {frontmatter.categories && frontmatter.categories.length > 0 && (
           <div class="post-categories">
             {frontmatter.categories.map((category: string) => (
-              <a href={`/en/categories/${category.toLowerCase()}`} class="category-tag">
+              <a href={`/en/categories/${termSlug(category)}/`} class="category-tag">
                 {category}
               </a>
             ))}
@@ -120,14 +126,14 @@ const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: t
           <span class="tags-label">Tags:</span>
           <div class="tag-list">
             {frontmatter.tags.map((tag: string) => (
-              <a href={`/en/tags/${tag.toLowerCase()}`} class="tag">{tag}</a>
+              <a href={`/en/tags/${termSlug(tag)}/`} class="tag">{tag}</a>
             ))}
           </div>
         </div>
       )}
       
       <div class="post-navigation">
-        <a href="/en/projects/short-stories" class="back-to-blog">← All the stories</a>
+        <a href="/en/projects/short-stories/" class="back-to-blog">← All the stories</a>
       </div>
     </footer>
   </article>

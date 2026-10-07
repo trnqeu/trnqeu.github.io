@@ -1,4 +1,5 @@
 ---
+import { mirroredAlternates } from '../../utils/i18n';
 import Layout from '../../components/Layout.astro';
 import { config } from '../../config';
 
@@ -7,7 +8,7 @@ const pageDescription = `Learn more about ${author.name} and the ${title} blog`;
 const currentYear = new Date().getFullYear();
 ---
 
-<Layout title={`About | ${title}`} description={pageDescription} lang="en">
+<Layout title={`About | ${title}`} description={pageDescription} lang="en" alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="about-page">
     <header class="intro">
       <p class="kicker">Info · about</p>

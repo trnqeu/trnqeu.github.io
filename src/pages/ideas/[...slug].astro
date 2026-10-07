@@ -3,7 +3,7 @@ import Layout from '../../components/Layout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import TranslationNotice from '../../components/TranslationNotice.astro';
 import { extractHeadings, filterHeadingsForTOC } from '../../utils/table-of-contents';
-import { localize, translationSibling, slugFromFile } from '../../utils/i18n';
+import { localize, translationSibling, slugFromFile, termSlug, canonicalPostUrl } from '../../utils/i18n';
 
 export async function getStaticPaths() {
   // Support both .md and .mdx files
@@ -23,7 +23,7 @@ export async function getStaticPaths() {
     return {
       params: { slug },
       props: {
-        post, tocHeadings, isFallback, url: `/ideas/${slug}`,
+        post, tocHeadings, isFallback, url: `/ideas/${slug}/`,
         translatedUrl: sibling ? `/en/ideas/${slugFromFile(sibling.file)}` : undefined,
       }
     };
@@ -36,6 +36,9 @@ const { frontmatter, Content } = post as any;
 const pageTitle = frontmatter.title;
 const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined;
 const alternateUrls = translatedUrl ? [{ lang: 'it', url }, { lang: 'en', url: translatedUrl }] : undefined;
+// Untranslated posts are also served under the other language's route;
+// point search engines at the original instead of a duplicate.
+const canonical = isFallback ? canonicalPostUrl(post) : undefined;
 ---
 
 <Layout
@@ -44,10 +47,13 @@ const alternateUrls = translatedUrl ? [{ lang: 'it', url }, { lang: 'en', url: t
   type="article"
   publishedTime={publishedTime}
   lang="it"
+  canonical={canonical}
+  contentLang={frontmatter.lang}
+  image={frontmatter.image}
   translatedUrl={translatedUrl}
   alternateUrls={alternateUrls}
 >
-  <article class="blog-post">
+  <article class="blog-post" lang={frontmatter.lang}>
     {isFallback && <TranslationNotice sourceLang={frontmatter.lang} currentLang="it" />}
     <header class="post-header">
       <h1 class="post-title">{frontmatter.title}</h1>
@@ -66,12 +72,12 @@ const alternateUrls = translatedUrl ? [{ lang: 'it', url }, { lang: 'en', url: t
         )}
 
         {frontmatter.lang && (
-            <a href={`/language/${frontmatter.lang.toLowerCase()}`} class="post-lang">{frontmatter.lang}</a>
+            <a href={`/language/${frontmatter.lang.toLowerCase()}/`} class="post-lang">{frontmatter.lang}</a>
         )}
 
        {frontmatter.projects && frontmatter.projects.length > 0 && (
           <div class="post-projects">
-            <a href={`/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '-')}`} class="project-tag">
+            <a href={`/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '-')}/`} class="project-tag">
               {frontmatter.projects[0]}
             </a>
           </div>
@@ -81,7 +87,7 @@ const alternateUrls = translatedUrl ? [{ lang: 'it', url }, { lang: 'en', url: t
         {frontmatter.categories && frontmatter.categories.length > 0 && (
           <div class="post-categories">
             {frontmatter.categories.map((category: string) => (
-              <a href={`/categories/${category.toLowerCase()}`} class="category-tag">
+              <a href={`/categories/${termSlug(category)}/`} class="category-tag">
                 {category}
               </a>
             ))}
@@ -109,14 +115,14 @@ const alternateUrls = translatedUrl ? [{ lang: 'it', url }, { lang: 'en', url: t
           <span class="tags-label">Tags:</span>
           <div class="tag-list">
             {frontmatter.tags.map((tag: string) => (
-              <a href={`/tags/${tag.toLowerCase()}`} class="tag">{tag}</a>
+              <a href={`/tags/${termSlug(tag)}/`} class="tag">{tag}</a>
             ))}
           </div>
         </div>
       )}
       
       <div class="post-navigation">
-        <a href="/projects/ideas" class="back-to-blog">← Back to Ideas</a>
+        <a href="/projects/ideas/" class="back-to-blog">← Back to Ideas</a>
       </div>
     </footer>
   </article>

@@ -2,7 +2,7 @@
 import Layout from '../../../components/Layout.astro';
 import Frame from '../../../components/Frame.astro';
 import TranslationNotice from '../../../components/TranslationNotice.astro';
-import { localize, translationSibling, slugFromFile } from '../../../utils/i18n';
+import { localize, translationSibling, slugFromFile, termSlug, canonicalPostUrl } from '../../../utils/i18n';
 
 export async function getStaticPaths() {
   const mdPostsGlob = import.meta.glob('../../../content/promptsoncanvas/*.md', { eager: true });
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
     return {
       params: { slug },
       props: {
-        post, isFallback, url: `/en/promptsoncanvas/${slug}`,
+        post, isFallback, url: `/en/promptsoncanvas/${slug}/`,
         translatedUrl: sibling ? `/promptsoncanvas/${slugFromFile(sibling.file)}` : undefined,
       }
     };
@@ -30,6 +30,9 @@ const { frontmatter, Content } = post as any;
 const pageTitle = frontmatter.title;
 const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined;
 const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: translatedUrl }] : undefined;
+// Untranslated posts are also served under the other language's route;
+// point search engines at the original instead of a duplicate.
+const canonical = isFallback ? canonicalPostUrl(post) : undefined;
 ---
 
 <Layout
@@ -38,10 +41,13 @@ const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: t
   type="article"
   publishedTime={publishedTime}
   lang="en"
+  canonical={canonical}
+  contentLang={frontmatter.lang}
+  image={frontmatter.image}
   translatedUrl={translatedUrl}
   alternateUrls={alternateUrls}
 >
-  <article>
+  <article lang={frontmatter.lang}>
     {isFallback && <TranslationNotice sourceLang={frontmatter.lang} currentLang="en" />}
     <header class="post-header">
       <h1 class="post-title">{frontmatter.title}</h1>
@@ -60,13 +66,13 @@ const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: t
         )}
 
         {frontmatter.lang && (
-            <a href={`/en/language/${frontmatter.lang.toLowerCase()}`} class="post-lang">{frontmatter.lang}</a>
+            <a href={`/en/language/${frontmatter.lang.toLowerCase()}/`} class="post-lang">{frontmatter.lang}</a>
         )}
       </div>
 
       {frontmatter.projects && frontmatter.projects.length > 0 && (
         <div class="post-projects">
-          <a href={`/en/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '')}`} class="project-tag">
+          <a href={`/en/projects/${frontmatter.projects[0].toLowerCase().replace(/ /g, '')}/`} class="project-tag">
             {frontmatter.projects[0]}
           </a>
         </div>
@@ -75,7 +81,7 @@ const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: t
       {frontmatter.categories && frontmatter.categories.length > 0 && (
         <div class="post-categories">
           {frontmatter.categories.map((category: string) => (
-            <a href={`/en/categories/${category.toLowerCase().split(' ')[0].replace('[', '').replace(']', '')}`} class="category-tag">
+            <a href={`/en/categories/${termSlug(category)}/`} class="category-tag">
               {category}
             </a>
           ))}
@@ -89,7 +95,7 @@ const alternateUrls = translatedUrl ? [{ lang: 'en', url }, { lang: 'it', url: t
 
     <footer class="post-footer">
       <div class="post-navigation">
-        <a href="/en/projects/promptsoncanvas" class="back-to-blog">← Back to Prompts on Canvas</a>
+        <a href="/en/projects/promptsoncanvas/" class="back-to-blog">← Back to Prompts on Canvas</a>
       </div>
     </footer>
   </article>

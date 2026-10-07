@@ -1,6 +1,6 @@
 ---
 import Layout from '../../components/Layout.astro';
-import { localize, slugFromFile } from '../../utils/i18n';
+import { localize, slugFromFile, mirroredAlternates } from '../../utils/i18n';
 
 const collectionName = 'shortstories';
 const collectionGlob = import.meta.glob('../../content/shortstories/**/*.{md,mdx}', { eager: true });
@@ -12,9 +12,9 @@ const posts = localize(allPosts, 'it')
 const base = import.meta.env.BASE_URL;
 ---
 
-<Layout title="Short stories" description="An archive for a couple of short stories I've written back in the day.">
+<Layout title="Short stories" description="An archive for a couple of short stories I've written back in the day." alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="project-page">
-    <p class="breadcrumb"><a href={`${base}projects`}>progetti</a> / short-stories</p>
+    <p class="breadcrumb"><a href={`${base}projects/`}>progetti</a> / short-stories</p>
 
     <header class="page-head">
       <div>
@@ -33,7 +33,7 @@ const base = import.meta.env.BASE_URL;
       <h2 class="cases-label">Racconti</h2>
       <div class="cases-list posts-list">
         {posts.map(({ post, isFallback }, idx: number) => (
-          <a class="case-row post-item" href={`${base}${collectionName}/${slugFromFile(post.file)}`}>
+          <a class="case-row post-item" href={`${base}${collectionName}/${slugFromFile(post.file)}/`}>
             <span class="num">#{idx + 1}</span>
             <div class="case-body">
               <div class="case-title">

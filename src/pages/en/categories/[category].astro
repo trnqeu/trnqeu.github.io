@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../components/Layout.astro';
-import { localize } from '../../../utils/i18n';
+import { localize, postUrl, termSlug } from '../../../utils/i18n';
 
 export async function getStaticPaths() {
   const allPostsGlob = import.meta.glob(['../../../content/**/*.{md,mdx}', '!../../../content/drafts/**'], { eager: true });
@@ -23,7 +23,7 @@ export async function getStaticPaths() {
     ).sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
 
     return {
-      params: { category },
+      params: { category: termSlug(category) },
       props: {
         category,
         posts: postsWithCategory
@@ -37,7 +37,7 @@ const { category, posts } = Astro.props;
 ---
 
 
-<Layout title={`Category: ${category}`} description={`All posts in category ${category}`}>
+<Layout title={`Category: ${category}`} description={`All posts in category ${category}`} noindex>
   <div class="category-page">
     <header class="page-header">
       <h1 class="page-title">Category: {category}</h1>
@@ -49,16 +49,7 @@ const { category, posts } = Astro.props;
 
     <div class="posts-list">
         {posts.map((post: any) => {
-          const postPath = post.file.includes('/murderheprompted/') 
-            ? 'murderheprompted/' 
-            : post.file.includes('/shortstories/')
-            ? 'shortstories/'
-            : post.file.includes('/promptsoncanvas/')
-            ? 'promptsoncanvas/'
-            : 'ideas/';
-
-          const slug = post.file.split('/').pop()?.replace(/\.(md|mdx)$/, '');
-          const finalHref = `/en/${postPath}${slug}`;
+          const finalHref = postUrl(post, 'en');
 
           return (
             <article class="post-item">
@@ -78,7 +69,7 @@ const { category, posts } = Astro.props;
                   })}
                 </time>
                 {post.frontmatter.lang && (
-                  <a href={`/en/language/${post.frontmatter.lang.toLowerCase()}`} class="post-lang">
+                  <a href={`/en/language/${post.frontmatter.lang.toLowerCase()}/`} class="post-lang">
                     {post.frontmatter.lang}
                   </a>
                 )}
@@ -97,7 +88,7 @@ const { category, posts } = Astro.props;
     </div>
 
     <div class="page-navigation">
-      <a href="/en/categories" class="back-link">← Back to All Categories</a>
+      <a href="/en/categories/" class="back-link">← Back to All Categories</a>
     </div>
   </div>
 </Layout>

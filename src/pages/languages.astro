@@ -16,7 +16,7 @@ const sortedLanguages = Array.from(allLanguages).sort((a, b) => a.localeCompare(
 const base = import.meta.env.BASE_URL;
 ---
 
-<Layout title="Languages" description="Browse all languages." lang="en">
+<Layout title="Languages" description="Browse all languages." lang="it" noindex>
   <div class="languages-page">
     <header class="page-header">
       <h1 class="page-title">Languages</h1>
@@ -29,7 +29,7 @@ const base = import.meta.env.BASE_URL;
     <div class="languages-grid">
       {sortedLanguages.map((language) => (
         <div class="language-card">
-          <a href={`${base}language/${language.toLowerCase()}`} class="language-link">
+          <a href={`${base}language/${language.toLowerCase()}/`} class="language-link">
             <h2 class="language-title">{language}</h2>
           </a>
         </div>

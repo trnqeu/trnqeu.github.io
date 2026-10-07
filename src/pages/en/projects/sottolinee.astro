@@ -1,4 +1,5 @@
 ---
+import { mirroredAlternates } from '../../../utils/i18n';
 import Layout from '../../../components/Layout.astro';
 import quotes from '../../../../public/all_quotes.json';
 
@@ -12,7 +13,7 @@ const randomQuote = randomBook.quotes[randomQuoteIndex];
 const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
 ---
 
-<Layout title="Underlines" description="A collection of underlines from books I've read." lang="en">
+<Layout title="Underlines" description="A collection of underlines from books I've read." lang="en" alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="project-page">
     <header class="page-header">
       <p class="kicker">Underlines · {totalQuotes}</p>
@@ -49,7 +50,7 @@ const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
     </div>
 
     <div class="page-navigation">
-      <a href="/en/projects" class="back-link">← Projects</a>
+      <a href="/en/projects/" class="back-link">← Projects</a>
     </div>
   </div>
 </Layout>

@@ -15,7 +15,7 @@ translationKey: "multivrssdotcom"
 
 A few days ago I launched [multivrss.com](https://multivrss.com/), an RSS feed aggregator and bookmark manager built with the goal of helping me *use* the internet to its full potential. Inside [multivrss.com](https://multivrss.com/) you can follow all the updates from your favorite sites and save the articles you find most interesting: just that, and nothing more. I hope there's someone else out there who might find this service useful.
 
-If you'd like to learn more, you can visit the [project page](/en/projects/multivrss) on trnq.eu.
+If you'd like to learn more, you can visit the [project page](/en/projects/multivrss/) on trnq.eu.
 
 Below you'll find the article I wrote to launch the project:
 
