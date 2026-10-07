@@ -29,6 +29,45 @@ export function slugFromFile(file: string): string {
   return file.split('/').pop()!.replace(/\.(md|mdx)$/, '');
 }
 
+/** Derives the content collection (= route prefix) from a glob-imported
+ *  file path. `file` is absolute, e.g. `/…/src/content/ideas/foo.md`. */
+export function collectionFromFile(file: string): string {
+  return file.split('/content/').pop()!.split('/')[0];
+}
+
+/**
+ * URL of `post` under the `locale` route tree, with trailing slash. Only
+ * valid when that route actually serves this entry: either the entry is in
+ * `locale`, or it is the fallback shown because no translation exists.
+ */
+export function postUrl(post: GlobPost, locale: Locale): string {
+  const prefix = locale === 'en' ? '/en/' : '/';
+  return `${prefix}${collectionFromFile(post.file)}/${slugFromFile(post.file)}/`;
+}
+
+/** The URL of `post` in its own language: the one that should be indexed. */
+export function canonicalPostUrl(post: GlobPost): string {
+  return postUrl(post, post.frontmatter.lang.toLowerCase() === 'en' ? 'en' : 'it');
+}
+
+/** URL-safe slug for a tag or category label (`Italian History` → `italian-history`). */
+export function termSlug(term: string): string {
+  return term.toLowerCase().trim().replace(/\s+/g, '-');
+}
+
+/**
+ * hreflang alternates for pages that exist with the same path in both
+ * languages (`/x/` ↔ `/en/x/`), such as the home, about or project pages.
+ */
+export function mirroredAlternates(pathname: string): { lang: string; url: string }[] {
+  const itPath = pathname.replace(/^\/en(\/|$)/, '/');
+  const enPath = itPath === '/' ? '/en/' : `/en${itPath}`;
+  return [
+    { lang: 'it', url: itPath },
+    { lang: 'en', url: enPath },
+  ];
+}
+
 function groupKey(post: GlobPost): string {
   return post.frontmatter.translationKey ?? slugFromFile(post.file);
 }

@@ -11,8 +11,11 @@ const path = Astro.url.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
 // of the current post; otherwise fall back to the naive path-swap, which is
 // correct for every non-post page and for untranslated posts (their
 // fallback rendering lives at the same slug under both prefixes).
-const itHref = lang === 'en' ? (translatedUrl ?? path) : path;
-const enHref = lang === 'it' ? (translatedUrl ?? getRelativeLocaleUrl('en', path)) : getRelativeLocaleUrl('en', path);
+const withSlash = (url: string) => (url.endsWith('/') ? url : `${url}/`);
+const itHref = withSlash(lang === 'en' ? (translatedUrl ?? path) : path);
+const enHref = withSlash(lang === 'it' ? (translatedUrl ?? getRelativeLocaleUrl('en', path)) : getRelativeLocaleUrl('en', path));
+// Nav links stay within the current language.
+const home = lang === 'en' ? `${base}en/` : base;
 
 const navTranslations = {
   en: {
@@ -48,15 +51,15 @@ const t = navTranslations[lang] || navTranslations.en;
     </button>
     
     <div class="site-title">
-      <a href={base} class="wordmark">trnq<span class="wordmark-dot">.</span>eu</a>
+      <a href={home} class="wordmark">trnq<span class="wordmark-dot">.</span>eu</a>
     </div>
     
     <div class="header-controls">
       <nav class="main-navigation" role="navigation" aria-label="Main navigation">
         <ul class="nav-list">
-          <li><a href={base} class="nav-link">Home</a></li>
-          <li><a href={base + "projects"} class="nav-link">{t.projects}</a></li>
-          <li><a href={base + "about"} class="nav-link">{t.about}</a></li>
+          <li><a href={home} class="nav-link">Home</a></li>
+          <li><a href={home + "projects/"} class="nav-link">{t.projects}</a></li>
+          <li><a href={home + "about/"} class="nav-link">{t.about}</a></li>
         </ul>
       </nav>
       
@@ -96,10 +99,10 @@ const t = navTranslations[lang] || navTranslations.en;
 
 <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
   <ul class="mobile-nav-list">
-    <li><a href={base} class="mobile-nav-link">{t.home}</a></li>
-    <li><a href={base + "projects"} class="mobile-nav-link">{t.projects}</a></li>
-    <li><a href={base + "projects/sottolinee"} class="mobile-nav-link">{t.sottolinee}</a></li>
-    <li><a href={base + "about"} class="mobile-nav-link">{t.about}</a></li>
+    <li><a href={home} class="mobile-nav-link">{t.home}</a></li>
+    <li><a href={home + "projects/"} class="mobile-nav-link">{t.projects}</a></li>
+    <li><a href={home + "projects/sottolinee/"} class="mobile-nav-link">{t.sottolinee}</a></li>
+    <li><a href={home + "about/"} class="mobile-nav-link">{t.about}</a></li>
   </ul>
 </nav>
 

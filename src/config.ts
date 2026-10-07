@@ -1,6 +1,10 @@
 export interface SiteConfig {
   title: string;
-  description: string;
+  /** Fallback meta description, per language, for pages that don't set one. */
+  description: {
+    it: string;
+    en: string;
+  };
   author: {
     name: string;
     bio: {
@@ -22,7 +26,10 @@ export interface SiteConfig {
 
 export const config: SiteConfig = {
   title: "Stefano Trinchero | Trnq.eu",
-  description: "Stefano Trinchero's Personal Website. Contains human slop, code snippets, ideas on AI, programming, archives, time and whatever goes through my mind. Home of the 'Murder, he prompted' series.",
+  description: {
+    it: "Il sito personale di Stefano Trinchero: idee, racconti, progetti digitali e qualche blocco di codice. Qui vive la serie 'Murder, he prompted'.",
+    en: "Stefano Trinchero's personal website: ideas, short stories, digital projects and some code snippets. Home of the 'Murder, he prompted' series.",
+  },
   author: {
     name: "Stefano Trinchero",
     bio: {
@@ -42,4 +49,3 @@ export const config: SiteConfig = {
 
 // Export constants for SEO component
 export const SITE_TITLE = config.title;
-export const SITE_DESCRIPTION = config.description;

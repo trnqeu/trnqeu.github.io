@@ -1,7 +1,7 @@
 ---
 import Layout from '../../components/Layout.astro';
 import Frame from '../../components/Frame.astro';
-import { localize, slugFromFile } from '../../utils/i18n';
+import { localize, slugFromFile, mirroredAlternates } from '../../utils/i18n';
 const base = import.meta.env.BASE_URL;
 
 const mdPostsGlob = import.meta.glob('../../content/promptsoncanvas/*.md', { eager: true });
@@ -15,12 +15,12 @@ const sortedPosts = localize(allPosts, 'it')
     return {
       ...post,
       isFallback,
-      url: `/promptsoncanvas/${slug}`
+      url: `/promptsoncanvas/${slug}/`
     }
   });
 ---
 
-<Layout title="Prompts on Canvas" description="Masterpieces of generative art.">
+<Layout title="Prompts on Canvas" description="Masterpieces of generative art." alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="blog-page">
     <header class="blog-header">
       <h1 class="blog-title">Prompts on Canvas</h1>

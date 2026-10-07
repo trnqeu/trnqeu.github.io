@@ -1,5 +1,6 @@
 ---
 title: 'La GiocondA.I.'
+description: "Leonardo's Mona Lisa, turned back into the text prompt that might generate it and hung on the wall as a work of art in its own right."
 date: 2024-01-01
 frameStyle: 'simple'
 projects: ["Prompts on canvas"]

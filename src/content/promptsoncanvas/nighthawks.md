@@ -1,5 +1,6 @@
 ---
 title: 'Nighthawks at the Dall-E'
+description: "Edward Hopper's Nighthawks rewritten as a text-to-image prompt, and framed as if the prompt itself were the painting."
 date: 2024-01-01
 frameStyle: 'simple'
 projects: ["Prompts on canvas"]

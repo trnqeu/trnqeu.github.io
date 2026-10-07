@@ -1,6 +1,6 @@
 ---
 import { config } from '../config';
-import { localize } from '../utils/i18n';
+import { localize, termSlug } from '../utils/i18n';
 
 const base = import.meta.env.BASE_URL;
 
@@ -115,7 +115,7 @@ const localeDateOptions: Intl.DateTimeFormatOptions = {
       <ul class="category-list">
         {categories.map(category => (
           <li class="category-item">
-            <a href={`${base}/categories/${category.toLowerCase()}`} class="category-link">
+            <a href={`${base}categories/${termSlug(category)}/`} class="category-link">
               {category}
             </a>
           </li>
