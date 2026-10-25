@@ -1,6 +1,6 @@
 ---
 import Layout from '../components/Layout.astro';
-import { localize, postUrl, mirroredAlternates } from '../utils/i18n';
+import { localize, postUrl, isExternal, mirroredAlternates } from '../utils/i18n';
 
 const lang: 'it' = 'it';
 
@@ -12,11 +12,13 @@ const shortStoriesPostsGlob = import.meta.glob('../content/shortstories/*.md', {
 const shortStoriesMdxPostsGlob = import.meta.glob('../content/shortstories/*.mdx', { eager: true });
 const promptsOnCanvasPostsGlob = import.meta.glob('../content/promptsoncanvas/*.md', { eager: true });
 const promptsOnCanvasMdxPostsGlob = import.meta.glob('../content/promptsoncanvas/*.mdx', { eager: true });
+const elsewherePostsGlob = import.meta.glob('../content/elsewhere/*.md', { eager: true });
 const allPosts = [
   ...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob),
   ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob),
   ...Object.values(shortStoriesPostsGlob), ...Object.values(shortStoriesMdxPostsGlob),
   ...Object.values(promptsOnCanvasPostsGlob), ...Object.values(promptsOnCanvasMdxPostsGlob),
+  ...Object.values(elsewherePostsGlob),
 ] as any[];
 
 const sortedPosts = localize(allPosts, lang)
@@ -88,6 +90,7 @@ function fmtDate(input: string | Date): string {
             <span class="rdate">{fmtDate(fm.date)}</span>
             <span class="rtitle">{fm.title}</span>
             <span class="rtags">
+              {isExternal(post) && <span class="tq-ext"><span aria-hidden="true">↗ </span>{fm.source}</span>}
               {post.isFallback && <span class="tq-langbadge filled">{fm.lang}</span>}
               {cats.length > 0 && <span class="tq-cat">{cats[0]}</span>}
             </span>
@@ -176,6 +179,8 @@ function fmtDate(input: string | Date): string {
   .tq-langbadge{font-family:var(--font-mono);font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
     color:var(--color-accent);border:1px solid var(--color-border);border-radius:var(--radius-badge);padding:2px 6px;}
   .tq-langbadge.filled{background:var(--color-accent);color:var(--color-accent-contrast);border-color:var(--color-accent);}
+  .tq-ext{font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.03em;color:var(--color-text-muted);
+    border:1px solid var(--color-border);border-radius:var(--radius-badge);padding:2px 6px;}
   .tq-cat{background:var(--color-surface-alt);color:var(--color-text-secondary);font-family:var(--font-mono);
     font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:var(--radius-badge);}
 

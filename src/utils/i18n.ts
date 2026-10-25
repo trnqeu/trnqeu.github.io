@@ -35,12 +35,20 @@ export function collectionFromFile(file: string): string {
   return file.split('/content/').pop()!.split('/')[0];
 }
 
+/** True for entries published on another site (the `elsewhere` collection):
+ *  they have no page here and link out to `frontmatter.url`. */
+export function isExternal(post: GlobPost): boolean {
+  return typeof post.frontmatter.url === 'string';
+}
+
 /**
- * URL of `post` under the `locale` route tree, with trailing slash. Only
+ * URL of `post` under the `locale` route tree, with trailing slash, or its
+ * own `url` when it was published elsewhere. Only
  * valid when that route actually serves this entry: either the entry is in
  * `locale`, or it is the fallback shown because no translation exists.
  */
 export function postUrl(post: GlobPost, locale: Locale): string {
+  if (isExternal(post)) return post.frontmatter.url;
   const prefix = locale === 'en' ? '/en/' : '/';
   return `${prefix}${collectionFromFile(post.file)}/${slugFromFile(post.file)}/`;
 }

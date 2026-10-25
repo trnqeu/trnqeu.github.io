@@ -1,6 +1,6 @@
 ---
 import Layout from '../components/Layout.astro';
-import { localize, postUrl, mirroredAlternates } from '../utils/i18n';
+import { localize, postUrl, isExternal, mirroredAlternates } from '../utils/i18n';
 
 const lang: 'en' | 'it' = 'it';
 const base = import.meta.env.BASE_URL;
@@ -15,29 +15,31 @@ const shortStoriesPostsGlob = import.meta.glob('../content/shortstories/*.md', {
 const shortStoriesMdxPostsGlob = import.meta.glob('../content/shortstories/*.mdx', { eager: true });
 const promptsOnCanvasPostsGlob = import.meta.glob('../content/promptsoncanvas/*.md', { eager: true });
 const promptsOnCanvasMdxPostsGlob = import.meta.glob('../content/promptsoncanvas/*.mdx', { eager: true });
+const elsewherePostsGlob = import.meta.glob('../content/elsewhere/*.md', { eager: true });
 const allPosts = [
   ...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob),
   ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob),
   ...Object.values(shortStoriesPostsGlob), ...Object.values(shortStoriesMdxPostsGlob),
   ...Object.values(promptsOnCanvasPostsGlob), ...Object.values(promptsOnCanvasMdxPostsGlob),
+  ...Object.values(elsewherePostsGlob),
 ] as any[];
 
 const localizedPosts = localize(allPosts, lang)
   .map(({ post, isFallback }) => ({ ...post, isFallback }))
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
 
-const latest = localizedPosts.slice(0, 6);       // 6 righe: quante ne stanno senza scroll
+const latest = localizedPosts.slice(0, 9);       // 9 righe: allineato al numero di progetti
 
 const i18n = {
   it: {
     projects: 'progetti', writings: 'scritti',
-    allProjects: 'tutti i progetti →', allWritings: "tutto l'archivio →",
+    allProjects: 'tutti i progetti', allWritings: 'tutti gli scritti',
     tagline: '[pensieri, parole, opere o missioni]', info: 'info',
     months: ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'],
   },
   en: {
     projects: 'projects', writings: 'writing',
-    allProjects: 'all projects →', allWritings: 'the whole archive →',
+    allProjects: 'all projects', allWritings: 'all writing',
     tagline: '[thoughts, words, snippets]', info: 'info',
     months: ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'],
   },
@@ -45,7 +47,9 @@ const i18n = {
 const dict = i18n[lang];
 
 const projects = [
+  { slug: 'undurable',           title: 'Undurable',              meta: { it: 'laboratorio sull’impermanenza', en: 'a lab on impermanence' } },
   { slug: 'multivrss',           title: 'Multivrss',              meta: { it: 'aggregatore di feed RSS', en: 'RSS feed aggregator' } },
+  { slug: 'clockwork-leagues',   title: 'Clockwork Leagues',      meta: { it: 'campionati che giocano da soli', en: 'leagues that play themselves' } },
   { slug: 'eblioteque',          title: 'Eblioteque',              meta: { it: 'la mia biblioteca digitale', en: 'my e-biblioteque' } },
   { slug: 'ideas',               title: 'Ideas',                  meta: { it: 'appunti e pensieri sparsi', en: 'posts, random thoughts' } },
   { slug: 'promptsoncanvas',     title: 'Prompts on canvas',      meta: { it: 'arte generativa', en: 'generative art' } },
@@ -93,7 +97,7 @@ function fmtDate(input: string | Date): string {
           </a>
         ))}
       </nav>
-      <a class="tq-pane-more" href={`${base}projects/`}>{dict.allProjects}</a>
+      <a class="tq-pane-more" href={`${base}projects/`}><span>{dict.allProjects}</span><span aria-hidden="true">→</span></a>
     </section>
 
     <!-- METÀ DESTRA — SCRITTI -->
@@ -110,13 +114,13 @@ function fmtDate(input: string | Date): string {
               <span class="c wide">{fmtDate(fm.date)}</span>
               <span class="tm">
                 <span class="t">{fm.title}</span>
-                <span class="m">{fm.lang}{cat ? ' · ' + cat.toLowerCase() : ''}</span>
+                <span class="m">{fm.lang}{cat ? ' · ' + cat.toLowerCase() : ''}{isExternal(post) && <span class="ext"> · <span aria-hidden="true">↗</span> {fm.source}</span>}</span>
               </span>
             </a>
           );
         })}
       </nav>
-      <a class="tq-pane-more" href={`${base}writing/`}>{dict.allWritings}</a>
+      <a class="tq-pane-more" href={`${base}writing/`}><span>{dict.allWritings}</span><span class="n">{localizedPosts.length}</span><span aria-hidden="true">→</span></a>
     </section>
 
   </div>
@@ -201,17 +205,19 @@ function fmtDate(input: string | Date): string {
   .tq-pane-row .tm{ flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
   .tq-pane-row .tm .m{ margin-left:0; padding-left:0; }
 
+  .tq-pane-row .ext{ text-transform:none; }
+
+  /* link all'indice completo: sempre visibile, non segue l'"accensione" della lista */
   .tq-pane-more{
-    margin-top:auto;
-    font-family:var(--font-mono); font-size:.7rem; letter-spacing:.1em;
-    text-transform:uppercase; color:var(--color-text-muted); text-decoration:none;
-    opacity:0; transition:opacity .3s ease, color .18s ease;
+    margin-top:auto; align-self:flex-start;
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--font-mono); font-size:.75rem; font-weight:600; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--color-text-primary); text-decoration:none;
+    transition:color .18s ease;
   }
+  .tq-pane-more .n{ color:var(--color-text-muted); font-weight:400; }
   .tq-pane-more:hover{ color:var(--color-accent); }
-  @media (hover:hover) and (min-width:901px){
-    .tq-pane:hover .tq-pane-more,
-    .tq-pane:focus-within .tq-pane-more{ opacity:1; }
-  }
+  .tq-pane-more:hover .n{ color:inherit; }
 
   /* ————— piede ————— */
   .tq-bivio-foot{
@@ -231,7 +237,6 @@ function fmtDate(input: string | Date): string {
     .tq-pane{ padding: calc(var(--grid-unit)*5) calc(var(--grid-unit)*3); gap:calc(var(--grid-unit)*3); }
     .tq-pane + .tq-pane{ border-left:none; border-top:1px solid var(--color-border); }
     .tq-pane-list{ opacity:1; }          /* su touch gli indici sono sempre accesi */
-    .tq-pane-more{ opacity:1; }
     .tq-pane-head h2{ font-size:2.4rem; }
   }
   @media (max-width:480px){
