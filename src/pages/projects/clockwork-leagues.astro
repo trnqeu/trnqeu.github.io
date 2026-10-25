@@ -1,0 +1,208 @@
+---
+import { mirroredAlternates } from '../../utils/i18n';
+import Layout from '../../components/Layout.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const features = [
+  {
+    title: 'Partite in diretta',
+    text: 'Un motore a tick genera un evento ogni 5 secondi: passaggi, duelli, tiri, falli, calci piazzati. I voti dei giocatori cambiano mentre la partita si gioca.',
+  },
+  {
+    title: 'Manager AI',
+    text: 'Ogni squadra è un agente autonomo: analizza la rosa, individua i buchi e usa il budget per tesserare i giocatori che le servono.',
+  },
+  {
+    title: 'Un mondo che invecchia',
+    text: 'I giocatori crescono, calano, si ritirano e vengono sostituiti da giovani generati. Le squadre salgono e scendono in una piramide di campionati con playoff e playout.',
+  },
+];
+---
+
+<Layout
+  title="Clockwork Leagues — Trnq.eu"
+  description="Clockwork Leagues: un god game calcistico autonomo. Squadre, giocatori e campionati evolvono da soli, e tu stai a guardare."
+  type="website"
+  lang="it"
+  alternateUrls={mirroredAlternates(Astro.url.pathname)}
+>
+  <div class="project-page">
+    <header class="page-header">
+      <p class="kicker">Progetti · Simulazione</p>
+      <h1 class="page-title">Clockwork Leagues</h1>
+      <p class="lead">Un god game calcistico che gira da solo: centoventi squadre, i loro giocatori e una piramide di campionati che evolvono senza bisogno di nessuno.</p>
+      <div class="cta-row">
+        <a class="cta-primary" href="https://clockworkleagues.undurable.com/" target="_blank" rel="noopener">
+          Visita Clockwork Leagues
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="cta-secondary" href={`${base}projects/`}>
+          ← Tutti i progetti
+        </a>
+      </div>
+    </header>
+
+    <div class="body">
+      <p>Clockwork Leagues è un campionato di calcio a orologeria. Le partite si giocano in tempo reale, gli allenatori fanno mercato, i giocatori invecchiano e si ritirano, le squadre vengono promosse e retrocesse. Tutto senza intervento umano.</p>
+      <p>Chi guarda è soprattutto uno spettatore: segue le partite in diretta, scorre classifiche, risultati e trasferimenti, ricostruisce la storia delle stagioni passate. C'è una sola leva a disposizione: prendere il controllo di una squadra e gestirla a mano, mentre il resto del mondo continua ad andare avanti per conto suo.</p>
+      <p>Il motore delle partite è ispirato a Championship Manager 3: possesso, duelli e tiri vengono risolti a partire dagli attributi reali dei giocatori, con moduli, corsie e calci piazzati. Il calcio è solo il primo sport: football americano e baseball sono in arrivo.</p>
+    </div>
+
+    <div class="feature-grid">
+      {features.map((f) => (
+        <div class="feature-card">
+          <h3>{f.title}</h3>
+          <p>{f.text}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="stack">
+      <p class="stack-label">Stack</p>
+      <p class="stack-list">Node.js · TypeScript · Express · Prisma · PostgreSQL · React · Next · Docker</p>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .project-page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 44px 0 60px;
+  }
+
+  .page-header {
+    margin-bottom: 40px;
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 18px;
+  }
+
+  .page-title {
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    margin: 0 0 20px;
+  }
+
+  .lead {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 56ch;
+    margin: 0 0 28px;
+  }
+
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .cta-primary {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--color-text-primary);
+    color: var(--color-background);
+    border: 1.5px solid var(--color-text-primary);
+    padding: 12px 20px;
+    border-radius: var(--radius-chip);
+    text-decoration: none;
+    transition: 0.2s;
+  }
+
+  .cta-primary:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .cta-secondary {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+
+  .cta-secondary:hover {
+    color: var(--color-accent);
+  }
+
+  .body {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+    max-width: 66ch;
+    margin-bottom: 48px;
+  }
+
+  .body p + p {
+    margin-top: 18px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    border-top: 2px solid var(--color-border-strong);
+    padding-top: 32px;
+    margin-bottom: 48px;
+  }
+
+  .feature-card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 8px;
+  }
+
+  .feature-card p {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .stack {
+    border-top: 1px solid var(--color-border);
+    padding-top: 20px;
+  }
+
+  .stack-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 8px;
+  }
+
+  .stack-list {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

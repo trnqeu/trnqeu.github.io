@@ -59,4 +59,16 @@ const promptsoncanvas = defineCollection({
     }),
 });
 
-export const collections = { ideas, murderheprompted, shortstories, drafts, ilcommissariogpt, promptsoncanvas };
+// Pieces published on other sites (Multivrss, Undurable…): frontmatter only,
+// no body and no page on trnq.eu. They show up in the home and archive lists
+// and link straight to `url`.
+const elsewhere = defineCollection({
+    loader: glob({ pattern: '**/[^_]*.md', base: './src/content/elsewhere' }),
+    schema: baseSchema.extend({
+        date: z.coerce.date(),
+        url: z.url(),
+        source: z.string(),
+    }),
+});
+
+export const collections = { elsewhere, ideas, murderheprompted, shortstories, drafts, ilcommissariogpt, promptsoncanvas };

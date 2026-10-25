@@ -3,9 +3,10 @@ import { config } from '../config';
 import { canonicalPostUrl } from '../utils/i18n';
 
 export async function GET(context) {
-  const posts = import.meta.glob(['../content/ideas/**/*.{md,mdx}', '../content/murderheprompted/**/*.{md,mdx}', '../content/ilcommissariogpt/**/*.{md,mdx}', '../content/shortstories/**/*.{md,mdx}', '../content/promptsoncanvas/**/*.{md,mdx}'], { eager: true });
+  const posts = import.meta.glob(['../content/ideas/**/*.{md,mdx}', '../content/murderheprompted/**/*.{md,mdx}', '../content/ilcommissariogpt/**/*.{md,mdx}', '../content/shortstories/**/*.{md,mdx}', '../content/promptsoncanvas/**/*.{md,mdx}', '../content/elsewhere/*.md'], { eager: true });
   // Each entry links to its own-language URL (`/en/…` for English posts):
   // the Italian route only serves Italian posts and untranslated fallbacks.
+  // Pieces published elsewhere link straight to the other site.
   const items = Object.values(posts).map((post) => ({
     title: post.frontmatter.title,
     pubDate: post.frontmatter.date,
