@@ -15,12 +15,14 @@ const shortStoriesPostsGlob = import.meta.glob('../content/shortstories/*.md', {
 const shortStoriesMdxPostsGlob = import.meta.glob('../content/shortstories/*.mdx', { eager: true });
 const promptsOnCanvasPostsGlob = import.meta.glob('../content/promptsoncanvas/*.md', { eager: true });
 const promptsOnCanvasMdxPostsGlob = import.meta.glob('../content/promptsoncanvas/*.mdx', { eager: true });
+const commissarioGipitiPostsGlob = import.meta.glob('../content/commissario-gipiti/*.{md,mdx}', { eager: true });
 const elsewherePostsGlob = import.meta.glob('../content/elsewhere/*.md', { eager: true });
 const allPosts = [
   ...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob),
   ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob),
   ...Object.values(shortStoriesPostsGlob), ...Object.values(shortStoriesMdxPostsGlob),
   ...Object.values(promptsOnCanvasPostsGlob), ...Object.values(promptsOnCanvasMdxPostsGlob),
+  ...Object.values(commissarioGipitiPostsGlob),
   ...Object.values(elsewherePostsGlob),
 ] as any[];
 
@@ -28,7 +30,7 @@ const localizedPosts = localize(allPosts, lang)
   .map(({ post, isFallback }) => ({ ...post, isFallback }))
   .sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
 
-const latest = localizedPosts.slice(0, 9);       // 9 righe: allineato al numero di progetti
+const latest = localizedPosts.slice(0, 10);      // 10 righe: allineato al numero di progetti
 
 const i18n = {
   it: {
@@ -54,6 +56,7 @@ const projects = [
   { slug: 'ideas',               title: 'Ideas',                  meta: { it: 'appunti e pensieri sparsi', en: 'posts, random thoughts' } },
   { slug: 'promptsoncanvas',     title: 'Prompts on canvas',      meta: { it: 'arte generativa', en: 'generative art' } },
   { slug: 'murder-he-prompted',  title: 'Murder, he prompted',    meta: { it: 'serie · in corso', en: 'series · ongoing' } },
+  { slug: 'commissario-gipiti',  title: 'I casi del Commissario Gipiti', meta: { it: 'serie · in corso', en: 'series · ongoing' } },
   { slug: 'sottolinee',          title: 'Sottolinee',             meta: { it: 'sottolinee', en: 'underlines' } },
   { slug: 'short-stories',       title: 'Racconti / Short stories', meta: { it: 'racconti brevi', en: 'short stories' } },
 ];

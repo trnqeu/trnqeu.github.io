@@ -4,7 +4,7 @@ const collectionGlobs = {
   ideas: import.meta.glob('../content/ideas/*.{md,mdx}', { eager: true }),
   murderheprompted: import.meta.glob('../content/murderheprompted/*.{md,mdx}', { eager: true }),
   shortstories: import.meta.glob('../content/shortstories/*.{md,mdx}', { eager: true }),
-  ilcommissariogpt: import.meta.glob('../content/ilcommissariogpt/*.{md,mdx}', { eager: true }),
+  'commissario-gipiti': import.meta.glob('../content/commissario-gipiti/*.{md,mdx}', { eager: true }),
   promptsoncanvas: import.meta.glob('../content/promptsoncanvas/*.{md,mdx}', { eager: true }),
 };
 

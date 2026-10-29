@@ -2,23 +2,23 @@
 import Layout from '../../../components/Layout.astro';
 import { localize, slugFromFile, mirroredAlternates } from '../../../utils/i18n';
 
-const collectionName = 'ilcommissariogpt';
-const collectionGlob = import.meta.glob('../../../content/ilcommissariogpt/**/*.{md,mdx}', { eager: true });
+const collectionName = 'commissario-gipiti';
+const collectionGlob = import.meta.glob('../../../content/commissario-gipiti/**/*.{md,mdx}', { eager: true });
 const allPosts = Object.values(collectionGlob) as any[];
 
 const posts = localize(allPosts, 'en')
   .sort((a, b) => new Date(a.post.frontmatter.date).getTime() - new Date(b.post.frontmatter.date).getTime());
 ---
 
-<Layout title="I casi del Commissario GPT" description="A collection of all the cases from the 'I casi del Commissario GPT' series." lang="en" alternateUrls={mirroredAlternates(Astro.url.pathname)} noindex>
+<Layout title="I casi del Commissario Gipiti" description="Commissario Gipiti solves murders in a matter of seconds. Chief Mediator Valdimiro Lafaietta is left with the most delicate task of all: dragging the case file in, typing “solve” and safeguarding the Human Factor." lang="en" alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="project-page">
-    <p class="breadcrumb"><a href="/en/projects/">projects</a> / il-commissario-gpt</p>
+    <p class="breadcrumb"><a href="/en/projects/">projects</a> / commissario-gipiti</p>
 
     <header class="page-head">
       <div>
-        <p class="kicker">Series · in progress</p>
-        <h1 class="page-title">I casi del<br />Commissario GPT</h1>
-        <p class="page-description">A collection of all the cases from the 'I casi del Commissario GPT' series.</p>
+        <p class="kicker">Series · ongoing</p>
+        <h1 class="page-title">I casi del<br />Commissario Gipiti</h1>
+        <p class="page-description">Commissario Gipiti solves murders in a matter of seconds. Chief Mediator Valdimiro Lafaietta is left with the most delicate task of all: dragging the case file in, typing “solve” and safeguarding the Human Factor.</p>
       </div>
       <span class="ghost-num">{String(posts.length).padStart(2, '0')}</span>
     </header>

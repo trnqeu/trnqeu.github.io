@@ -44,8 +44,8 @@ const drafts = defineCollection({
     }),
 });
 
-const ilcommissariogpt = defineCollection({
-    loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/ilcommissariogpt' }),
+const commissarioGipiti = defineCollection({
+    loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/commissario-gipiti' }),
     schema: baseSchema.extend({
         date: z.coerce.date(),
     }),
@@ -71,4 +71,4 @@ const elsewhere = defineCollection({
     }),
 });
 
-export const collections = { elsewhere, ideas, murderheprompted, shortstories, drafts, ilcommissariogpt, promptsoncanvas };
+export const collections = { elsewhere, ideas, murderheprompted, shortstories, drafts, 'commissario-gipiti': commissarioGipiti, promptsoncanvas };

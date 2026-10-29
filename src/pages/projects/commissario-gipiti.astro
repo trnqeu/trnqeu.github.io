@@ -2,8 +2,8 @@
 import Layout from '../../components/Layout.astro';
 import { localize, slugFromFile, mirroredAlternates } from '../../utils/i18n';
 
-const collectionName = 'ilcommissariogpt';
-const collectionGlob = import.meta.glob('../../content/ilcommissariogpt/**/*.{md,mdx}', { eager: true });
+const collectionName = 'commissario-gipiti';
+const collectionGlob = import.meta.glob('../../content/commissario-gipiti/**/*.{md,mdx}', { eager: true });
 const allPosts = Object.values(collectionGlob) as any[];
 
 const posts = localize(allPosts, 'it')
@@ -12,21 +12,21 @@ const posts = localize(allPosts, 'it')
 const base = import.meta.env.BASE_URL;
 ---
 
-<Layout title="I casi del Commissario GPT" description="A collection of all the cases from the 'I casi del Commissario GPT' series." alternateUrls={mirroredAlternates(Astro.url.pathname)} noindex>
+<Layout title="I casi del Commissario Gipiti" description="Il Commissario Gipiti risolve gli omicidi in pochi secondi. Al Capo Mediatore Valdimiro Lafaietta resta il compito più delicato: trascinare il fascicolo, scrivere «risolvi» e custodire il Fattore Umano." alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="project-page">
-    <p class="breadcrumb"><a href={`${base}projects/`}>progetti</a> / il-commissario-gpt</p>
+    <p class="breadcrumb"><a href={`${base}projects/`}>progetti</a> / commissario-gipiti</p>
 
     <header class="page-head">
       <div>
-        <p class="kicker">Serie · in scrittura</p>
-        <h1 class="page-title">I casi del<br />Commissario GPT</h1>
-        <p class="page-description">A collection of all the cases from the 'I casi del Commissario GPT' series.</p>
+        <p class="kicker">Serie · in corso</p>
+        <h1 class="page-title">I casi del<br />Commissario Gipiti</h1>
+        <p class="page-description">Il Commissario Gipiti risolve gli omicidi in pochi secondi. Al Capo Mediatore Valdimiro Lafaietta resta il compito più delicato: trascinare il fascicolo, scrivere «risolvi» e custodire il Fattore Umano.</p>
       </div>
       <span class="ghost-num">{String(posts.length).padStart(2, '0')}</span>
     </header>
 
     <div class="sort-controls">
-      <button id="sort-toggle">Sort by Date (Newest First)</button>
+      <button id="sort-toggle">Dal più recente</button>
     </div>
 
     <section class="cases">
@@ -43,7 +43,7 @@ const base = import.meta.env.BASE_URL;
               {post.frontmatter.excerpt && <div class="case-desc">{post.frontmatter.excerpt}</div>}
             </div>
             <time class="case-date post-date" datetime={post.frontmatter.date}>
-              {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
+              {new Date(post.frontmatter.date).toLocaleDateString('it-IT', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
@@ -66,7 +66,7 @@ const base = import.meta.env.BASE_URL;
 
     sortToggle.addEventListener('click', () => {
       isAscending = !isAscending;
-      sortToggle.textContent = isAscending ? 'Sort by Date (Newest First)' : 'Sort by Date (Oldest First)';
+      sortToggle.textContent = isAscending ? 'Dal più recente' : 'Dal meno recente';
 
       posts.sort((a, b) => {
         const dateA = new Date(a.querySelector('.post-date').getAttribute('datetime'));
