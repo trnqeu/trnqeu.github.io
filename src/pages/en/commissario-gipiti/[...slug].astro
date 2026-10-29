@@ -60,35 +60,35 @@ const canonical = isFallback ? canonicalPostUrl(post) : undefined;
       <h1 class="post-title">{frontmatter.title}</h1>
       
       <div class="post-meta">
-        <time class="post-date" datetime={frontmatter.date}>
-          {new Date(frontmatter.date).toLocaleDateString(frontmatter.lang || 'en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
-        </time>
-
-        {frontmatter.author && (
-            <span class="post-author">by {frontmatter.author}</span>
-        )}
-
-        {frontmatter.lang && (
+        <p class="post-meta-line">
+          <time class="post-date" datetime={frontmatter.date}>
+            {new Date(frontmatter.date).toLocaleDateString(frontmatter.lang || 'en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </time>
+          {frontmatter.author && <span class="post-author">by {frontmatter.author}</span>}
+          {frontmatter.lang && (
             <a href={`/en/language/${frontmatter.lang.toLowerCase()}/`} class="post-lang">{frontmatter.lang}</a>
-        )}
+          )}
+        </p>
 
-        <div class="project-link-meta">
-          Project: <a href="/en/projects/commissario-gipiti/">I casi del Commissario Gipiti</a>
-        </div>
-        
-        {frontmatter.categories && frontmatter.categories.length > 0 && (
-          <div class="post-categories">
-            {frontmatter.categories.map((category: string) => (
-              <a href={`/en/categories/${termSlug(category)}/`} class="category-tag">
-                {category}
-              </a>
-            ))}
+        <div class="post-meta-row">
+          <div class="project-link-meta">
+            Project: <a href="/en/projects/commissario-gipiti/">I casi del Commissario Gipiti</a>
           </div>
-        )}
+
+          {frontmatter.categories && frontmatter.categories.length > 0 && (
+            <div class="post-categories">
+              {frontmatter.categories.map((category: string) => (
+                <a href={`/en/categories/${termSlug(category)}/`} class="category-tag">
+                  {category}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       
       <hr class="monumental-rule" />
@@ -144,46 +144,38 @@ const canonical = isFallback ? canonicalPostUrl(post) : undefined;
     margin-bottom: calc(var(--grid-unit) * 3);
   }
 
-  .post-date {
+  .post-meta-line {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: calc(var(--grid-unit) / 2);
+    margin: 0;
     font-family: var(--font-mono);
-    font-size: 0.9rem;
+    font-size: 0.78rem;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
-  .post-author {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
+  .post-meta-line > * + *::before {
+    content: "·";
+    margin: 0 0.6em;
     color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 
   .post-lang {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
     color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 
   .post-lang:hover {
     color: var(--color-accent);
   }
 
-  .post-reading-time {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .post-reading-time::before {
-    content: "•";
-    margin: 0 calc(var(--grid-unit));
-    color: var(--color-border);
+  .post-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--grid-unit) calc(var(--grid-unit) * 2);
+    font-size: 0.95rem;
   }
 
   .post-categories {
@@ -227,10 +219,21 @@ const canonical = isFallback ? canonicalPostUrl(post) : undefined;
     width: 100%;
   }
 
+  /* ~65–70 characters per line for long-form reading */
   .post-content {
+    max-width: 36em;
     font-size: 1.125rem;
     line-height: 1.7;
     margin-bottom: calc(var(--grid-unit) * 6);
+  }
+
+  .post-content > :global(p:first-of-type::first-letter) {
+    float: left;
+    margin: 0.08em 0.12em 0 0;
+    font-size: 4.5em;
+    font-weight: 700;
+    line-height: 0.8;
+    color: var(--color-accent);
   }
 
   .post-content :global(h2) {

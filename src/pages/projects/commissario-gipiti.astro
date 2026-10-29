@@ -11,9 +11,14 @@ const posts = localize(allPosts, 'it')
 
 const base = import.meta.env.BASE_URL;
 
-// Series blurb: an excerpt from case #001.
-const seriesQuote =
-  "«Anni prima, quando era soltanto un pessimo prototipo di assistente virtuale incapace di interpretare correttamente la più elementare delle richieste, la Macchina era stata simpaticamente ribattezzata “Il Commissario Gipiti”. E continuavano a chiamarla Il Commissario Gipiti anche adesso che non c'era più niente da ridere, adesso che il Commissario era in grado di portare a termine in tempi brevissimi, e con una precisione spietata, indagini che avrebbero richiesto mesi di tentativi ed errori a una squadra di professionisti navigati. Oggi l'unico professionista richiesto da un'indagine di polizia era un soggetto come Lafaietta, cerimoniosamente incaricato dalle più alte istituzioni del Paese di sovrintendere al delicato compito della Mediazione Uomo-Macchina.»";
+// Series blurb: an excerpt from case #001, one entry per paragraph.
+const quoteParagraphs = [
+  "Anni prima, quando era soltanto un pessimo prototipo di assistente virtuale incapace di interpretare correttamente la più elementare delle richieste, la Macchina era stata simpaticamente ribattezzata “Il Commissario Gipiti”.",
+  "E continuavano a chiamarla Il Commissario Gipiti anche adesso che non c'era più niente da ridere, adesso che il Commissario era in grado di portare a termine in tempi brevissimi, e con una precisione spietata, indagini che avrebbero richiesto mesi di tentativi ed errori a una squadra di professionisti navigati.",
+  "Oggi l'unico professionista richiesto da un'indagine di polizia era un soggetto come Lafaietta, cerimoniosamente incaricato dalle più alte istituzioni del Paese di sovrintendere al delicato compito della Mediazione Uomo-Macchina."
+];
+const seriesQuote = `«${quoteParagraphs.join(' ')}»`;
+const firstCase = posts[0]?.post;
 ---
 
 <Layout title="I casi del Commissario Gipiti" description={seriesQuote} alternateUrls={mirroredAlternates(Astro.url.pathname)}>
@@ -24,10 +29,19 @@ const seriesQuote =
       <div>
         <p class="kicker">Serie · in corso</p>
         <h1 class="page-title">I casi del<br />Commissario Gipiti</h1>
-        <p class="page-description" lang="it">{seriesQuote}</p>
       </div>
       <span class="ghost-num">{String(posts.length).padStart(2, '0')}</span>
     </header>
+
+    <figure class="series-quote" lang="it">
+      <div class="quote-tab"><span><strong>Estratto</strong> · Fascicolo #001</span><span>p. 1</span></div>
+      <blockquote>
+        {quoteParagraphs.map((p) => <p>{p}</p>)}
+      </blockquote>
+      {firstCase && (
+        <figcaption><a href={`${base}${collectionName}/${slugFromFile(firstCase.file)}/`}>Apri il fascicolo →</a></figcaption>
+      )}
+    </figure>
 
     <div class="sort-controls">
       <button id="sort-toggle">Dal più recente</button>
@@ -62,8 +76,8 @@ const seriesQuote =
 
 <script>
   const sortToggle = document.getElementById('sort-toggle');
-  if (sortToggle) {
-    const postsList = document.querySelector('.posts-list');
+  const postsList = document.querySelector('.posts-list');
+  if (sortToggle && postsList) {
     const posts = Array.from(postsList.querySelectorAll('.post-item'));
 
     let isAscending = true;
@@ -73,8 +87,8 @@ const seriesQuote =
       sortToggle.textContent = isAscending ? 'Dal più recente' : 'Dal meno recente';
 
       posts.sort((a, b) => {
-        const dateA = new Date(a.querySelector('.post-date').getAttribute('datetime'));
-        const dateB = new Date(b.querySelector('.post-date').getAttribute('datetime'));
+        const dateA = new Date(a.querySelector('.post-date')?.getAttribute('datetime') ?? 0);
+        const dateB = new Date(b.querySelector('.post-date')?.getAttribute('datetime') ?? 0);
 
         if (isAscending) {
           return dateA.getTime() - dateB.getTime();
@@ -132,11 +146,71 @@ const seriesQuote =
     margin: 0 0 14px;
   }
 
-  .page-description {
-    font-size: 1.05rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
+  .series-quote {
+    margin: 0 0 40px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+
+  .quote-tab {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 28px;
+    border-bottom: 1px dashed var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .quote-tab strong {
+    color: var(--color-accent);
+  }
+
+  .series-quote blockquote {
+    border: none;
     margin: 0;
+    padding: 32px 40px 8px;
+    font-size: 1.06rem;
+    font-weight: 400;
+    line-height: 1.78;
+    color: var(--color-text-secondary);
+  }
+
+  .series-quote blockquote p {
+    margin: 0 0 16px;
+  }
+
+  .series-quote blockquote p:first-child::first-letter {
+    float: left;
+    margin: 6px 12px 0 0;
+    font-size: 4.75rem;
+    font-weight: 700;
+    line-height: 0.82;
+    color: var(--color-accent);
+  }
+
+  .series-quote figcaption {
+    padding: 4px 40px 26px;
+    text-align: right;
+  }
+
+  .series-quote figcaption a {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-accent);
+  }
+
+  .series-quote figcaption a:hover {
+    color: var(--color-text-primary);
   }
 
   .ghost-num {
@@ -255,6 +329,18 @@ const seriesQuote =
 
     .ghost-num {
       display: none;
+    }
+
+    .quote-tab {
+      padding: 10px 18px;
+    }
+
+    .series-quote blockquote {
+      padding: 24px 20px 4px;
+    }
+
+    .series-quote figcaption {
+      padding: 4px 20px 20px;
     }
 
     .case-row {
