@@ -56,8 +56,8 @@ const posts = localize(allPosts, 'en')
 
 <script>
   const sortToggle = document.getElementById('sort-toggle');
-  if (sortToggle) {
-    const postsList = document.querySelector('.posts-list');
+  const postsList = document.querySelector('.posts-list');
+  if (sortToggle && postsList) {
     const posts = Array.from(postsList.querySelectorAll('.post-item'));
 
     let isAscending = false;
@@ -67,8 +67,8 @@ const posts = localize(allPosts, 'en')
       sortToggle.textContent = isAscending ? 'Sort by Date (Newest First)' : 'Sort by Date (Oldest First)';
 
       posts.sort((a, b) => {
-        const dateA = new Date(a.querySelector('.post-date').getAttribute('datetime'));
-        const dateB = new Date(b.querySelector('.post-date').getAttribute('datetime'));
+        const dateA = new Date(a.querySelector('.post-date')?.getAttribute('datetime') ?? 0);
+        const dateB = new Date(b.querySelector('.post-date')?.getAttribute('datetime') ?? 0);
 
         if (isAscending) {
           return dateA.getTime() - dateB.getTime();

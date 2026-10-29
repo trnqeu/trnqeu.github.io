@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 
   return Array.from(allTags).map((tag: string) => {
     const postsWithTag = posts.filter((post: any) =>
-      post.frontmatter.tags && post.frontmatter.tags.map(t => t.toLowerCase()).includes(tag)
+      post.frontmatter.tags && post.frontmatter.tags.map((t: string) => t.toLowerCase()).includes(tag)
     ).sort((a: any, b: any) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
 
     return {
