@@ -8,9 +8,13 @@ const allPosts = Object.values(collectionGlob) as any[];
 
 const posts = localize(allPosts, 'en')
   .sort((a, b) => new Date(a.post.frontmatter.date).getTime() - new Date(b.post.frontmatter.date).getTime());
+
+// Series blurb: an excerpt from case #001.
+const seriesQuote =
+  "«Anni prima, quando era soltanto un pessimo prototipo di assistente virtuale incapace di interpretare correttamente la più elementare delle richieste, la Macchina era stata simpaticamente ribattezzata “Il Commissario Gipiti”. E continuavano a chiamarla Il Commissario Gipiti anche adesso che non c'era più niente da ridere, adesso che il Commissario era in grado di portare a termine in tempi brevissimi, e con una precisione spietata, indagini che avrebbero richiesto mesi di tentativi ed errori a una squadra di professionisti navigati. Oggi l'unico professionista richiesto da un'indagine di polizia era un soggetto come Lafaietta, cerimoniosamente incaricato dalle più alte istituzioni del Paese di sovrintendere al delicato compito della Mediazione Uomo-Macchina.»";
 ---
 
-<Layout title="I casi del Commissario Gipiti" description="Commissario Gipiti solves murders in a matter of seconds. Chief Mediator Valdimiro Lafaietta is left with the most delicate task of all: dragging the case file in, typing “solve” and safeguarding the Human Factor." lang="en" alternateUrls={mirroredAlternates(Astro.url.pathname)}>
+<Layout title="I casi del Commissario Gipiti" description={seriesQuote} lang="en" alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="project-page">
     <p class="breadcrumb"><a href="/en/projects/">projects</a> / commissario-gipiti</p>
 
@@ -18,7 +22,7 @@ const posts = localize(allPosts, 'en')
       <div>
         <p class="kicker">Series · ongoing</p>
         <h1 class="page-title">I casi del<br />Commissario Gipiti</h1>
-        <p class="page-description">Commissario Gipiti solves murders in a matter of seconds. Chief Mediator Valdimiro Lafaietta is left with the most delicate task of all: dragging the case file in, typing “solve” and safeguarding the Human Factor.</p>
+        <p class="page-description" lang="it">{seriesQuote}</p>
       </div>
       <span class="ghost-num">{String(posts.length).padStart(2, '0')}</span>
     </header>

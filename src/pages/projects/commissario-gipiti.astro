@@ -10,9 +10,13 @@ const posts = localize(allPosts, 'it')
   .sort((a, b) => new Date(a.post.frontmatter.date).getTime() - new Date(b.post.frontmatter.date).getTime());
 
 const base = import.meta.env.BASE_URL;
+
+// Series blurb: an excerpt from case #001.
+const seriesQuote =
+  "«Anni prima, quando era soltanto un pessimo prototipo di assistente virtuale incapace di interpretare correttamente la più elementare delle richieste, la Macchina era stata simpaticamente ribattezzata “Il Commissario Gipiti”. E continuavano a chiamarla Il Commissario Gipiti anche adesso che non c'era più niente da ridere, adesso che il Commissario era in grado di portare a termine in tempi brevissimi, e con una precisione spietata, indagini che avrebbero richiesto mesi di tentativi ed errori a una squadra di professionisti navigati. Oggi l'unico professionista richiesto da un'indagine di polizia era un soggetto come Lafaietta, cerimoniosamente incaricato dalle più alte istituzioni del Paese di sovrintendere al delicato compito della Mediazione Uomo-Macchina.»";
 ---
 
-<Layout title="I casi del Commissario Gipiti" description="Il Commissario Gipiti risolve gli omicidi in pochi secondi. Al Capo Mediatore Valdimiro Lafaietta resta il compito più delicato: trascinare il fascicolo, scrivere «risolvi» e custodire il Fattore Umano." alternateUrls={mirroredAlternates(Astro.url.pathname)}>
+<Layout title="I casi del Commissario Gipiti" description={seriesQuote} alternateUrls={mirroredAlternates(Astro.url.pathname)}>
   <div class="project-page">
     <p class="breadcrumb"><a href={`${base}projects/`}>progetti</a> / commissario-gipiti</p>
 
@@ -20,7 +24,7 @@ const base = import.meta.env.BASE_URL;
       <div>
         <p class="kicker">Serie · in corso</p>
         <h1 class="page-title">I casi del<br />Commissario Gipiti</h1>
-        <p class="page-description">Il Commissario Gipiti risolve gli omicidi in pochi secondi. Al Capo Mediatore Valdimiro Lafaietta resta il compito più delicato: trascinare il fascicolo, scrivere «risolvi» e custodire il Fattore Umano.</p>
+        <p class="page-description" lang="it">{seriesQuote}</p>
       </div>
       <span class="ghost-num">{String(posts.length).padStart(2, '0')}</span>
     </header>
