@@ -12,12 +12,14 @@ const shortStoriesPostsGlob = import.meta.glob('../content/shortstories/*.md', {
 const shortStoriesMdxPostsGlob = import.meta.glob('../content/shortstories/*.mdx', { eager: true });
 const promptsOnCanvasPostsGlob = import.meta.glob('../content/promptsoncanvas/*.md', { eager: true });
 const promptsOnCanvasMdxPostsGlob = import.meta.glob('../content/promptsoncanvas/*.mdx', { eager: true });
+const commissarioGipitiPostsGlob = import.meta.glob('../content/commissario-gipiti/*.{md,mdx}', { eager: true });
 const elsewherePostsGlob = import.meta.glob('../content/elsewhere/*.md', { eager: true });
 const allPosts = [
   ...Object.values(mdPostsGlob), ...Object.values(mdxPostsGlob),
   ...Object.values(murderHePromptedPostsGlob), ...Object.values(murderHePromptedMdxPostsGlob),
   ...Object.values(shortStoriesPostsGlob), ...Object.values(shortStoriesMdxPostsGlob),
   ...Object.values(promptsOnCanvasPostsGlob), ...Object.values(promptsOnCanvasMdxPostsGlob),
+  ...Object.values(commissarioGipitiPostsGlob),
   ...Object.values(elsewherePostsGlob),
 ] as any[];
 
