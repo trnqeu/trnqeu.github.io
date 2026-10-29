@@ -70,6 +70,10 @@ const canonical = isFallback ? canonicalPostUrl(post) : undefined;
           })}
         </time>
 
+        {frontmatter.author && (
+            <span class="post-author">di {frontmatter.author}</span>
+        )}
+
         {frontmatter.lang && (
             <a href={`/language/${frontmatter.lang.toLowerCase()}/`} class="post-lang">{frontmatter.lang}</a>
         )}
@@ -150,6 +154,14 @@ const canonical = isFallback ? canonicalPostUrl(post) : undefined;
   }
 
   .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-author {
     font-family: var(--font-mono);
     font-size: 0.9rem;
     color: var(--color-text-muted);
