@@ -1,6 +1,7 @@
 ---
 import { mirroredAlternates } from '../../../utils/i18n';
 import Layout from '../../../components/Layout.astro';
+import { bookSlug } from '../../../utils/book-links';
 import quotes from '../../../../public/all_quotes.json';
 
 const base = import.meta.env.BASE_URL;
@@ -11,6 +12,7 @@ const randomBook = allBooks[randomBookIndex];
 const randomQuoteIndex = Math.floor(Math.random() * randomBook.quotes.length);
 const randomQuote = randomBook.quotes[randomQuoteIndex];
 const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
+const books = allBooks.map(book => ({ ...book, slug: bookSlug(book.title) }));
 ---
 
 <Layout title="Underlines" description="A collection of underlines from books I've read." lang="en" alternateUrls={mirroredAlternates(Astro.url.pathname)}>
@@ -30,12 +32,16 @@ const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
     </div>
 
     <div class="quotes-list">
-      {Object.values(quotes).map(book => (
-        <details class="book-entry">
+      {books.map(book => (
+        <details class="book-entry" id={book.slug}>
           <summary class="book-title">
             {book.title} <span class="book-author">— {book.author}</span>
           </summary>
           <div class="quotes-content">
+            <div class="share-row">
+              <a class="share-link" href={`#${book.slug}`}>#{book.slug}</a>
+              <button type="button" class="copy-link" data-label="Copy link" data-copied="Copied!">Copy link</button>
+            </div>
             {book.quotes.map(quote => (
               <div class="underline-item">
                 <p class="quote-text">{quote}</p>
@@ -68,6 +74,12 @@ const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
     document.querySelector('.random-quote-block .author').innerHTML = randomBook.author;
     document.querySelector('.random-quote-block .work').innerHTML = randomBook.title;
   });
+</script>
+
+<script>
+  import { initBookLinks } from '../../../utils/book-links';
+
+  initBookLinks();
 </script>
 
 <style>
@@ -138,7 +150,8 @@ const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
     margin-bottom: 44px;
   }
 
-  #refresh-quote {
+  #refresh-quote,
+  .copy-link {
     margin-top: 18px;
     font-family: var(--font-mono);
     font-weight: 600;
@@ -155,7 +168,9 @@ const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
   }
 
   #refresh-quote:hover,
-  #refresh-quote:focus {
+  #refresh-quote:focus,
+  .copy-link:hover,
+  .copy-link:focus {
     border-color: var(--color-accent);
     color: var(--color-accent);
   }
@@ -169,6 +184,8 @@ const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
 
   .book-entry {
     border-bottom: 1px solid var(--color-border);
+    /* clear the sticky header when arriving from a shared link */
+    scroll-margin-top: 110px;
   }
 
   .book-title {
@@ -200,8 +217,38 @@ const totalQuotes = allBooks.reduce((sum, book) => sum + book.quotes.length, 0);
     border-top: 1px solid var(--color-border);
   }
 
-  .quotes-content .underline-item:first-child {
+  .quotes-content .share-row + .underline-item {
     border-top: none;
+  }
+
+  /* the book's own URL, shown when its entry is open */
+  .share-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-left: 24px;
+    min-width: 0;
+  }
+
+  .share-link {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .share-link:hover {
+    color: var(--color-accent);
+  }
+
+  .share-row .copy-link {
+    margin-top: 0;
+    flex-shrink: 0;
   }
 
   .page-navigation {
