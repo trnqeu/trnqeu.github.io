@@ -1,48 +1,88 @@
 ---
-import { string } from 'astro:schema'
-
-interface Props {
-    author?: string;
-    variant?: 'human' | 'ai';
-}
-
-
-const { author = 'AI', variant = 'ai'} = Astro.props;
-
-const bubbleClasses = {
-    ai: 'bg-gray-100 border-gray-200 dark:bg-gray-800 dark:border-gray-700',
-    human: 'bg-blue-100 border-blue-200 dark:bg-blue-900/50 dark:border-blue-800'
-};
-
+// Renders its slot as text typed into an LLM prompt box.
 ---
-<div class:list={["chat-bubble", bubbleClasses[variant]]}>
-    <!-- {author && <div class="author">{author}</div>} -->
+<div class="prompt-box">
     <div class="content">
         <slot />
     </div>
-</div>  
+    <div class="toolbar" aria-hidden="true">
+        <span class="tool">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+        </span>
+        <span class="send">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+        </span>
+    </div>
+</div>
 
 <style>
-    .chat-bubble {
-        display: flex;
-        align-items: center;
-        border: 1px solid;
-        border-radius: 12px;
-        padding: 16px;
-        margin-block: 24px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .author {
-        font-weight: 600;
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-        color: #666;
-        dark:color; #ccc;
+    .prompt-box {
+        max-width: 640px;
+        margin: 32px auto;
+        padding: 16px 16px 12px 20px;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
 
     .content {
+        font-family: var(--font-body);
         font-size: 1rem;
         line-height: 1.6;
+        color: var(--color-text-primary);
+        min-height: 1.6em;
+    }
+
+    .content :global(p) {
+        display: inline;
+        margin: 0;
+    }
+
+    /* Blinking text cursor after the typed prompt */
+    .content::after {
+        content: '';
+        display: inline-block;
+        width: 2px;
+        height: 1.15em;
+        margin-left: 2px;
+        vertical-align: text-bottom;
+        background: var(--color-text-primary);
+        animation: blink 1s steps(1) infinite;
+    }
+
+    .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+    }
+
+    .tool,
+    .send {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+    }
+
+    .tool {
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+    }
+
+    .send {
+        color: var(--color-accent-contrast);
+        background: var(--color-accent);
+    }
+
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .content::after { animation: none; }
     }
 </style>
