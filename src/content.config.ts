@@ -4,6 +4,9 @@ import { z } from 'astro/zod';
 
 const baseSchema = z.object({
     title: z.string(),
+    // Optional label shown above the title on the post page (e.g. "Caso #001"),
+    // kept out of the title so lists show the title alone.
+    kicker: z.string().optional(),
     description: z.string().optional(),
     date: z.coerce.date().optional(),
     excerpt: z.string().optional(),

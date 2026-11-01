@@ -36,7 +36,7 @@ export async function getStaticPaths() {
 const { post, readingTime, tocHeadings, isFallback, translatedUrl, url } = Astro.props;
 const { frontmatter, Content } = post as any;
 
-const pageTitle = frontmatter.title;
+const pageTitle = frontmatter.kicker ? `${frontmatter.kicker}: ${frontmatter.title}` : frontmatter.title;
 const publishedTime = frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined;
 const alternateUrls = translatedUrl ? [{ lang: 'it', url }, { lang: 'en', url: translatedUrl }] : undefined;
 // Untranslated posts are also served under the other language's route;
@@ -59,6 +59,7 @@ const canonical = isFallback ? canonicalPostUrl(post) : undefined;
   <article class="blog-post" lang={frontmatter.lang}>
     {isFallback && <TranslationNotice sourceLang={frontmatter.lang} currentLang="it" />}
     <header class="post-header">
+      {frontmatter.kicker && <p class="post-kicker">{frontmatter.kicker}</p>}
       <h1 class="post-title">{frontmatter.title}</h1>
       
       <div class="post-meta">
@@ -134,6 +135,16 @@ const canonical = isFallback ? canonicalPostUrl(post) : undefined;
 
   .post-header {
     margin-bottom: calc(var(--grid-unit) * 6);
+  }
+
+  .post-kicker {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--grid-unit) * 1.5);
   }
 
   .post-title {
