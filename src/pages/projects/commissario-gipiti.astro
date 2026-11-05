@@ -43,6 +43,11 @@ const firstCase = posts[0]?.post;
       )}
     </figure>
 
+    {/* Series description: one <p> per paragraph; line breaks inside a <p> don't matter. */}
+    <div class="series-intro">
+      <p>Ambientato in un futuro prossimo o in un presente poco probabile, "I casi del Commissario Gipiti" è una serie di brevi racconti che seguono le avventure del Capo Mediatore Valdimiro Lafaietta e del suo assistente virtuale, un'intelligenza artificiale in grado di indagare su qualunque crimine con estrema efficienza. Ma la vera indagine al centro della serie riguarda il destino del lavoro umano ai tempi delle macchine intelligenti.</p>
+    </div>
+
     <div class="sort-controls">
       <button id="sort-toggle">Dal più recente</button>
     </div>
@@ -211,6 +216,21 @@ const firstCase = posts[0]?.post;
 
   .series-quote figcaption a:hover {
     color: var(--color-text-primary);
+  }
+
+  .series-intro {
+    margin: 0 0 40px;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-primary);
+  }
+
+  .series-intro p {
+    margin: 0 0 16px;
+  }
+
+  .series-intro p:last-child {
+    margin-bottom: 0;
   }
 
   .ghost-num {

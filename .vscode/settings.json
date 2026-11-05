@@ -12,5 +12,8 @@
     },
     "[markdown]": {
         "editor.wordWrap": "on"
+    },
+    "[astro]": {
+        "editor.wordWrap": "on"
     }
 }
