@@ -42,8 +42,13 @@ const shortstories = defineCollection({
 
 const drafts = defineCollection({
     loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/drafts' }),
+    // Drafts are work in progress: tolerate missing frontmatter and
+    // placeholder values (e.g. date: "2026-__-__") so one unfinished file
+    // doesn't break the dev server. Drafts are never built in production.
     schema: baseSchema.extend({
-        date: z.coerce.date(),
+        title: z.string().default('Bozza senza titolo'),
+        lang: z.string().default('it'),
+        date: z.coerce.date().optional().catch(undefined),
     }),
 });
 

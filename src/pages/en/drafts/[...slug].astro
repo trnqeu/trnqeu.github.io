@@ -49,6 +49,7 @@ const publishedTime = frontmatter.date
             <h1 class="post-title">{frontmatter.title}</h1>
 
             <div class="post-meta">
+                {frontmatter.date && (
                 <time
                     class="post-date"
                     datetime={new Date(frontmatter.date).toISOString()}
@@ -64,6 +65,7 @@ const publishedTime = frontmatter.date
                         )
                     }
                 </time>
+                )}
 
                 {
                     frontmatter.author && (
