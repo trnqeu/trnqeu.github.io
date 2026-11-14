@@ -1,0 +1,12 @@
+{
+  // Static Astro site served as Cloudflare Workers static assets (no Worker script).
+  "name": "trnq-eu",
+  "compatibility_date": "2026-11-14",
+  "assets": {
+    "directory": "./dist",
+    // Serve dist/404.html with a 404 status for unknown paths.
+    "not_found_handling": "404-page",
+    // foo/index.html is served at /foo/ (matches the trailing-slash canonicals).
+    "html_handling": "auto-trailing-slash"
+  }
+}
