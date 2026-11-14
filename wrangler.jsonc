@@ -2,6 +2,9 @@
   // Static Astro site served as Cloudflare Workers static assets (no Worker script).
   "name": "trnq-eu",
   "compatibility_date": "2026-11-14",
+  // Served only on the custom domain; www.trnq.eu is redirected by a zone Redirect Rule.
+  "routes": [{ "pattern": "trnq.eu", "custom_domain": true }],
+  "workers_dev": false,
   "assets": {
     "directory": "./dist",
     // Serve dist/404.html with a 404 status for unknown paths.
