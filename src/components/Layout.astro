@@ -67,6 +67,13 @@ const lang: 'en' | 'it' = (Astro.props.lang === 'en' || Astro.props.lang === 'it
       lang={lang}
       contentLang={contentLang}
     />
+
+    <!-- Privacy-friendly analytics by Plausible -->
+    <script is:inline async src="https://analytics.trnq.eu/js/pa-8kCDEvMDZ5Q8ZOhMdNSJ_.js"></script>
+    <script is:inline>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init()
+    </script>
   </head>
   <body>
     <div class="site-wrapper">
